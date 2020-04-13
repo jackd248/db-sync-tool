@@ -1,0 +1,5 @@
+.DS_Store
+.idea
+host.json
+.sync/
+*.pyc
