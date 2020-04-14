@@ -4,7 +4,7 @@ Simple python script to synchronize a TYPO3 database from a remote to your local
 
 ## Prerequisite
 
-The script using python 2. Is it necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
+The script using python 2. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
 You can do this by the following command:
 
 ```bash
@@ -41,6 +41,12 @@ Example structure of `host.json`:
 ```bash
 # Run python script
 python sync.py
+```
+
+```bash
+# Options
+-h, --help          Show help
+-c, --config        Path to host file
 ```
 
 You are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 

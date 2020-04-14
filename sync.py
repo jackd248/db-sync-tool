@@ -1,14 +1,22 @@
 #!/usr/bin/python
 
-import argparse, sys, os, time, calendar, shutil
+import argparse, sys, os, time, calendar, shutil, argparse
 from subprocess import check_output
 import getpass
 import json
 
+#
+# GLOBALS
+#
 config = {}
 remote_ssh_password = None
 remote_database_dump_file_name = None
 ssh_client = None
+
+#
+# CONSTANTS
+#
+local_host_file_path = 'host.json'
 ignore_database_tables = [
     'sys_domain',
     'cf_cache_hash',
@@ -31,6 +39,14 @@ ignore_database_tables = [
 
 def main():
     global config
+    global local_host_file_path
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f','--file', help='Path to host file', required=False)
+    args = parser.parse_args()
+
+    if not args.file is None:
+        local_host_file_path = args.file
 
     print(bcolors.BLACK + '###############################' + bcolors.ENDC)
     print(bcolors.BLACK + '#' + bcolors.ENDC + '     TYPO3 Database Sync     ' + bcolors.BLACK + '#' + bcolors.ENDC)
@@ -59,8 +75,8 @@ def check_configuration():
     check_remote_configuration()
 
 def get_host_configuration():
-    if os.path.isfile('host.json'):
-        with open('host.json', 'r') as read_file:
+    if os.path.isfile(local_host_file_path):
+        with open(local_host_file_path, 'r') as read_file:
             config['host'] = json.load(read_file)
             _print(subject.LOCAL, 'Loading host configuration', True)
     else:
