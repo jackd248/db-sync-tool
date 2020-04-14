@@ -57,7 +57,6 @@ Often it is better to exclude some tables from the sql dump for performance reas
 
 ```json
 {
-  ...
   "ignore_table": [
     "sys_domain",
     "cf_cache_hash",
@@ -75,7 +74,7 @@ Often it is better to exclude some tables from the sql dump for performance reas
     "cf_extbase_object",
     "cf_extbase_object_tags",
     "cf_extbase_reflection",
-    'cf_extbase_reflection_tags'
+    "cf_extbase_reflection_tags"
   ]
 }
 ```
