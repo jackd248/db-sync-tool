@@ -51,6 +51,35 @@ python sync.py
 
 You are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 
 
+### Ignore tables
+
+Often it is better to exclude some tables from the sql dump for performance reasons, e.g. caching tables. There is a default stack of ignored tables within the script, but you can specify them in your `host.yml`. The following tables are the default setting:
+
+```json
+{
+  ...
+  "ignore_table": [
+    "sys_domain",
+    "cf_cache_hash",
+    "cf_cache_hash_tags",
+    "cf_cache_news_category",
+    "cf_cache_news_category_tags",
+    "cf_cache_pages",
+    "cf_cache_pagesection",
+    "cf_cache_pagesection_tags",
+    "cf_cache_pages_tags",
+    "cf_cache_rootline",
+    "cf_cache_rootline_tags",
+    "cf_extbase_datamapfactory_datamap",
+    "cf_extbase_datamapfactory_datamap_tags",
+    "cf_extbase_object",
+    "cf_extbase_object_tags",
+    "cf_extbase_reflection",
+    'cf_extbase_reflection_tags'
+  ]
+}
+```
+
 ## FAQ
 
 - `Unknown column '?' in 'field list'` 
