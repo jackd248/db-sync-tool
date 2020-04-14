@@ -14,10 +14,10 @@ remote_database_dump_file_name = None
 ssh_client = None
 
 #
-# CONSTANTS
+# DEFAULTS
 #
-local_host_file_path = 'host.json'
-ignore_database_tables = [
+default_local_host_file_path = 'host.json'
+default_ignore_database_tables = [
     'sys_domain',
     'cf_cache_hash',
     'cf_cache_hash_tags',
@@ -39,14 +39,14 @@ ignore_database_tables = [
 
 def main():
     global config
-    global local_host_file_path
+    global default_local_host_file_path
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-f','--file', help='Path to host file', required=False)
     args = parser.parse_args()
 
     if not args.file is None:
-        local_host_file_path = args.file
+        default_local_host_file_path = args.file
 
     print(bcolors.BLACK + '###############################' + bcolors.ENDC)
     print(bcolors.BLACK + '#' + bcolors.ENDC + '     TYPO3 Database Sync     ' + bcolors.BLACK + '#' + bcolors.ENDC)
@@ -75,10 +75,15 @@ def check_configuration():
     check_remote_configuration()
 
 def get_host_configuration():
-    if os.path.isfile(local_host_file_path):
-        with open(local_host_file_path, 'r') as read_file:
+    if os.path.isfile(default_local_host_file_path):
+        with open(default_local_host_file_path, 'r') as read_file:
             config['host'] = json.load(read_file)
             _print(subject.LOCAL, 'Loading host configuration', True)
+
+            if 'ignore_table' in config['host']:
+                config['ignore_table'] = config['host']['ignore_table']
+            else:
+                config['ignore_table'] = default_ignore_database_tables
     else:
         sys.exit(_print(subject.ERROR, 'Local host configuration not found', False))
 
@@ -147,7 +152,7 @@ def generate_database_dump_filename():
 
 def generate_ignore_database_tables():
     _ignore_tables = []
-    for table in ignore_database_tables:
+    for table in config['ignore_table']:
         _ignore_tables.append(config['db']['remote']['dbname'] + '.' + table)
     return ','.join(_ignore_tables)
 
