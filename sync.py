@@ -33,7 +33,7 @@ def main():
     global config
 
     print(bcolors.BLACK + '###############################' + bcolors.ENDC)
-    print(bcolors.BLACK + '#     TYPO3 Database Sync     #' + bcolors.ENDC)
+    print(bcolors.BLACK + '#' + bcolors.ENDC + '     TYPO3 Database Sync     ' + bcolors.BLACK + '#' + bcolors.ENDC)
     print(bcolors.BLACK + '###############################' + bcolors.ENDC)
 
     check_configuration()
@@ -203,7 +203,7 @@ def get_ssh_client():
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh_client.connect(hostname = config['host']['remote']['host'], username = config['host']['remote']['user'], password = remote_ssh_password, compress = True)
-    _print(subject.REMOTE, 'Successfully connect to SSH client', True)
+    _print(subject.REMOTE, 'Successfully connect to SSH client (' + config['host']['remote']['host'] + ')', True)
     return ssh_client
 
 def run_ssh_command(command):
@@ -217,9 +217,9 @@ def run_ssh_command(command):
     return stdout
 
 def download_status(sent,size):
-    sent_mb=round(sent/1024/1024,1)
-    size=round(size/1024/1024,1)
-    sys.stdout.write(bcolors.YELLOW + "[REMOTE]" + bcolors.ENDC + " Status: {0} MB of {1} MB downloaded".
+    sent_mb=round(float(sent)/1024/1024,1)
+    size=round(float(size)/1024/1024,1)
+    sys.stdout.write(bcolors.PURPLE + "[REMOTE]" + bcolors.ENDC + " Status: {0} MB of {1} MB downloaded".
         format(sent_mb, size,))
     sys.stdout.write('\r')
 
