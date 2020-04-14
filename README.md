@@ -21,6 +21,21 @@ You need to specify the SSH credentials for the remote system and the path to th
 mv host.json.dist host.json
 ```
 
+Example structure of `host.json`:
+```json
+{
+  "name": "project",
+  "local": {
+    "path": "../htdocs/typo3/web/typo3conf/LocalConfiguration.php"
+  },
+  "remote": {
+    "host": "ssh_host",
+    "user": "ssh_user",
+    "path": "/var/www/html/project/shared/typo3conf/LocalConfiguration.php"
+  }
+}
+```
+
 ## Usage
 
 ```bash
