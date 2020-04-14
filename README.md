@@ -29,3 +29,9 @@ python sync.py
 ```
 
 You are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 
+
+## FAQ
+
+- `Unknown column '?' in 'field list'` 
+   
+   Sometimes your local environment differ from the remote system. So you maybe need to update the database schema either manually via the install tool or using the TYPO3 console by `typo3cms database:updateschema`
