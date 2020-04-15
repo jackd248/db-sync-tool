@@ -96,7 +96,7 @@ def load_pip_modules():
     except ImportError:
         sys.exit(_print(subject.ERROR, 'Pip is not installed', False))
 
-    _print(subject.LOCAL, 'Loading pip modules', True)
+    _print(subject.LOCAL, 'Checking pip modules', True)
     package = 'paramiko'
     try:
         importlib.import_module(package)
@@ -108,7 +108,12 @@ def load_pip_modules():
 
 def get_remote_password():
     global remote_ssh_password
-    _password = getpass.getpass(_print(subject.INFO, 'SSH password for user "' + config['host']['remote']['user'] + '": ', False))
+    _password = getpass.getpass(_print(subject.INFO, 'SSH password for user "' + config['host']['remote']['user'] + '" (' + config['host']['remote']['host'] + '): ', False))
+
+    while _password.strip() is '':
+            _print(subject.INFO, 'Password is empty. Please enter a valid password.', True)
+            _password = getpass.getpass(_print(subject.INFO, 'SSH password for user "' + config['host']['remote']['user'] + '" (' + config['host']['remote']['host'] + '): ', False))
+
     remote_ssh_password = _password
 
 def check_local_configuration():
@@ -142,7 +147,7 @@ def create_remote_database_dump():
     prepare_remote_database_dump()
 
 def prepare_remote_database_dump():
-    _print(subject.REMOTE, 'Preparing database dump', True)
+    _print(subject.REMOTE, 'Compress database dump', True)
     run_ssh_command('tar cfvz ~/' + remote_database_dump_file_name + '.tar.gz ' + remote_database_dump_file_name)
 
 def generate_database_dump_filename():
@@ -188,7 +193,7 @@ def import_database_dump():
     os.system('mysql -u' + config['db']['local']['user'] + ' -p' + config['db']['local']['password'] + ' -P ' + str(config['db']['local']['port']) + ' -h ' + config['db']['local']['host'] + ' ' + config['db']['local']['dbname'] + ' < ' + os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name)
 
 def prepare_local_database_dump():
-    _print(subject.LOCAL, 'Preparing database dump', True)
+    _print(subject.LOCAL, 'Extract database dump', True)
     os.system('tar xzf ' + os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name + '.tar.gz')
     os.system('mv ' + os.path.abspath(os.getcwd()) + '/' + remote_database_dump_file_name + ' ' + os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name)
 
