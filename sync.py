@@ -102,6 +102,7 @@ def load_pip_modules():
         importlib.import_module(package)
     except ImportError:
         subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+        sys.exit(_print(subject.INFO, 'First install of additional pip modules completed. Please re-run the script.', False))
     finally:
         globals()[package] = importlib.import_module(package)
 
