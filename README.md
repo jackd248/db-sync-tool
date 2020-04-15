@@ -53,8 +53,9 @@ python sync.py
 
 ```bash
 # Options
--h, --help          Show help
--c, --config        Path to host file
+-h, --help              Show help
+-c, --config            Path to host file
+-kd, --keepdump         Skipping local import of the database dump and saving the available dump file in the given directory
 ```
 
 You are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 

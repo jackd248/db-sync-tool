@@ -12,11 +12,13 @@ config = {}
 remote_ssh_password = None
 remote_database_dump_file_name = None
 ssh_client = None
+keep_dump_option = False
 
 #
 # DEFAULTS
 #
 default_local_host_file_path = 'host.json'
+default_local_sync_path = os.path.abspath(os.getcwd()) + '/.sync/'
 default_ignore_database_tables = [
     'sys_domain',
     'cf_cache_hash',
@@ -40,17 +42,28 @@ default_ignore_database_tables = [
 def main():
     global config
     global default_local_host_file_path
+    global default_local_sync_path
+    global default_local_sync_path
+    global keep_dump_option
+
+    print(bcolors.BLACK + '###############################' + bcolors.ENDC)
+    print(bcolors.BLACK + '#' + bcolors.ENDC + '     TYPO3 Database Sync     ' + bcolors.BLACK + '#' + bcolors.ENDC)
+    print(bcolors.BLACK + '###############################' + bcolors.ENDC)
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-f','--file', help='Path to host file', required=False)
+    parser.add_argument('-kd','--keepdump', help='Skipping local import of the database dump and saving the available dump file in the given directory', required=False)
     args = parser.parse_args()
 
     if not args.file is None:
         default_local_host_file_path = args.file
 
-    print(bcolors.BLACK + '###############################' + bcolors.ENDC)
-    print(bcolors.BLACK + '#' + bcolors.ENDC + '     TYPO3 Database Sync     ' + bcolors.BLACK + '#' + bcolors.ENDC)
-    print(bcolors.BLACK + '###############################' + bcolors.ENDC)
+    if not args.keepdump is None:
+        default_local_sync_path = args.keepdump
+        if default_local_sync_path[-1] != '/':
+            default_local_sync_path += '/'
+        keep_dump_option = True
+        _print(subject.INFO, '"Keep dump" option chosen', True)
 
     check_configuration()
     create_remote_database_dump()
@@ -180,13 +193,13 @@ def get_remote_database_dump():
     # ToDo: Download speed problems
     # https://github.com/paramiko/paramiko/issues/60
     #
-    sftp.get('/home/' + config['host']['remote']['user'] + '/' + remote_database_dump_file_name + '.tar.gz', os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name + '.tar.gz', download_status)
+    sftp.get('/home/' + config['host']['remote']['user'] + '/' + remote_database_dump_file_name + '.tar.gz', default_local_sync_path + remote_database_dump_file_name + '.tar.gz', download_status)
     sftp.close()
     print('')
 
 def create_temporary_data_dir():
-    if not os.path.exists(os.path.abspath(os.getcwd()) + '/.sync/'):
-        os.mkdir(os.path.abspath(os.getcwd()) + '/.sync/')
+    if not os.path.exists(default_local_sync_path):
+        os.mkdir(default_local_sync_path)
 
 #
 # IMPORT DATABASE DUMP
@@ -195,16 +208,17 @@ def import_database_dump():
     prepare_local_database_dump()
     check_local_database_dump()
 
-    _print(subject.LOCAL, 'Importing database dump', True)
-    os.system('mysql ' + generate_mysql_credentials('local') + ' ' + config['db']['local']['dbname'] + ' < ' + os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name)
+    if not keep_dump_option:
+        _print(subject.LOCAL, 'Importing database dump', True)
+        os.system('mysql ' + generate_mysql_credentials('local') + ' ' + config['db']['local']['dbname'] + ' < ' + default_local_sync_path + remote_database_dump_file_name)
 
 def prepare_local_database_dump():
     _print(subject.LOCAL, 'Extract database dump', True)
-    os.system('tar xzf ' + os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name + '.tar.gz')
-    os.system('mv ' + os.path.abspath(os.getcwd()) + '/' + remote_database_dump_file_name + ' ' + os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name)
+    os.system('tar xzf ' + default_local_sync_path + remote_database_dump_file_name + '.tar.gz')
+    os.system('mv ' + os.path.abspath(os.getcwd()) + '/' + remote_database_dump_file_name + ' ' + default_local_sync_path + remote_database_dump_file_name)
 
 def check_local_database_dump():
-    with open(os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name) as f:
+    with open(default_local_sync_path + remote_database_dump_file_name) as f:
         lines = f.readlines()
         if "-- Dump completed on" not in lines[-1]:
             sys.exit(_print(subject.ERROR, 'Dump was not fully transferred', False))
@@ -214,7 +228,10 @@ def check_local_database_dump():
 #
 def clean_up():
     remove_remote_database_dump()
-    remove_temporary_data_dir()
+    if not keep_dump_option:
+        remove_temporary_data_dir()
+    else:
+        _print(subject.INFO, 'Dump file is saved to: ' + default_local_sync_path + remote_database_dump_file_name, True)
 
 def remove_remote_database_dump():
 
@@ -225,8 +242,8 @@ def remove_remote_database_dump():
     sftp.close()
 
 def remove_temporary_data_dir():
-    if os.path.exists(os.path.abspath(os.getcwd()) + '/.sync/'):
-        shutil.rmtree(os.path.abspath(os.getcwd()) + '/.sync/')
+    if os.path.exists(default_local_sync_path):
+        shutil.rmtree(default_local_sync_path)
         _print(subject.LOCAL, 'Cleaning up', True)
 
 #
