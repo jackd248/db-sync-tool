@@ -137,7 +137,7 @@ def create_remote_database_dump():
     generate_database_dump_filename()
 
     _print(subject.REMOTE, 'Creating database dump', True)
-    run_ssh_command('mysqldump -u' + config['db']['remote']['user'] + ' -p' + config['db']['remote']['password'] + ' ' + config['db']['remote']['dbname'] + ' --ignore-table=' + generate_ignore_database_tables() + ' > ~/' + remote_database_dump_file_name)
+    run_ssh_command('mysqldump -u' + config['db']['remote']['user'] + ' -p' + config['db']['remote']['password'] + ' -P ' + str(config['db']['remote']['port']) + ' -h ' + config['db']['remote']['host'] + ' ' + config['db']['remote']['dbname'] + ' --ignore-table=' + generate_ignore_database_tables() + ' > ~/' + remote_database_dump_file_name)
     prepare_remote_database_dump()
 
 def prepare_remote_database_dump():
@@ -184,7 +184,7 @@ def import_database_dump():
     check_local_database_dump()
 
     _print(subject.LOCAL, 'Importing database dump', True)
-    os.system('mysql -u' + config['db']['local']['user'] + ' -p' + config['db']['local']['password'] + ' ' + config['db']['local']['dbname'] + ' < ' + os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name)
+    os.system('mysql -u' + config['db']['local']['user'] + ' -p' + config['db']['local']['password'] + ' -P ' + str(config['db']['local']['port']) + ' -h ' + config['db']['local']['host'] + ' ' + config['db']['local']['dbname'] + ' < ' + os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name)
 
 def prepare_local_database_dump():
     _print(subject.LOCAL, 'Preparing database dump', True)
