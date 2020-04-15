@@ -99,7 +99,7 @@ def load_pip_modules():
     _print(subject.LOCAL, 'Checking pip modules', True)
     package = 'paramiko'
     try:
-        importlib.import_module(package)
+        globals()[package] = importlib.import_module(package)
     except ImportError:
         subprocess.check_call([sys.executable, "-m", "pip", "install", package])
         sys.exit(_print(subject.INFO, 'First install of additional pip modules completed. Please re-run the script.', False))
@@ -141,7 +141,7 @@ def create_remote_database_dump():
     generate_database_dump_filename()
 
     _print(subject.REMOTE, 'Creating database dump', True)
-    run_ssh_command('mysqldump -u' + config['db']['remote']['user'] + ' -p' + config['db']['remote']['password'] + ' -P ' + str(config['db']['remote']['port']) + ' -h ' + config['db']['remote']['host'] + ' ' + config['db']['remote']['dbname'] + ' --ignore-table=' + generate_ignore_database_tables() + ' > ~/' + remote_database_dump_file_name)
+    run_ssh_command('mysqldump ' + generate_mysql_credentials('remote') + ' ' + config['db']['remote']['dbname'] + ' --ignore-table=' + generate_ignore_database_tables() + ' > ~/' + remote_database_dump_file_name)
     prepare_remote_database_dump()
 
 def prepare_remote_database_dump():
@@ -159,6 +159,14 @@ def generate_ignore_database_tables():
     for table in config['ignore_table']:
         _ignore_tables.append(config['db']['remote']['dbname'] + '.' + table)
     return ','.join(_ignore_tables)
+
+def generate_mysql_credentials(_target):
+    _credentials = '-u' + config['db'][_target]['user'] + ' -p' + config['db'][_target]['password']
+    if 'host' in config['db'][_target]:
+        _credentials += ' -h' + config['db'][_target]['host']
+    if 'port' in config['db'][_target]:
+        _credentials += ' -P' + str(config['db'][_target]['port'])
+    return _credentials
 
 #
 # GET REMOTE DATABASE DUMP
@@ -188,7 +196,7 @@ def import_database_dump():
     check_local_database_dump()
 
     _print(subject.LOCAL, 'Importing database dump', True)
-    os.system('mysql -u' + config['db']['local']['user'] + ' -p' + config['db']['local']['password'] + ' -P ' + str(config['db']['local']['port']) + ' -h ' + config['db']['local']['host'] + ' ' + config['db']['local']['dbname'] + ' < ' + os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name)
+    os.system('mysql ' + generate_mysql_credentials('local') + ' ' + config['db']['local']['dbname'] + ' < ' + os.path.abspath(os.getcwd()) + '/.sync/' + remote_database_dump_file_name)
 
 def prepare_local_database_dump():
     _print(subject.LOCAL, 'Extract database dump', True)
