@@ -5,10 +5,18 @@ Simple python script to synchronize a TYPO3 database from a remote to your local
 ## Prerequisite
 
 The script using python 2. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
-You can do this by the following command:
+You can do this e.g. by the following command:
 
 ```bash
 apt install -y python-pip
+```
+
+## Install
+
+While using the script within the TYPO3 context, the script is available via [packagist.org](https://packagist.org/packages/kmi/t3-db-sync) using composer:
+
+```bash
+composer require kmi/t3-db-sync
 ```
 
 ## Configuration
@@ -26,7 +34,7 @@ Example structure of `host.json`:
 {
   "name": "project",
   "local": {
-    "path": "../htdocs/typo3/web/typo3conf/LocalConfiguration.php"
+    "path": "/var/www/html/htdocs/typo3/web/typo3conf/LocalConfiguration.php"
   },
   "remote": {
     "host": "ssh_host",
@@ -53,7 +61,7 @@ You are requested to enter the SSH password for the given user in the `host.json
 
 ### Ignore tables
 
-Often it is better to exclude some tables from the sql dump for performance reasons, e.g. caching tables. There is a default stack of ignored tables within the script, but you can specify them in your `host.yml`. The following tables are the default setting:
+Often it is better to exclude some tables from the sql dump for performance reasons, e.g. caching tables. There is a default stack of ignored tables within the script, but you can specify them in your `host.json`. The following tables are the default setting:
 
 ```json
 {
@@ -81,6 +89,10 @@ Often it is better to exclude some tables from the sql dump for performance reas
 
 ## FAQ
 
-- `Unknown column '?' in 'field list'` 
+- First script run was aborted with the message `First install of additional pip modules completed. Please re-run the script.`
+   
+   Actually it is not possible to load the required pip modules and add them dynamically to the script excecution. So you need to re-run the script again with the available dependencies.
+
+- TYPO3 error message: `Unknown column '?' in 'field list'` 
    
    Sometimes your local environment differ from the remote system. So you maybe need to update the database schema either manually via the install tool or using the TYPO3 console by `typo3cms database:updateschema`
