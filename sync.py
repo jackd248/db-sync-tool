@@ -176,9 +176,9 @@ def generate_ignore_database_tables():
 def generate_mysql_credentials(_target):
     _credentials = '-u\'' + config['db'][_target]['user'] + '\' -p\'' + config['db'][_target]['password'] + '\''
     if 'host' in config['db'][_target]:
-        _credentials += ' -h' + config['db'][_target]['host']
+        _credentials += ' -h\'' + config['db'][_target]['host'] + '\''
     if 'port' in config['db'][_target]:
-        _credentials += ' -P' + str(config['db'][_target]['port'])
+        _credentials += ' -P\'' + str(config['db'][_target]['port']) + '\''
     return _credentials
 
 #
