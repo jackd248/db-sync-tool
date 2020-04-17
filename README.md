@@ -26,7 +26,7 @@ You need to specify the SSH credentials for the remote system and the path to th
 
 ```bash
 # Copy/edit host.json
-mv host.json.dist host.json
+cp host.json.dist host.json
 ```
 
 Example structure of `host.json`:
@@ -59,6 +59,16 @@ python sync.py
 ```
 
 You are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 
+
+### SSH key authentification
+
+If you want to authenticate with a private ssh key instead of a password to the server (useful for CI/CD), you can a add the file path to the private key file in your `host.json`:
+
+```json
+{
+  "ssh_key": "~/bob/.ssh/id_rsa"
+}
+```
 
 ### Ignore tables
 

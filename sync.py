@@ -12,6 +12,7 @@ config = {}
 remote_ssh_password = None
 remote_database_dump_file_name = None
 ssh_client = None
+use_ssh_key = False
 keep_dump_option = False
 
 #
@@ -85,7 +86,8 @@ def check_configuration():
     global ssh_client
     get_host_configuration()
     load_pip_modules()
-    get_remote_password()
+    if not use_ssh_key:
+        get_remote_password()
     check_local_configuration()
 
     ssh_client = get_ssh_client()
@@ -93,15 +95,26 @@ def check_configuration():
 
 
 def get_host_configuration():
+    global use_ssh_key
+
     if os.path.isfile(default_local_host_file_path):
         with open(default_local_host_file_path, 'r') as read_file:
             config['host'] = json.load(read_file)
             _print(subject.LOCAL, 'Loading host configuration', True)
 
+            # check if custom ignore_table configuration is provided
             if 'ignore_table' in config['host']:
                 config['ignore_table'] = config['host']['ignore_table']
             else:
                 config['ignore_table'] = default_ignore_database_tables
+
+            # check if ssh key authorization should be used
+            if 'ssh_key' in config['host']:
+                if os.path.isfile(config['host']['ssh_key']):
+                    use_ssh_key = True
+                else:
+                    sys.exit(_print(subject.ERROR, 'SSH private key not found', False))
+
     else:
         sys.exit(_print(subject.ERROR, 'Local host configuration not found', False))
 
@@ -128,14 +141,12 @@ def load_pip_modules():
 def get_remote_password():
     global remote_ssh_password
     _password = getpass.getpass(_print(subject.INFO,
-                                       'SSH password for user "' + config['host']['remote']['user'] + '" (' +
-                                       config['host']['remote']['host'] + '): ', False))
+                                       'SSH password ' + config['host']['remote']['user'] + '@' + config['host']['remote']['host'] + ': ', False))
 
     while _password.strip() is '':
-        _print(subject.INFO, 'Password is empty. Please enter a valid password.', True)
+        _print(subject.WARNING, 'Password is empty. Please enter a valid password.', True)
         _password = getpass.getpass(_print(subject.INFO,
-                                           'SSH password for user "' + config['host']['remote']['user'] + '" (' +
-                                           config['host']['remote']['host'] + '): ', False))
+                                           'SSH password ' + config['host']['remote']['user'] + '@' + config['host']['remote']['host'] + ': ', False))
 
     remote_ssh_password = _password
 
@@ -284,9 +295,27 @@ def remove_temporary_data_dir():
 def get_ssh_client():
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh_client.connect(hostname=config['host']['remote']['host'], username=config['host']['remote']['user'],
-                       password=remote_ssh_password, compress=True)
-    _print(subject.REMOTE, 'Successfully connect to SSH client (' + config['host']['remote']['host'] + ')', True)
+    if use_ssh_key:
+        try:
+            ssh_client.connect(hostname=config['host']['remote']['host'],
+                               username=config['host']['remote']['user'],
+                               key_filename=config['host']['ssh_key'],
+                               compress=True)
+        except paramiko.ssh_exception.AuthenticationException:
+            sys.exit(_print(subject.ERROR, 'SSH authentification failed', False))
+        _authentication_method = 'using key'
+    else:
+        try:
+            ssh_client.connect(hostname=config['host']['remote']['host'],
+                               username=config['host']['remote']['user'],
+                               password=remote_ssh_password,
+                               compress=True)
+        except paramiko.ssh_exception.AuthenticationException:
+            sys.exit(_print(subject.ERROR, 'SSH authentification failed', False))
+
+        _authentication_method = 'using password'
+
+    _print(subject.REMOTE, 'Successfully connect to ' + config['host']['remote']['user'] + '@' + config['host']['remote']['host'] + ' ' + _authentication_method, True)
     return ssh_client
 
 
