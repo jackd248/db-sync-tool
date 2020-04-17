@@ -261,8 +261,10 @@ def run_ssh_command(command):
     exit_status = stdout.channel.recv_exit_status()
 
     err = stderr.read().decode()
-    if err:
+    if err and 0 != exit_status:
         sys.exit(_print(subject.ERROR, err, False))
+    elif err:
+        _print(subject.WARNING, err, True)
 
     return stdout
 
@@ -292,6 +294,7 @@ class subject:
     LOCAL = bcolors.BLUE + '[LOCAL]' + bcolors.ENDC
     REMOTE = bcolors.PURPLE + '[REMOTE]' + bcolors.ENDC
     ERROR = bcolors.RED + '[ERROR]' + bcolors.ENDC
+    WARNING = bcolors.YELLOW + '[WARNING]' + bcolors.ENDC
 
 def _print(header,message,do_print):
     if do_print:
