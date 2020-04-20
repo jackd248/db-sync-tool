@@ -12,6 +12,7 @@ config = {}
 remote_ssh_password = None
 remote_database_dump_file_name = None
 ssh_client = None
+verbose = False
 use_ssh_key = False
 keep_dump_option = False
 
@@ -47,6 +48,7 @@ def main():
     global default_local_sync_path
     global default_local_sync_path
     global keep_dump_option
+    global verbose
 
     print(bcolors.BLACK + '###############################' + bcolors.ENDC)
     print(bcolors.BLACK + '#' + bcolors.ENDC + '     TYPO3 Database Sync     ' + bcolors.BLACK + '#' + bcolors.ENDC)
@@ -54,6 +56,7 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', help='Path to host file', required=False)
+    parser.add_argument('-v', '--verbose', help='Enable extended console output', required=False)
     parser.add_argument('-kd', '--keepdump',
                         help='Skipping local import of the database dump and saving the available dump file in the given directory',
                         required=False)
@@ -61,6 +64,9 @@ def main():
 
     if not args.file is None:
         default_local_host_file_path = args.file
+
+    if not args.verbose is None:
+        verbose = True
 
     if not args.keepdump is None:
         default_local_sync_path = args.keepdump
@@ -163,15 +169,19 @@ def check_local_configuration():
         ['php', '-r', 'echo json_encode(include "' + config['host']['local']['path'] + '");'])
     _local_db_config = json.loads(_local_db_config)['DB']['Connections']['Default']
     _print(subject.LOCAL, 'Checking database configuration', True)
+
+    if verbose:
+            _print(subject.LOCAL, bcolors.BLACK + 'php -r "echo json_encode(include "' + config['host']['local']['path'] + '");"' + bcolors.ENDC, True)
+
     config['db']['local'] = _local_db_config
 
 
 def check_remote_configuration():
+    _print(subject.REMOTE, 'Checking database configuration', True)
     stdout = run_ssh_command('php -r "echo json_encode(include \'' + config['host']['remote']['path'] + '\');"')
     _remote_db_config = stdout.readlines()[0]
     _remote_db_config = json.loads(_remote_db_config)['DB']['Connections']['Default']
     config['db']['remote'] = _remote_db_config
-    _print(subject.REMOTE, 'Checking database configuration', True)
 
 
 #
@@ -246,6 +256,11 @@ def import_database_dump():
 
     if not keep_dump_option:
         _print(subject.LOCAL, 'Importing database dump', True)
+
+        if verbose:
+            _print(subject.LOCAL, bcolors.BLACK + 'mysql ' + generate_mysql_credentials('local') + ' ' + config['db']['local'][
+            'dbname'] + ' < ' + default_local_sync_path + remote_database_dump_file_name + bcolors.ENDC, True)
+
         os.system('mysql ' + generate_mysql_credentials('local') + ' ' + config['db']['local'][
             'dbname'] + ' < ' + default_local_sync_path + remote_database_dump_file_name)
 
@@ -253,6 +268,10 @@ def import_database_dump():
 def prepare_local_database_dump():
     _print(subject.LOCAL, 'Extract database dump', True)
     os.system('tar xzf ' + default_local_sync_path + remote_database_dump_file_name + '.tar.gz')
+
+    if verbose:
+        _print(subject.LOCAL, bcolors.BLACK + 'tar xzf ' + default_local_sync_path + remote_database_dump_file_name + '.tar.gz' + bcolors.ENDC, True)
+
     os.system('mv ' + os.path.abspath(
         os.getcwd()) + '/' + remote_database_dump_file_name + ' ' + default_local_sync_path + remote_database_dump_file_name)
 
@@ -322,6 +341,9 @@ def get_ssh_client():
 def run_ssh_command(command):
     stdin, stdout, stderr = ssh_client.exec_command(command)
     exit_status = stdout.channel.recv_exit_status()
+
+    if verbose:
+        _print(subject.REMOTE, bcolors.BLACK + command + bcolors.ENDC, True)
 
     err = stderr.read().decode()
     if err and 0 != exit_status:

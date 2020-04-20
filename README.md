@@ -54,6 +54,7 @@ python sync.py
 ```bash
 # Options
 -h, --help              Show help
+-v, --verbose           Enable extended console output
 -c, --config            Path to host file
 -kd, --keepdump         Skipping local import of the database dump and saving the available dump file in the given directory
 ```
