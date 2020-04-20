@@ -182,7 +182,7 @@ def create_remote_database_dump():
 
     _print(subject.REMOTE, 'Creating database dump', True)
     run_ssh_command('mysqldump ' + generate_mysql_credentials('remote') + ' ' + config['db']['remote'][
-        'dbname'] + ' --ignore-table=' + generate_ignore_database_tables() + ' > ~/' + remote_database_dump_file_name)
+        'dbname'] + ' ' + generate_ignore_database_tables() + ' > ~/' + remote_database_dump_file_name)
     prepare_remote_database_dump()
 
 
@@ -201,8 +201,8 @@ def generate_database_dump_filename():
 def generate_ignore_database_tables():
     _ignore_tables = []
     for table in config['ignore_table']:
-        _ignore_tables.append(config['db']['remote']['dbname'] + '.' + table)
-    return ','.join(_ignore_tables)
+        _ignore_tables.append('--ignore-table=' + config['db']['remote']['dbname'] + '.' + table)
+    return ' '.join(_ignore_tables)
 
 
 def generate_mysql_credentials(_target):
