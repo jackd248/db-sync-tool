@@ -104,8 +104,20 @@ def get_host_configuration():
             if 'type' in config['host']:
                 if config['host']['type'] == 'TYPO3':
                     option['framework'] = framework.TYPO3
+
+                    output.message(
+                        output.get_subject().INFO,
+                        'Framework: TYPO3',
+                        True
+                    )
                 elif config['host']['type'] == 'Symfony':
                     option['framework'] = framework.SYMFONY
+
+                    output.message(
+                        output.get_subject().INFO,
+                        'Framework: Symfony',
+                        True
+                    )
                 else:
                     sys.exit(
                         output.message(
@@ -116,6 +128,11 @@ def get_host_configuration():
                     )
             else:
                 option['framework'] = framework.TYPO3
+                output.message(
+                    output.get_subject().INFO,
+                    'Framework: TYPO3',
+                    True
+                )
 
     else:
         sys.exit(
