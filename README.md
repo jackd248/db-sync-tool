@@ -1,6 +1,11 @@
-# TYPO3 Database Sync
+# Database Sync Tool
 
-Simple python script to synchronize a TYPO3 database from a remote to your local system.
+Simple python script to synchronize a framework database from a remote to your local system.
+
+Available framework types:
+
+- TYPO3
+- Symfony
 
 ## Prerequisite
 
@@ -13,26 +18,27 @@ apt install -y python-pip
 
 ## Install
 
-While using the script within the TYPO3 context, the script is available via [packagist.org](https://packagist.org/packages/kmi/t3-db-sync) using composer:
+While using the script within the PHP framework context, the script is available via [packagist.org](https://packagist.org/packages/kmi/db-sync-tool) using composer:
 
 ```bash
-composer require kmi/t3-db-sync
+composer require kmi/db-sync-tool
 ```
 
 ## Configuration
 
 The `host.json` contains important information about the remote and the local system. 
-You need to specify the SSH credentials for the remote system and the path to the `LocalConfiguration.php` of both systems.
+You need to specify the SSH credentials for the remote system and the path to the database credentials of both systems.
 
 ```bash
 # Copy/edit host.json
 cp host.json.dist host.json
 ```
 
-Example structure of `host.json`:
+Example structure of `host.json` for a TYPO3 system:
 ```json
 {
   "name": "project",
+  "type": "TYPO3",
   "local": {
     "path": "/var/www/html/htdocs/typo3/web/typo3conf/LocalConfiguration.php"
   },

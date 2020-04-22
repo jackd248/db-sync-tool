@@ -1,6 +1,6 @@
 {
-  "name": "kmi/t3-db-sync",
-  "description": "Simple python script to synchronize a TYPO3 database from a remote to your local system",
+  "name": "kmi/db-sync-tool",
+  "description": "Simple python script to synchronize a database from a remote to your local system",
   "version": "0.2.1",
   "license": "MIT",
   "type": "project",

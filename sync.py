@@ -6,7 +6,7 @@ from utility import output, system, database, helper, connect
 def main():
 
     print(output.get_bcolors().BLACK + '###############################' + output.get_bcolors().ENDC)
-    print(output.get_bcolors().BLACK + '#' + output.get_bcolors().ENDC + '     TYPO3 Database Sync     ' + output.get_bcolors().BLACK + '#' + output.get_bcolors().ENDC)
+    print(output.get_bcolors().BLACK + '#' + output.get_bcolors().ENDC + '     Database Sync Tool      ' + output.get_bcolors().BLACK + '#' + output.get_bcolors().ENDC)
     print(output.get_bcolors().BLACK + '###############################' + output.get_bcolors().ENDC)
 
     parser = argparse.ArgumentParser()
