@@ -1,11 +1,11 @@
 # Database Sync Tool
 
-Simple python script to synchronize a framework database from a remote to your local system.
+Simple python script to synchronize a database from a remote to your local system.
 
-Available framework types:
+Supported framework types:
 
-- TYPO3
-- Symfony
+- _TYPO3_
+- _Symfony_
 
 ## Prerequisite
 
@@ -14,6 +14,12 @@ You can do this e.g. by the following command:
 
 ```bash
 apt install -y python-pip
+```
+
+Additionally the python module [paramiko](https://github.com/paramiko/paramiko) is needed, to connect to the remote system. The module will be installed within the first script run or you can add the module using pip on your own:
+
+```bash
+pip install paramiko
 ```
 
 ## Install
@@ -30,23 +36,41 @@ The `host.json` contains important information about the remote and the local sy
 You need to specify the SSH credentials for the remote system and the path to the database credentials of both systems.
 
 ```bash
-# Copy/edit host.json
-cp host.json.dist host.json
+# Copy/edit host.json for TYPO3
+cp dist/t3-db-sync.json.dist host.json
+
+# Copy/edit host.json for Symfony
+cp dist/sf-db-sync.json.dist host.json
 ```
 
-Example structure of `host.json` for a TYPO3 system:
+Example structure of `host.json` for a Symfony system:
 ```json
 {
   "name": "project",
-  "type": "TYPO3",
+  "type": "Symfony",
   "local": {
-    "path": "/var/www/html/htdocs/typo3/web/typo3conf/LocalConfiguration.php"
+    "path": "/var/www/html/app/.env"
   },
   "remote": {
     "host": "ssh_host",
     "user": "ssh_user",
-    "path": "/var/www/html/project/shared/typo3conf/LocalConfiguration.php"
-  }
+    "path": "/var/www/html/project/shared/.env"
+  },
+  "ignore_table": []
+}
+```
+
+### Ignore tables
+
+Often it is better to exclude some tables from the sql dump for performance reasons, e.g. caching tables. Specify them as comma separeted list in the `ignore_table` array.
+
+### SSH key authentification
+
+If you want to authenticate with a private ssh key instead of a password to the server (useful for CI/CD), you can a add the file path to the private key file in your `host.json`:
+
+```json
+{
+  "ssh_key": "~/bob/.ssh/id_rsa"
 }
 ```
 
@@ -65,51 +89,14 @@ python sync.py
 -kd, --keepdump         Skipping local import of the database dump and saving the available dump file in the given directory
 ```
 
-You are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 
+If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 
 
-### SSH key authentification
-
-If you want to authenticate with a private ssh key instead of a password to the server (useful for CI/CD), you can a add the file path to the private key file in your `host.json`:
-
-```json
-{
-  "ssh_key": "~/bob/.ssh/id_rsa"
-}
-```
-
-### Ignore tables
-
-Often it is better to exclude some tables from the sql dump for performance reasons, e.g. caching tables. There is a default stack of ignored tables within the script, but you can specify them in your `host.json`. The following tables are the default setting:
-
-```json
-{
-  "ignore_table": [
-    "sys_domain",
-    "cf_cache_hash",
-    "cf_cache_hash_tags",
-    "cf_cache_news_category",
-    "cf_cache_news_category_tags",
-    "cf_cache_pages",
-    "cf_cache_pagesection",
-    "cf_cache_pagesection_tags",
-    "cf_cache_pages_tags",
-    "cf_cache_rootline",
-    "cf_cache_rootline_tags",
-    "cf_extbase_datamapfactory_datamap",
-    "cf_extbase_datamapfactory_datamap_tags",
-    "cf_extbase_object",
-    "cf_extbase_object_tags",
-    "cf_extbase_reflection",
-    "cf_extbase_reflection_tags"
-  ]
-}
-```
 
 ## FAQ
 
 - First script run was aborted with the message `First install of additional pip modules completed. Please re-run the script.`
    
-   Actually it is not possible to load the required pip modules and add them dynamically to the script excecution. So you need to re-run the script again with the available dependencies.
+   Actually it is not possible to load the required pip modules and add them dynamically to the script execution. So you need to re-run the script again with the available dependencies.
 
 - TYPO3 error message: `Unknown column '?' in 'field list'` 
    
