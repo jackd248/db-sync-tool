@@ -1,7 +1,7 @@
 {
   "name": "kmi/db-sync-tool",
   "description": "Simple python script to synchronize a database from a remote to your local system",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "license": "MIT",
   "type": "project",
   "authors": [
