@@ -52,7 +52,6 @@ def check_configuration():
         symfony.check_remote_configuration()
 
 def get_host_configuration():
-    print(default_local_host_file_path)
     if os.path.isfile(default_local_host_file_path):
         with open(default_local_host_file_path, 'r') as read_file:
             config['host'] = json.load(read_file)
