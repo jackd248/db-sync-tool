@@ -1,0 +1,13 @@
+{
+  "name": "project",
+  "type": "Symfony",
+  "local": {
+    "path": "/var/www/html/app/.env"
+  },
+  "remote": {
+    "host": "ssh_host",
+    "user": "ssh_user",
+    "path": "/var/www/html/project/shared/.env"
+  },
+  "ignore_table": []
+}
