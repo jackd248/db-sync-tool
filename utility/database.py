@@ -43,7 +43,7 @@ def generate_database_dump_filename():
 
 def generate_ignore_database_tables():
     _ignore_tables = []
-    if 'ignore_table' in system.config['host']
+    if 'ignore_table' in system.config['host']:
         for table in system.config['host']['ignore_table']:
             _ignore_tables.append('--ignore-table=' + system.config['db']['remote']['dbname'] + '.' + table)
         return ' '.join(_ignore_tables)
