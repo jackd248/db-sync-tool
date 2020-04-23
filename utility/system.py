@@ -23,25 +23,6 @@ remote_ssh_password = None
 #
 default_local_host_file_path = 'host.json'
 default_local_sync_path = os.path.abspath(os.getcwd()) + '/.sync/'
-default_ignore_database_tables = [
-    'sys_domain',
-    'cf_cache_hash',
-    'cf_cache_hash_tags',
-    'cf_cache_news_category',
-    'cf_cache_news_category_tags',
-    'cf_cache_pages',
-    'cf_cache_pagesection',
-    'cf_cache_pagesection_tags',
-    'cf_cache_pages_tags',
-    'cf_cache_rootline',
-    'cf_cache_rootline_tags',
-    'cf_extbase_datamapfactory_datamap',
-    'cf_extbase_datamapfactory_datamap_tags',
-    'cf_extbase_object',
-    'cf_extbase_object_tags',
-    'cf_extbase_reflection',
-    'cf_extbase_reflection_tags',
-]
 
 
 #
@@ -80,12 +61,6 @@ def get_host_configuration():
                 'Loading host configuration',
                 True
             )
-
-            # check if custom ignore_table configuration is provided
-            if 'ignore_table' in config['host']:
-                config['ignore_table'] = config['host']['ignore_table']
-            else:
-                config['ignore_table'] = default_ignore_database_tables
 
             # check if ssh key authorization should be used
             if 'ssh_key' in config['host']:
