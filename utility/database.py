@@ -28,7 +28,7 @@ def create_remote_database_dump():
 def prepare_remote_database_dump():
     output.message(
         output.get_subject().REMOTE,
-        'Compress database dump',
+        'Compressing database dump',
         True
     )
     connect.run_ssh_command('tar cfvz ~/' + remote_database_dump_file_name + '.tar.gz ' + remote_database_dump_file_name)
@@ -83,7 +83,7 @@ def import_database_dump():
 
 
 def prepare_local_database_dump():
-    output.message(output.get_subject().LOCAL, 'Extract database dump', True)
+    output.message(output.get_subject().LOCAL, 'Extracting database dump', True)
     if system.option['verbose']:
         output.message(
             output.get_subject().LOCAL,
