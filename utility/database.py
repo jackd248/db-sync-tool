@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import output, connect, calendar, time, system, os, sys
+import output, connect, calendar, time, system, os, sys, helper
 
 
 #
@@ -19,7 +19,7 @@ def create_remote_database_dump():
         'Creating database dump',
         True
     )
-    connect.run_ssh_command('mysqldump ' + generate_mysql_credentials('remote') + ' ' + system.config['db']['remote'][
+    connect.run_ssh_command(helper.get_command('remote','mysqldump') + ' ' + generate_mysql_credentials('remote') + ' ' + system.config['db']['remote'][
         'dbname'] + ' ' + generate_ignore_database_tables() + ' > ~/' + remote_database_dump_file_name)
 
     prepare_remote_database_dump()
@@ -31,7 +31,7 @@ def prepare_remote_database_dump():
         'Compressing database dump',
         True
     )
-    connect.run_ssh_command('tar cfvz ~/' + remote_database_dump_file_name + '.tar.gz ' + remote_database_dump_file_name)
+    connect.run_ssh_command(helper.get_command('remote','tar') + ' cfvz ~/' + remote_database_dump_file_name + '.tar.gz ' + remote_database_dump_file_name)
 
 
 def generate_database_dump_filename():
@@ -74,11 +74,11 @@ def import_database_dump():
         if system.option['verbose']:
             output.message(
                 output.get_subject().LOCAL,
-                output.get_bcolors().BLACK + 'mysql ' + generate_mysql_credentials('local') + ' ' + system.config['db']['local'][
+                output.get_bcolors().BLACK + helper.get_command('local','mysql') + ' ' + generate_mysql_credentials('local') + ' ' + system.config['db']['local'][
             'dbname'] + ' < ' + system.default_local_sync_path + remote_database_dump_file_name + output.get_bcolors().ENDC,
             True)
 
-        os.system('mysql ' + generate_mysql_credentials('local') + ' ' + system.config['db']['local'][
+        os.system(helper.get_command('local','mysql') + ' ' + generate_mysql_credentials('local') + ' ' + system.config['db']['local'][
             'dbname'] + ' < ' + system.default_local_sync_path + remote_database_dump_file_name)
 
 
@@ -87,11 +87,11 @@ def prepare_local_database_dump():
     if system.option['verbose']:
         output.message(
             output.get_subject().LOCAL,
-            output.get_bcolors().BLACK + 'tar xzf ' + system.default_local_sync_path + remote_database_dump_file_name + '.tar.gz' + output.get_bcolors().ENDC,
+            output.get_bcolors().BLACK + helper.get_command('local','tar') + ' xzf ' + system.default_local_sync_path + remote_database_dump_file_name + '.tar.gz' + output.get_bcolors().ENDC,
             True
         )
 
-    os.system('tar xzf ' + system.default_local_sync_path + remote_database_dump_file_name + '.tar.gz')
+    os.system(helper.get_command('local','tar') + ' xzf ' + system.default_local_sync_path + remote_database_dump_file_name + '.tar.gz')
 
     os.system('mv ' + os.path.abspath(
         os.getcwd()) + '/' + remote_database_dump_file_name + ' ' + system.default_local_sync_path + remote_database_dump_file_name)

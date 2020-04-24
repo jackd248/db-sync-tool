@@ -25,3 +25,9 @@ def remove_temporary_data_dir():
             'Cleaning up',
             True
         )
+
+def get_command(target, command):
+    if 'console' in system.config['host'][target]:
+        if command in system.config['host'][target]['console']:
+            return system.config['host'][target]['console'][command]
+    return command

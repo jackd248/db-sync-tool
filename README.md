@@ -74,6 +74,22 @@ If you want to authenticate with a private ssh key instead of a password to the 
 }
 ```
 
+### Console commands
+
+The script using among other things the `php`, `mysql`, `mysqldump`, `grep` commands to synchronize the databases. Sometimes these commands are not available via the path variable, so you have to specify the full path to the source in the `host.json` depending on the target system:
+
+```json
+{
+  "remote": {
+    "console": {
+      "php": "/usr/bin/php",
+      "mysql": "/usr/bin/mysql",
+      "mysqldump": "/usr/bin/mysqldump"
+    }
+  }
+}
+```
+
 ## Usage
 
 ```bash

@@ -2,7 +2,7 @@
 
 import os, json, subprocess, re
 from subprocess import check_output
-from utility import output, system, connect
+from utility import output, system, connect, helper
 
 def check_local_configuration():
     if os.path.isfile(system.config['host']['local']['path']) == False:
@@ -17,7 +17,7 @@ def check_local_configuration():
     )
 
     _database_credentials = check_output(
-        'grep -v "^#" ' + system.config['host']['local']['path'] + ' | grep DATABASE_URL',
+        helper.get_command('local','grep') + ' -v "^#" ' + system.config['host']['local']['path'] + ' | ' + helper.get_command('local','grep') + ' DATABASE_URL',
         stderr=subprocess.STDOUT,
         shell=True
     )
@@ -27,7 +27,7 @@ def check_local_configuration():
     if system.option['verbose']:
         output.message(
             output.get_subject().LOCAL,
-            output.get_bcolors().BLACK + 'grep -v "^#" ' + system.config['host']['local']['path'] + ' | grep DATABASE_URL' + output.get_bcolors().ENDC,
+            output.get_bcolors().BLACK + helper.get_command('local','grep') + ' -v "^#" ' + system.config['host']['local']['path'] + ' | ' + helper.get_command('local','grep') + ' DATABASE_URL' + output.get_bcolors().ENDC,
             True
         )
 
@@ -35,7 +35,7 @@ def check_local_configuration():
 
 def check_remote_configuration():
     output.message(output.get_subject().REMOTE, 'Checking database configuration', True)
-    stdout = connect.run_ssh_command('grep -v "^#" ' + system.config['host']['remote']['path'] + ' | grep DATABASE_URL',)
+    stdout = connect.run_ssh_command(helper.get_command('remote','grep') + ' -v "^#" ' + system.config['host']['remote']['path'] + ' | ' + helper.get_command('remote','grep') + ' DATABASE_URL',)
     _database_credentials = stdout.readlines()[0]
     _remote_db_config = parse_database_credentials(_database_credentials)
     system.config['db']['remote'] = _remote_db_config
