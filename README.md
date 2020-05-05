@@ -90,6 +90,28 @@ The script using among other things the `php`, `mysql`, `mysqldump`, `grep` comm
 }
 ```
 
+### Remote temporary dump directory
+
+Normally is the script creating the remote sql dump in the `home` directory of the given ssh user. If this directory is not writable, you can specify an alternative directory in the `host.json`, where the temporary sql dump will be saved:
+
+```json
+{
+  "remote": {
+    "dump_dir": "/path/to/writable/dir/"
+  }
+}
+```
+
+### Check dump
+
+The script is checking the local dump if the file is being downloaded completely. If you want to prevent this check, you can disable them in the `host.json`:
+
+```json
+{
+  "check_dump": false
+}
+```
+
 ## Usage
 
 ```bash

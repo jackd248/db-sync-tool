@@ -20,7 +20,7 @@ def create_remote_database_dump():
         True
     )
     connect.run_ssh_command(helper.get_command('remote','mysqldump') + ' ' + generate_mysql_credentials('remote') + ' ' + system.config['db']['remote'][
-        'dbname'] + ' ' + generate_ignore_database_tables() + ' > ~/' + remote_database_dump_file_name)
+        'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_remote_dump_dir() + remote_database_dump_file_name)
 
     prepare_remote_database_dump()
 
@@ -31,14 +31,14 @@ def prepare_remote_database_dump():
         'Compressing database dump',
         True
     )
-    connect.run_ssh_command(helper.get_command('remote','tar') + ' cfvz ~/' + remote_database_dump_file_name + '.tar.gz ' + remote_database_dump_file_name)
+    connect.run_ssh_command(helper.get_command('remote','tar') + ' cfvz ' + helper.get_remote_dump_dir() + remote_database_dump_file_name + '.tar.gz -C ' + helper.get_remote_dump_dir() + ' ' + remote_database_dump_file_name)
 
 
 def generate_database_dump_filename():
     # _project_typo3_db_dump_1586780116.sql
     global remote_database_dump_file_name
     _timestamp = calendar.timegm(time.gmtime())
-    remote_database_dump_file_name = '_' + system.config['host']['name'] + '_typo3_db_dump_' + str(_timestamp) + '.sql'
+    remote_database_dump_file_name = '_' + system.config['host']['name'] + '_' + system.option['framework'] + '_db_dump_' + str(_timestamp) + '.sql'
 
 
 def generate_ignore_database_tables():
@@ -62,7 +62,9 @@ def generate_mysql_credentials(_target):
 #
 def import_database_dump():
     prepare_local_database_dump()
-    check_local_database_dump()
+
+    if system.option['check_dump']:
+        check_local_database_dump()
 
     if not system.option['keep_dump']:
         output.message(
@@ -87,14 +89,11 @@ def prepare_local_database_dump():
     if system.option['verbose']:
         output.message(
             output.get_subject().LOCAL,
-            output.get_bcolors().BLACK + helper.get_command('local','tar') + ' xzf ' + system.default_local_sync_path + remote_database_dump_file_name + '.tar.gz' + output.get_bcolors().ENDC,
+            output.get_bcolors().BLACK + helper.get_command('local','tar') + ' xzf ' + system.default_local_sync_path + remote_database_dump_file_name + '.tar.gz -C ' + system.default_local_sync_path + output.get_bcolors().ENDC,
             True
         )
 
-    os.system(helper.get_command('local','tar') + ' xzf ' + system.default_local_sync_path + remote_database_dump_file_name + '.tar.gz')
-
-    os.system('mv ' + os.path.abspath(
-        os.getcwd()) + '/' + remote_database_dump_file_name + ' ' + system.default_local_sync_path + remote_database_dump_file_name)
+    os.system(helper.get_command('local','tar') + ' xzf ' + system.default_local_sync_path + remote_database_dump_file_name + '.tar.gz -C ' + system.default_local_sync_path)
 
 
 def check_local_database_dump():

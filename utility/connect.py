@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys, output, system, database
+import sys, output, system, database, helper
 
 #
 # GLOBALS
@@ -87,8 +87,8 @@ def remove_remote_database_dump():
         True
     )
     sftp = ssh_client.open_sftp()
-    sftp.remove('/home/' + system.config['host']['remote']['user'] + '/' + database.remote_database_dump_file_name)
-    sftp.remove('/home/' + system.config['host']['remote']['user'] + '/' + database.remote_database_dump_file_name + '.tar.gz')
+    sftp.remove(helper.get_remote_dump_dir() + database.remote_database_dump_file_name)
+    sftp.remove(helper.get_remote_dump_dir() + database.remote_database_dump_file_name + '.tar.gz')
     sftp.close()
 
 #
@@ -103,11 +103,12 @@ def get_remote_database_dump():
         'Downloading database dump',
         True
         )
+
     #
     # ToDo: Download speed problems
     # https://github.com/paramiko/paramiko/issues/60
     #
-    sftp.get('/home/' + system.config['host']['remote']['user'] + '/' + database.remote_database_dump_file_name + '.tar.gz',
+    sftp.get(helper.get_remote_dump_dir() + database.remote_database_dump_file_name + '.tar.gz',
              system.default_local_sync_path + database.remote_database_dump_file_name + '.tar.gz', download_status)
     sftp.close()
     print('')

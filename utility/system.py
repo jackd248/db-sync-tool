@@ -6,15 +6,17 @@ import sys, json, os, getpass, output, connect
 # GLOBALS
 #
 class framework:
-    TYPO3 = 1
-    SYMFONY = 2
+    TYPO3 = 'typo3'
+    SYMFONY = 'symfony'
 
 config = {}
 option = {
     'verbose': False,
     'use_ssh_key': False,
     'keep_dump': False,
-    'framework': framework.TYPO3
+    'framework': framework.TYPO3,
+    'default_remote_dump_dir': True,
+    'check_dump': True
 }
 remote_ssh_password = None
 
@@ -108,6 +110,11 @@ def get_host_configuration():
                     True
                 )
 
+            if 'dump_dir' in config['host']['remote']:
+                option['default_remote_dump_dir'] = False
+
+            if 'check_dump' in config['host']:
+                option['check_dump'] = config['host']['check_dump']
     else:
         sys.exit(
             output.message(

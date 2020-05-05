@@ -31,3 +31,9 @@ def get_command(target, command):
         if command in system.config['host'][target]['console']:
             return system.config['host'][target]['console'][command]
     return command
+
+def get_remote_dump_dir():
+    if system.option['default_remote_dump_dir']:
+        return '/home/' + system.config['host']['remote']['user'] + '/'
+    else:
+        return system.config['host']['remote']['dump_dir']
