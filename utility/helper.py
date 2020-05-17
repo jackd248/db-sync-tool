@@ -2,6 +2,7 @@
 
 import os, shutil, output, system, database, connect
 
+
 #
 # CLEAN UP
 #
@@ -26,11 +27,13 @@ def remove_temporary_data_dir():
             True
         )
 
+
 def get_command(target, command):
     if 'console' in system.config['host'][target]:
         if command in system.config['host'][target]['console']:
             return system.config['host'][target]['console'][command]
     return command
+
 
 def get_origin_dump_dir():
     if system.option['default_origin_dump_dir']:

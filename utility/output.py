@@ -2,6 +2,7 @@
 
 import mode
 
+
 #
 # SYSTEM UTILITY
 #
@@ -31,20 +32,27 @@ def message(header, message, do_print):
     if do_print:
         print(header + extend_output_by_sync_mode(header) + ' ' + message)
     else:
-        return header + extend_output_by_sync_mode(header) +  ' ' + message
+        return header + extend_output_by_sync_mode(header) + ' ' + message
+
 
 def extend_output_by_sync_mode(header):
     _sync_mode = mode.get_sync_mode()
-    if ((_sync_mode == mode.get_sync_modes().RECEIVER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.ORIGIN) or ((_sync_mode == mode.get_sync_modes().SENDER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.TARGET):
+    if ((
+                _sync_mode == mode.get_sync_modes().RECEIVER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.ORIGIN) or (
+            (
+                    _sync_mode == mode.get_sync_modes().SENDER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.TARGET):
         return bcolors.BLACK + '[REMOTE]' + bcolors.ENDC
 
-    if (_sync_mode == mode.get_sync_modes().SENDER and header == subject.ORIGIN) or (_sync_mode == mode.get_sync_modes().RECEIVER and header == subject.TARGET):
+    if (_sync_mode == mode.get_sync_modes().SENDER and header == subject.ORIGIN) or (
+            _sync_mode == mode.get_sync_modes().RECEIVER and header == subject.TARGET):
         return bcolors.BLACK + '[LOCAL]' + bcolors.ENDC
 
     return ''
 
+
 def get_bcolors():
     return bcolors
+
 
 def get_subject():
     return subject

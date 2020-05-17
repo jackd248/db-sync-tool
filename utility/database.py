@@ -2,11 +2,11 @@
 
 import output, connect, calendar, time, system, os, sys, helper, mode
 
-
 #
 # GLOBALS
 #
 origin_database_dump_file_name = None
+
 
 #
 # CREATE ORIGIN DATABASE DUMP
@@ -20,8 +20,9 @@ def create_origin_database_dump():
         True
     )
     mode.run_command(
-        helper.get_command('origin','mysqldump') + ' ' + generate_mysql_credentials('origin') + ' ' + system.config['db']['origin'][
-        'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_origin_dump_dir() + origin_database_dump_file_name,
+        helper.get_command('origin', 'mysqldump') + ' ' + generate_mysql_credentials('origin') + ' ' +
+        system.config['db']['origin'][
+            'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_origin_dump_dir() + origin_database_dump_file_name,
         mode.get_clients().ORIGIN
     )
 
@@ -35,7 +36,8 @@ def prepare_origin_database_dump():
         True
     )
     mode.run_command(
-        helper.get_command('origin','tar') + ' cfvz ' + helper.get_origin_dump_dir() + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_origin_dump_dir() + ' ' + origin_database_dump_file_name,
+        helper.get_command('origin',
+                           'tar') + ' cfvz ' + helper.get_origin_dump_dir() + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_origin_dump_dir() + ' ' + origin_database_dump_file_name,
         mode.get_clients().ORIGIN
     )
 
@@ -44,7 +46,8 @@ def generate_database_dump_filename():
     # _project_typo3_db_dump_1586780116.sql
     global origin_database_dump_file_name
     _timestamp = calendar.timegm(time.gmtime())
-    origin_database_dump_file_name = '_' + system.config['host']['name'] + '_' + system.option['framework'] + '_db_dump_' + str(_timestamp) + '.sql'
+    origin_database_dump_file_name = '_' + system.config['host']['name'] + '_' + system.option[
+        'framework'] + '_db_dump_' + str(_timestamp) + '.sql'
 
 
 def generate_ignore_database_tables():
@@ -56,12 +59,14 @@ def generate_ignore_database_tables():
 
 
 def generate_mysql_credentials(_target):
-    _credentials = '-u\'' + system.config['db'][_target]['user'] + '\' -p\'' + system.config['db'][_target]['password'] + '\''
+    _credentials = '-u\'' + system.config['db'][_target]['user'] + '\' -p\'' + system.config['db'][_target][
+        'password'] + '\''
     if 'host' in system.config['db'][_target]:
         _credentials += ' -h\'' + system.config['db'][_target]['host'] + '\''
     if 'port' in system.config['db'][_target]:
         _credentials += ' -P\'' + str(system.config['db'][_target]['port']) + '\''
     return _credentials
+
 
 #
 # IMPORT DATABASE DUMP
@@ -80,8 +85,9 @@ def import_database_dump():
         )
 
         mode.run_command(
-            helper.get_command('target','mysql') + ' ' + generate_mysql_credentials('target') + ' ' + system.config['db']['target'][
-            'dbname'] + ' < ' + system.default_local_sync_path + origin_database_dump_file_name,
+            helper.get_command('target', 'mysql') + ' ' + generate_mysql_credentials('target') + ' ' +
+            system.config['db']['target'][
+                'dbname'] + ' < ' + system.default_local_sync_path + origin_database_dump_file_name,
             mode.get_clients().TARGET
         )
 
@@ -90,7 +96,8 @@ def prepare_target_database_dump():
     output.message(output.get_subject().TARGET, 'Extracting database dump', True)
 
     mode.run_command(
-        helper.get_command('target','tar') + ' xzf ' + system.default_local_sync_path + origin_database_dump_file_name + '.tar.gz -C ' + system.default_local_sync_path,
+        helper.get_command('target',
+                           'tar') + ' xzf ' + system.default_local_sync_path + origin_database_dump_file_name + '.tar.gz -C ' + system.default_local_sync_path,
         mode.get_clients().TARGET
     )
 

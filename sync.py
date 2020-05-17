@@ -3,10 +3,11 @@
 import argparse, sys, os, shutil
 from utility import output, system, database, helper, connect
 
-def main():
 
+def main():
     print(output.get_bcolors().BLACK + '###############################' + output.get_bcolors().ENDC)
-    print(output.get_bcolors().BLACK + '#' + output.get_bcolors().ENDC + '     Database Sync Tool      ' + output.get_bcolors().BLACK + '#' + output.get_bcolors().ENDC)
+    print(
+                output.get_bcolors().BLACK + '#' + output.get_bcolors().ENDC + '     Database Sync Tool      ' + output.get_bcolors().BLACK + '#' + output.get_bcolors().ENDC)
     print(output.get_bcolors().BLACK + '###############################' + output.get_bcolors().ENDC)
 
     parser = argparse.ArgumentParser()
@@ -30,6 +31,7 @@ def main():
         'Successfully synchronized databases',
         True
     )
+
 
 #
 # MAIN

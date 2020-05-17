@@ -2,7 +2,6 @@
 
 import sys, output, system, database, helper, mode
 
-
 #
 # GLOBALS
 #
@@ -38,9 +37,9 @@ def load_ssh_client(ssh):
     if 'ssh_key' in system.config['host'][ssh]:
         try:
             _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
-                               username=system.config['host'][ssh]['user'],
-                               key_filename=system.config['host'][ssh]['ssh_key'],
-                               compress=True)
+                                username=system.config['host'][ssh]['user'],
+                                key_filename=system.config['host'][ssh]['ssh_key'],
+                                compress=True)
 
         except system.paramiko.ssh_exception.AuthenticationException:
             sys.exit(
@@ -55,9 +54,9 @@ def load_ssh_client(ssh):
     else:
         try:
             _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
-                               username=system.config['host'][ssh]['user'],
-                               password=system.origin_ssh_password,
-                               compress=True)
+                                username=system.config['host'][ssh]['user'],
+                                password=system.origin_ssh_password,
+                                compress=True)
 
         except system.paramiko.ssh_exception.AuthenticationException:
             sys.exit(
@@ -79,17 +78,21 @@ def load_ssh_client(ssh):
 
     return _ssh_client
 
+
 def close_ssh_clients():
     if not ssh_client_origin is None:
         ssh_client_origin.close()
     if not ssh_client_target is None:
         ssh_client_target.close()
 
+
 def run_ssh_command_origin(command):
     return run_ssh_command(command, ssh_client_origin)
 
+
 def run_ssh_command_target(command):
     return run_ssh_command(command, ssh_client_target)
+
 
 def run_ssh_command(command, ssh_client=ssh_client_origin):
     stdin, stdout, stderr = ssh_client.exec_command(command)
