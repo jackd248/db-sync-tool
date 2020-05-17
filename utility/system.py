@@ -15,10 +15,10 @@ option = {
     'use_ssh_key': False,
     'keep_dump': False,
     'framework': framework.TYPO3,
-    'default_remote_dump_dir': True,
+    'default_origin_dump_dir': True,
     'check_dump': True
 }
-remote_ssh_password = None
+origin_ssh_password = None
 
 #
 # DEFAULTS
@@ -34,31 +34,31 @@ def check_configuration():
     get_host_configuration()
     load_pip_modules()
     if not option['use_ssh_key']:
-        get_remote_password()
+        get_origin_password()
 
 
     if option['framework'] == framework.TYPO3:
         sys.path.append('./parser')
         from parser import typo3
 
-        typo3.check_local_configuration()
+        typo3.check_target_configuration()
         connect.get_ssh_client()
-        typo3.check_remote_configuration()
+        typo3.check_origin_configuration()
 
     elif option['framework'] == framework.SYMFONY:
         sys.path.append('./parser')
         from parser import symfony
 
-        symfony.check_local_configuration()
+        symfony.check_target_configuration()
         connect.get_ssh_client()
-        symfony.check_remote_configuration()
+        symfony.check_origin_configuration()
 
 def get_host_configuration():
     if os.path.isfile(default_local_host_file_path):
         with open(default_local_host_file_path, 'r') as read_file:
             config['host'] = json.load(read_file)
             output.message(
-                output.get_subject().LOCAL,
+                output.get_subject().TARGET,
                 'Loading host configuration',
                 True
             )
@@ -110,8 +110,8 @@ def get_host_configuration():
                     True
                 )
 
-            if 'dump_dir' in config['host']['remote']:
-                option['default_remote_dump_dir'] = False
+            if 'dump_dir' in config['host']['origin']:
+                option['default_origin_dump_dir'] = False
 
             if 'check_dump' in config['host']:
                 option['check_dump'] = config['host']['check_dump']
@@ -141,7 +141,7 @@ def load_pip_modules():
         )
 
     output.message(
-        output.get_subject().LOCAL,
+        output.get_subject().TARGET,
         'Checking pip modules',
         True
     )
@@ -162,13 +162,13 @@ def load_pip_modules():
         )
 
 
-def get_remote_password():
-    global remote_ssh_password
+def get_origin_password():
+    global origin_ssh_password
 
     _password = getpass.getpass(
         output.message(
             output.get_subject().INFO,
-            'SSH password ' + config['host']['remote']['user'] + '@' + config['host']['remote']['host'] + ': ',
+            'SSH password ' + config['host']['origin']['user'] + '@' + config['host']['origin']['host'] + ': ',
             False
         )
     )
@@ -183,12 +183,12 @@ def get_remote_password():
         _password = getpass.getpass(
             output.message(
                 output.get_subject().INFO,
-                'SSH password ' + config['host']['remote']['user'] + '@' + config['host']['remote']['host'] + ': ',
+                'SSH password ' + config['host']['origin']['user'] + '@' + config['host']['origin']['host'] + ': ',
                 False
             )
         )
 
-    remote_ssh_password = _password
+    origin_ssh_password = _password
 
 
 def check_options(args):
@@ -216,7 +216,7 @@ def check_options(args):
         )
 
 
-def create_temporary_data_dir():
+def create_local_temporary_data_dir():
     if not os.path.exists(default_local_sync_path):
         os.mkdir(default_local_sync_path)
 

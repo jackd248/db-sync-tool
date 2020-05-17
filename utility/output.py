@@ -17,8 +17,8 @@ class bcolors:
 
 class subject:
     INFO = bcolors.GREEN + '[INFO]' + bcolors.ENDC
-    LOCAL = bcolors.BLUE + '[LOCAL]' + bcolors.ENDC
-    REMOTE = bcolors.PURPLE + '[REMOTE]' + bcolors.ENDC
+    TARGET = bcolors.BLUE + '[TARGET]' + bcolors.ENDC
+    ORIGIN = bcolors.PURPLE + '[ORIGIN]' + bcolors.ENDC
     ERROR = bcolors.RED + '[ERROR]' + bcolors.ENDC
     WARNING = bcolors.YELLOW + '[WARNING]' + bcolors.ENDC
 

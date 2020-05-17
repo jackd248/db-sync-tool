@@ -1,10 +1,10 @@
 {
   "name": "project",
   "type": "TYPO3",
-  "local": {
+  "target": {
     "path": "/var/www/html/htdocs/typo3/web/typo3conf/LocalConfiguration.php"
   },
-  "remote": {
+  "origin": {
     "host": "ssh_host",
     "user": "ssh_user",
     "path": "/var/www/html/project/shared/typo3conf/LocalConfiguration.php"

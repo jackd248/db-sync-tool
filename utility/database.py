@@ -6,46 +6,46 @@ import output, connect, calendar, time, system, os, sys, helper
 #
 # GLOBALS
 #
-remote_database_dump_file_name = None
+origin_database_dump_file_name = None
 
 #
-# CREATE REMOTE DATABASE DUMP
+# CREATE ORIGIN DATABASE DUMP
 #
-def create_remote_database_dump():
+def create_origin_database_dump():
     generate_database_dump_filename()
 
     output.message(
-        output.get_subject().REMOTE,
+        output.get_subject().ORIGIN,
         'Creating database dump',
         True
     )
-    connect.run_ssh_command(helper.get_command('remote','mysqldump') + ' ' + generate_mysql_credentials('remote') + ' ' + system.config['db']['remote'][
-        'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_remote_dump_dir() + remote_database_dump_file_name)
+    connect.run_ssh_command(helper.get_command('origin','mysqldump') + ' ' + generate_mysql_credentials('origin') + ' ' + system.config['db']['origin'][
+        'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_origin_dump_dir() + origin_database_dump_file_name)
 
-    prepare_remote_database_dump()
+    prepare_origin_database_dump()
 
 
-def prepare_remote_database_dump():
+def prepare_origin_database_dump():
     output.message(
-        output.get_subject().REMOTE,
+        output.get_subject().ORIGIN,
         'Compressing database dump',
         True
     )
-    connect.run_ssh_command(helper.get_command('remote','tar') + ' cfvz ' + helper.get_remote_dump_dir() + remote_database_dump_file_name + '.tar.gz -C ' + helper.get_remote_dump_dir() + ' ' + remote_database_dump_file_name)
+    connect.run_ssh_command(helper.get_command('origin','tar') + ' cfvz ' + helper.get_origin_dump_dir() + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_origin_dump_dir() + ' ' + origin_database_dump_file_name)
 
 
 def generate_database_dump_filename():
     # _project_typo3_db_dump_1586780116.sql
-    global remote_database_dump_file_name
+    global origin_database_dump_file_name
     _timestamp = calendar.timegm(time.gmtime())
-    remote_database_dump_file_name = '_' + system.config['host']['name'] + '_' + system.option['framework'] + '_db_dump_' + str(_timestamp) + '.sql'
+    origin_database_dump_file_name = '_' + system.config['host']['name'] + '_' + system.option['framework'] + '_db_dump_' + str(_timestamp) + '.sql'
 
 
 def generate_ignore_database_tables():
     _ignore_tables = []
     if 'ignore_table' in system.config['host']:
         for table in system.config['host']['ignore_table']:
-            _ignore_tables.append('--ignore-table=' + system.config['db']['remote']['dbname'] + '.' + table)
+            _ignore_tables.append('--ignore-table=' + system.config['db']['origin']['dbname'] + '.' + table)
         return ' '.join(_ignore_tables)
 
 
@@ -61,43 +61,43 @@ def generate_mysql_credentials(_target):
 # IMPORT DATABASE DUMP
 #
 def import_database_dump():
-    prepare_local_database_dump()
+    prepare_target_database_dump()
 
     if system.option['check_dump']:
-        check_local_database_dump()
+        check_target_database_dump()
 
     if not system.option['keep_dump']:
         output.message(
-            output.get_subject().LOCAL,
+            output.get_subject().TARGET,
             'Importing database dump',
             True
         )
 
         if system.option['verbose']:
             output.message(
-                output.get_subject().LOCAL,
-                output.get_bcolors().BLACK + helper.get_command('local','mysql') + ' ' + generate_mysql_credentials('local') + ' ' + system.config['db']['local'][
-            'dbname'] + ' < ' + system.default_local_sync_path + remote_database_dump_file_name + output.get_bcolors().ENDC,
+                output.get_subject().TARGET,
+                output.get_bcolors().BLACK + helper.get_command('target','mysql') + ' ' + generate_mysql_credentials('target') + ' ' + system.config['db']['target'][
+            'dbname'] + ' < ' + system.default_local_sync_path + origin_database_dump_file_name + output.get_bcolors().ENDC,
             True)
 
-        os.system(helper.get_command('local','mysql') + ' ' + generate_mysql_credentials('local') + ' ' + system.config['db']['local'][
-            'dbname'] + ' < ' + system.default_local_sync_path + remote_database_dump_file_name)
+        os.system(helper.get_command('target','mysql') + ' ' + generate_mysql_credentials('target') + ' ' + system.config['db']['target'][
+            'dbname'] + ' < ' + system.default_local_sync_path + origin_database_dump_file_name)
 
 
-def prepare_local_database_dump():
-    output.message(output.get_subject().LOCAL, 'Extracting database dump', True)
+def prepare_target_database_dump():
+    output.message(output.get_subject().TARGET, 'Extracting database dump', True)
     if system.option['verbose']:
         output.message(
-            output.get_subject().LOCAL,
-            output.get_bcolors().BLACK + helper.get_command('local','tar') + ' xzf ' + system.default_local_sync_path + remote_database_dump_file_name + '.tar.gz -C ' + system.default_local_sync_path + output.get_bcolors().ENDC,
+            output.get_subject().TARGET,
+            output.get_bcolors().BLACK + helper.get_command('target','tar') + ' xzf ' + system.default_local_sync_path + origin_database_dump_file_name + '.tar.gz -C ' + system.default_local_sync_path + output.get_bcolors().ENDC,
             True
         )
 
-    os.system(helper.get_command('local','tar') + ' xzf ' + system.default_local_sync_path + remote_database_dump_file_name + '.tar.gz -C ' + system.default_local_sync_path)
+    os.system(helper.get_command('target','tar') + ' xzf ' + system.default_local_sync_path + origin_database_dump_file_name + '.tar.gz -C ' + system.default_local_sync_path)
 
 
-def check_local_database_dump():
-    with open(system.default_local_sync_path + remote_database_dump_file_name) as f:
+def check_target_database_dump():
+    with open(system.default_local_sync_path + origin_database_dump_file_name) as f:
         lines = f.readlines()
         if "-- Dump completed on" not in lines[-1]:
             sys.exit(output.message(output.get_subject().ERROR, 'Dump was not fully transferred', False))
