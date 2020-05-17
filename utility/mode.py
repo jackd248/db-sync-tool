@@ -51,6 +51,11 @@ def check_sync_mode():
 def get_clients():
     return clients
 
+def is_target_remote():
+    return sync_mode == sync_modes.SENDER or sync_mode == sync_modes.PROXY
+
+def is_origin_remote():
+    return sync_mode == sync_modes.RECEIVER or sync_mode == sync_modes.PROXY
 
 def run_command(command, client):
     if client == clients.ORIGIN:
@@ -60,10 +65,9 @@ def run_command(command, client):
                 output.get_bcolors().BLACK + command + output.get_bcolors().ENDC,
                 True
             )
-        if sync_mode == sync_modes.RECEIVER or sync_mode == sync_modes.PROXY:
+        if is_origin_remote():
             return connect.run_ssh_command_origin(command)
         else:
-
             return os.system(command)
     elif client == clients.TARGET:
         if system.option['verbose']:
@@ -72,13 +76,7 @@ def run_command(command, client):
                 output.get_bcolors().BLACK + command + output.get_bcolors().ENDC,
                 True
             )
-        if sync_mode == sync_modes.SENDER or sync_mode == sync_modes.PROXY:
+        if is_target_remote():
             return connect.run_ssh_command_origin(command)
         else:
-            if system.option['verbose']:
-                output.message(
-                    output.get_subject().TARGET,
-                    command,
-                    True
-                )
             return os.system(command)

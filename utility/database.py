@@ -46,8 +46,7 @@ def generate_database_dump_filename():
     # _project_typo3_db_dump_1586780116.sql
     global origin_database_dump_file_name
     _timestamp = calendar.timegm(time.gmtime())
-    origin_database_dump_file_name = '_' + system.config['host']['name'] + '_' + system.option[
-        'framework'] + '_db_dump_' + str(_timestamp) + '.sql'
+    origin_database_dump_file_name = '_' + system.config['host']['name'] + '_db_dump_' + str(_timestamp) + '.sql'
 
 
 def generate_ignore_database_tables():

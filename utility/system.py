@@ -1,20 +1,15 @@
 #!/usr/bin/python
 
-import sys, json, os, getpass, output, connect, mode
+import sys, json, os, getpass, output, connect, mode, parser
 
 #
 # GLOBALS
 #
-class framework:
-    TYPO3 = 'typo3'
-    SYMFONY = 'symfony'
-
 config = {}
 option = {
     'verbose': False,
     'use_origin_ssh_key': False,
     'keep_dump': False,
-    'framework': framework.TYPO3,
     'default_origin_dump_dir': True,
     'check_dump': True
 }
@@ -31,26 +26,12 @@ default_local_sync_path = os.path.abspath(os.getcwd()) + '/.sync/'
 # CHECK CONFIGURATION
 #
 def check_configuration():
-    get_host_configuration()
     load_pip_modules()
+    get_host_configuration()
     if not option['use_origin_ssh_key']:
         get_origin_password()
 
-    if option['framework'] == framework.TYPO3:
-        sys.path.append('./parser')
-        from parser import typo3
-
-        typo3.check_target_configuration()
-        connect.load_ssh_client_origin()
-        typo3.check_origin_configuration()
-
-    elif option['framework'] == framework.SYMFONY:
-        sys.path.append('./parser')
-        from parser import symfony
-
-        symfony.check_target_configuration()
-        connect.load_ssh_client_origin()
-        symfony.check_origin_configuration()
+    parser.get_database_configuration()
 
 def get_host_configuration():
     if os.path.isfile(default_local_host_file_path):
@@ -152,40 +133,6 @@ def check_options():
                 )
             )
 
-    # check framework type
-    if 'type' in config['host']:
-        if config['host']['type'] == 'TYPO3':
-            option['framework'] = framework.TYPO3
-
-            output.message(
-                output.get_subject().INFO,
-                'Sync base: TYPO3',
-                True
-            )
-        elif config['host']['type'] == 'Symfony':
-            option['framework'] = framework.SYMFONY
-
-            output.message(
-                output.get_subject().INFO,
-                'Sync base: Symfony',
-                True
-            )
-        else:
-            sys.exit(
-                output.message(
-                    output.get_subject().ERROR,
-                    'Framework type not supported',
-                    False
-                )
-            )
-    else:
-        option['framework'] = framework.TYPO3
-        output.message(
-            output.get_subject().INFO,
-            'Framework: TYPO3',
-            True
-        )
-
     if 'dump_dir' in config['host']['origin']:
         option['default_origin_dump_dir'] = False
 
@@ -222,6 +169,3 @@ def check_args_options(args):
 def create_local_temporary_data_dir():
     if not os.path.exists(default_local_sync_path):
         os.mkdir(default_local_sync_path)
-
-def get_framework():
-    return framework
