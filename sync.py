@@ -16,7 +16,7 @@ def main():
                         help='Skipping target import of the database dump and saving the available dump file in the given directory',
                         required=False)
 
-    system.check_options(parser.parse_args())
+    system.check_args_options(parser.parse_args())
 
     system.check_configuration()
     database.create_origin_database_dump()
