@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
-import os, json, subprocess, re
+import os, json, subprocess, re, sys
 from subprocess import check_output
-from utility import output, system, connect, helper
+from utility import output, system, connect, helper, mode
 
 def check_target_configuration():
     if os.path.isfile(system.config['host']['target']['path']) == False:
@@ -35,7 +35,10 @@ def check_target_configuration():
 
 def check_origin_configuration():
     output.message(output.get_subject().ORIGIN, 'Checking database configuration', True)
-    stdout = connect.run_ssh_command(helper.get_command('origin','grep') + ' -v "^#" ' + system.config['host']['origin']['path'] + ' | ' + helper.get_command('origin','grep') + ' DATABASE_URL',)
+    stdout = mode.run_command(
+        helper.get_command('origin','grep') + ' -v "^#" ' + system.config['host']['origin']['path'] + ' | ' + helper.get_command('origin','grep') + ' DATABASE_URL',
+        mode.get_clients().ORIGIN
+    )
     _database_credentials = stdout.readlines()[0]
     _origin_db_config = parse_database_credentials(_database_credentials)
     system.config['db']['origin'] = _origin_db_config

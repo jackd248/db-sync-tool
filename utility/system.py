@@ -41,7 +41,7 @@ def check_configuration():
         from parser import typo3
 
         typo3.check_target_configuration()
-        connect.get_ssh_client()
+        connect.load_ssh_client_origin()
         typo3.check_origin_configuration()
 
     elif option['framework'] == framework.SYMFONY:
@@ -49,7 +49,7 @@ def check_configuration():
         from parser import symfony
 
         symfony.check_target_configuration()
-        connect.get_ssh_client()
+        connect.load_ssh_client_origin()
         symfony.check_origin_configuration()
 
 def get_host_configuration():
@@ -89,7 +89,7 @@ def load_pip_modules():
         )
 
     output.message(
-        output.get_subject().TARGET,
+        output.get_subject().LOCAL,
         'Checking pip modules',
         True
     )
@@ -159,7 +159,7 @@ def check_options():
 
             output.message(
                 output.get_subject().INFO,
-                'Framework: TYPO3',
+                'Sync base: TYPO3',
                 True
             )
         elif config['host']['type'] == 'Symfony':
@@ -167,7 +167,7 @@ def check_options():
 
             output.message(
                 output.get_subject().INFO,
-                'Framework: Symfony',
+                'Sync base: Symfony',
                 True
             )
         else:

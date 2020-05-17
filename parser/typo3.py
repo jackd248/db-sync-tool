@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
-import os, json
+import os, json, sys
 from subprocess import check_output
-from utility import output, system, connect, helper
+from utility import output, system, connect, helper, mode
 
 def check_target_configuration():
     if os.path.isfile(system.config['host']['target']['path']) == False:
@@ -24,7 +24,10 @@ def check_target_configuration():
 
 def check_origin_configuration():
     output.message(output.get_subject().ORIGIN, 'Checking database configuration', True)
-    stdout = connect.run_ssh_command(helper.get_command('origin','php') + ' -r "echo json_encode(include \'' + system.config['host']['origin']['path'] + '\');"')
+    stdout = mode.run_command(
+        helper.get_command('origin','php') + ' -r "echo json_encode(include \'' + system.config['host']['origin']['path'] + '\');"',
+        mode.get_clients().ORIGIN
+    )
     _origin_db_config = stdout.readlines()[0]
     _origin_db_config = json.loads(_origin_db_config)['DB']['Connections']['Default']
     system.config['db']['origin'] = _origin_db_config

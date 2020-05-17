@@ -24,7 +24,7 @@ def main():
     database.import_database_dump()
     helper.clean_up()
 
-    connect.ssh_client.close()
+    connect.close_ssh_clients()
     output.message(
         output.get_subject().INFO,
         'Successfully synchronized databases',

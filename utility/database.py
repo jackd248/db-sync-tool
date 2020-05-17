@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import output, connect, calendar, time, system, os, sys, helper
+import output, connect, calendar, time, system, os, sys, helper, mode
 
 
 #
@@ -19,8 +19,11 @@ def create_origin_database_dump():
         'Creating database dump',
         True
     )
-    connect.run_ssh_command(helper.get_command('origin','mysqldump') + ' ' + generate_mysql_credentials('origin') + ' ' + system.config['db']['origin'][
-        'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_origin_dump_dir() + origin_database_dump_file_name)
+    mode.run_command(
+        helper.get_command('origin','mysqldump') + ' ' + generate_mysql_credentials('origin') + ' ' + system.config['db']['origin'][
+        'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_origin_dump_dir() + origin_database_dump_file_name,
+        mode.get_clients().ORIGIN
+    )
 
     prepare_origin_database_dump()
 
@@ -31,7 +34,10 @@ def prepare_origin_database_dump():
         'Compressing database dump',
         True
     )
-    connect.run_ssh_command(helper.get_command('origin','tar') + ' cfvz ' + helper.get_origin_dump_dir() + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_origin_dump_dir() + ' ' + origin_database_dump_file_name)
+    mode.run_command(
+        helper.get_command('origin','tar') + ' cfvz ' + helper.get_origin_dump_dir() + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_origin_dump_dir() + ' ' + origin_database_dump_file_name,
+        mode.get_clients().ORIGIN
+    )
 
 
 def generate_database_dump_filename():
@@ -73,27 +79,20 @@ def import_database_dump():
             True
         )
 
-        if system.option['verbose']:
-            output.message(
-                output.get_subject().TARGET,
-                output.get_bcolors().BLACK + helper.get_command('target','mysql') + ' ' + generate_mysql_credentials('target') + ' ' + system.config['db']['target'][
-            'dbname'] + ' < ' + system.default_local_sync_path + origin_database_dump_file_name + output.get_bcolors().ENDC,
-            True)
-
-        os.system(helper.get_command('target','mysql') + ' ' + generate_mysql_credentials('target') + ' ' + system.config['db']['target'][
-            'dbname'] + ' < ' + system.default_local_sync_path + origin_database_dump_file_name)
+        mode.run_command(
+            helper.get_command('target','mysql') + ' ' + generate_mysql_credentials('target') + ' ' + system.config['db']['target'][
+            'dbname'] + ' < ' + system.default_local_sync_path + origin_database_dump_file_name,
+            mode.get_clients().TARGET
+        )
 
 
 def prepare_target_database_dump():
     output.message(output.get_subject().TARGET, 'Extracting database dump', True)
-    if system.option['verbose']:
-        output.message(
-            output.get_subject().TARGET,
-            output.get_bcolors().BLACK + helper.get_command('target','tar') + ' xzf ' + system.default_local_sync_path + origin_database_dump_file_name + '.tar.gz -C ' + system.default_local_sync_path + output.get_bcolors().ENDC,
-            True
-        )
 
-    os.system(helper.get_command('target','tar') + ' xzf ' + system.default_local_sync_path + origin_database_dump_file_name + '.tar.gz -C ' + system.default_local_sync_path)
+    mode.run_command(
+        helper.get_command('target','tar') + ' xzf ' + system.default_local_sync_path + origin_database_dump_file_name + '.tar.gz -C ' + system.default_local_sync_path,
+        mode.get_clients().TARGET
+    )
 
 
 def check_target_database_dump():
