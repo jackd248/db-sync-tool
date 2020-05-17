@@ -70,7 +70,9 @@ If you want to authenticate with a private ssh key instead of a password to the 
 
 ```json
 {
-  "ssh_key": "~/bob/.ssh/id_rsa"
+  "origin": {
+    "ssh_key": "~/bob/.ssh/id_rsa"
+  }
 }
 ```
 

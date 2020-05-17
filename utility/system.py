@@ -12,7 +12,7 @@ class framework:
 config = {}
 option = {
     'verbose': False,
-    'use_ssh_key': False,
+    'use_origin_ssh_key': False,
     'keep_dump': False,
     'framework': framework.TYPO3,
     'default_origin_dump_dir': True,
@@ -33,7 +33,7 @@ default_local_sync_path = os.path.abspath(os.getcwd()) + '/.sync/'
 def check_configuration():
     get_host_configuration()
     load_pip_modules()
-    if not option['use_ssh_key']:
+    if not option['use_origin_ssh_key']:
         get_origin_password()
 
     if option['framework'] == framework.TYPO3:
@@ -140,14 +140,14 @@ def get_origin_password():
 
 def check_options():
     # check if ssh key authorization should be used
-    if 'ssh_key' in config['host']:
-        if os.path.isfile(config['host']['ssh_key']):
-            option['use_ssh_key'] = True
+    if 'ssh_key' in config['host']['origin']:
+        if os.path.isfile(config['host']['origin']['ssh_key']):
+            option['use_origin_ssh_key'] = True
         else:
             sys.exit(
                 output.message(
                     output.get_subject().ERROR,
-                    'SSH private key not found',
+                    'SSH origin private key not found',
                     False
                 )
             )

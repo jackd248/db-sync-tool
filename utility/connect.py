@@ -15,7 +15,7 @@ def get_ssh_client():
     ssh_client = system.paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(system.paramiko.AutoAddPolicy())
 
-    if system.option['use_ssh_key']:
+    if system.option['use_origin_ssh_key']:
         try:
             ssh_client.connect(hostname=system.config['host']['origin']['host'],
                                username=system.config['host']['origin']['user'],
@@ -26,7 +26,7 @@ def get_ssh_client():
             sys.exit(
                 output.message(
                     output.get_subject().ERROR,
-                    'SSH authentification failed',
+                    'SSH authentification for ' + system.config['host']['origin']['host'] + ' failed',
                     False
                 )
             )
@@ -43,7 +43,7 @@ def get_ssh_client():
             sys.exit(
                 output.message(
                     output.get_subject().ERROR,
-                    'SSH authentification failed',
+                    'SSH authentification for ' + system.config['host']['origin']['host'] + ' failed',
                     False
                 )
             )
