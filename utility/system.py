@@ -1,24 +1,24 @@
 #!/usr/bin/python
 
-import sys, json, os, getpass, output, connect
+import sys, json, os, getpass, output, connect, mode, parser
 
 #
 # GLOBALS
 #
-class framework:
-    TYPO3 = 'typo3'
-    SYMFONY = 'symfony'
-
 config = {}
 option = {
     'verbose': False,
-    'use_ssh_key': False,
+    'use_origin_ssh_key': False,
+    'use_target_ssh_key': False,
     'keep_dump': False,
-    'framework': framework.TYPO3,
-    'default_remote_dump_dir': True,
-    'check_dump': True
+    'default_origin_dump_dir': True,
+    'default_target_dump_dir': True,
+    'check_dump': True,
+    'ssh_password': {
+        'origin': None,
+        'target': None
+    }
 }
-remote_ssh_password = None
 
 #
 # DEFAULTS
@@ -31,27 +31,21 @@ default_local_sync_path = os.path.abspath(os.getcwd()) + '/.sync/'
 # CHECK CONFIGURATION
 #
 def check_configuration():
-    get_host_configuration()
     load_pip_modules()
-    if not option['use_ssh_key']:
-        get_remote_password()
+    get_host_configuration()
+    if not option['use_origin_ssh_key'] and mode.is_origin_remote():
+        option['ssh_password']['origin'] = get_password(mode.get_clients().ORIGIN)
+
+    if not option['use_target_ssh_key'] and mode.is_target_remote():
+        option['ssh_password']['target'] = get_password(mode.get_clients().TARGET)
+
+    # first get data configuration for origin client
+    parser.get_database_configuration(mode.get_clients().ORIGIN)
 
 
-    if option['framework'] == framework.TYPO3:
-        sys.path.append('./parser')
-        from parser import typo3
+def check_target_configuration():
+    parser.get_database_configuration(mode.get_clients().TARGET)
 
-        typo3.check_local_configuration()
-        connect.get_ssh_client()
-        typo3.check_remote_configuration()
-
-    elif option['framework'] == framework.SYMFONY:
-        sys.path.append('./parser')
-        from parser import symfony
-
-        symfony.check_local_configuration()
-        connect.get_ssh_client()
-        symfony.check_remote_configuration()
 
 def get_host_configuration():
     if os.path.isfile(default_local_host_file_path):
@@ -63,58 +57,7 @@ def get_host_configuration():
                 True
             )
 
-            # check if ssh key authorization should be used
-            if 'ssh_key' in config['host']:
-                if os.path.isfile(config['host']['ssh_key']):
-                    option['use_ssh_key'] = True
-                else:
-                    sys.exit(
-                        output.message(
-                            output.get_subject().ERROR,
-                            'SSH private key not found',
-                            False
-                        )
-                    )
-
-            # check framework type
-            if 'type' in config['host']:
-                if config['host']['type'] == 'TYPO3':
-                    option['framework'] = framework.TYPO3
-
-                    output.message(
-                        output.get_subject().INFO,
-                        'Framework: TYPO3',
-                        True
-                    )
-                elif config['host']['type'] == 'Symfony':
-                    option['framework'] = framework.SYMFONY
-
-                    output.message(
-                        output.get_subject().INFO,
-                        'Framework: Symfony',
-                        True
-                    )
-                else:
-                    sys.exit(
-                        output.message(
-                            output.get_subject().ERROR,
-                            'Framework type not supported',
-                            False
-                        )
-                    )
-            else:
-                option['framework'] = framework.TYPO3
-                output.message(
-                    output.get_subject().INFO,
-                    'Framework: TYPO3',
-                    True
-                )
-
-            if 'dump_dir' in config['host']['remote']:
-                option['default_remote_dump_dir'] = False
-
-            if 'check_dump' in config['host']:
-                option['check_dump'] = config['host']['check_dump']
+            check_options()
     else:
         sys.exit(
             output.message(
@@ -162,13 +105,11 @@ def load_pip_modules():
         )
 
 
-def get_remote_password():
-    global remote_ssh_password
-
+def get_password(client):
     _password = getpass.getpass(
         output.message(
             output.get_subject().INFO,
-            'SSH password ' + config['host']['remote']['user'] + '@' + config['host']['remote']['host'] + ': ',
+            'SSH password ' + config['host'][client]['user'] + '@' + config['host'][client]['host'] + ': ',
             False
         )
     )
@@ -183,15 +124,41 @@ def get_remote_password():
         _password = getpass.getpass(
             output.message(
                 output.get_subject().INFO,
-                'SSH password ' + config['host']['remote']['user'] + '@' + config['host']['remote']['host'] + ': ',
+                'SSH password ' + config['host'][client]['user'] + '@' + config['host'][client]['host'] + ': ',
                 False
             )
         )
 
-    remote_ssh_password = _password
+    return _password
 
 
-def check_options(args):
+def check_options():
+    # check if ssh key authorization should be used
+    if 'ssh_key' in config['host']['origin']:
+        if os.path.isfile(config['host']['origin']['ssh_key']):
+            option['use_origin_ssh_key'] = True
+        else:
+            sys.exit(
+                output.message(
+                    output.get_subject().ERROR,
+                    'SSH origin private key not found',
+                    False
+                )
+            )
+
+    if 'dump_dir' in config['host']['origin']:
+        option['default_origin_dump_dir'] = False
+
+    if 'dump_dir' in config['host']['target']:
+        option['default_target_dump_dir'] = False
+
+    if 'check_dump' in config['host']:
+        option['check_dump'] = config['host']['check_dump']
+
+    mode.check_sync_mode()
+
+
+def check_args_options(args):
     global option
     global default_local_host_file_path
     global default_local_sync_path
@@ -214,11 +181,3 @@ def check_options(args):
             '"Keep dump" option chosen',
             True
         )
-
-
-def create_temporary_data_dir():
-    if not os.path.exists(default_local_sync_path):
-        os.mkdir(default_local_sync_path)
-
-def get_framework():
-    return framework

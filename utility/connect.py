@@ -1,32 +1,51 @@
 #!/usr/bin/python
 
-import sys, output, system, database, helper
+import sys, output, system, database, helper, mode, os
 
 #
 # GLOBALS
 #
-ssh_client = None
+ssh_client_origin = None
+ssh_client_target = None
+
 
 #
 # SSH UTILITY
 #
-def get_ssh_client():
-    global ssh_client
-    ssh_client = system.paramiko.SSHClient()
-    ssh_client.set_missing_host_key_policy(system.paramiko.AutoAddPolicy())
+def load_ssh_client_origin():
+    global ssh_client_origin
+    ssh_client_origin = load_ssh_client(mode.get_clients().ORIGIN)
 
-    if system.option['use_ssh_key']:
+
+def load_ssh_client_target():
+    global ssh_client_target
+    ssh_client_target = load_ssh_client(mode.get_clients().TARGET)
+
+
+def get_ssh_client_origin():
+    return ssh_client_origin
+
+
+def get_ssh_client_target():
+    return ssh_client_target
+
+
+def load_ssh_client(ssh):
+    _ssh_client = system.paramiko.SSHClient()
+    _ssh_client.set_missing_host_key_policy(system.paramiko.AutoAddPolicy())
+
+    if 'ssh_key' in system.config['host'][ssh]:
         try:
-            ssh_client.connect(hostname=system.config['host']['remote']['host'],
-                               username=system.config['host']['remote']['user'],
-                               key_filename=system.config['host']['ssh_key'],
-                               compress=True)
+            _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
+                                username=system.config['host'][ssh]['user'],
+                                key_filename=system.config['host'][ssh]['ssh_key'],
+                                compress=True)
 
         except system.paramiko.ssh_exception.AuthenticationException:
             sys.exit(
                 output.message(
                     output.get_subject().ERROR,
-                    'SSH authentification failed',
+                    'SSH authentification for ' + system.config['host'][ssh]['host'] + ' failed',
                     False
                 )
             )
@@ -34,16 +53,16 @@ def get_ssh_client():
         _authentication_method = 'using key'
     else:
         try:
-            ssh_client.connect(hostname=system.config['host']['remote']['host'],
-                               username=system.config['host']['remote']['user'],
-                               password=system.remote_ssh_password,
-                               compress=True)
+            _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
+                                username=system.config['host'][ssh]['user'],
+                                password=system.option['ssh_password'][ssh],
+                                compress=True)
 
         except system.paramiko.ssh_exception.AuthenticationException:
             sys.exit(
                 output.message(
                     output.get_subject().ERROR,
-                    'SSH authentification failed',
+                    'SSH authentification for ' + system.config['host'][ssh]['host'] + ' failed',
                     False
                 )
             )
@@ -51,20 +70,36 @@ def get_ssh_client():
         _authentication_method = 'using password'
 
     output.message(
-        output.get_subject().REMOTE,
-        'Successfully connect to ' + system.config['host']['remote']['user'] + '@' + system.config['host']['remote']['host'] + ' ' + _authentication_method,
+        output.client_to_subject(ssh),
+        'Successfully connect to ' + system.config['host'][ssh]['user'] + '@' + system.config['host'][ssh][
+            'host'] + ' ' + _authentication_method,
         True
     )
 
+    return _ssh_client
 
-def run_ssh_command(command):
-    stdin, stdout, stderr = ssh_client.exec_command(command)
+
+def close_ssh_clients():
+    if not ssh_client_origin is None:
+        ssh_client_origin.close()
+    if not ssh_client_target is None:
+        ssh_client_target.close()
+
+
+def run_ssh_command_origin(command):
+    return run_ssh_command(command, ssh_client_origin)
+
+
+def run_ssh_command_target(command):
+    return run_ssh_command(command, ssh_client_target)
+
+
+def run_ssh_command(command, ssh_client=ssh_client_origin):
+    stdin, stdout, stderr = ssh_client.exec_command(command, get_pty=True)
     exit_status = stdout.channel.recv_exit_status()
 
-    if system.option['verbose']:
-        output.message(output.get_subject().REMOTE, output.get_bcolors().BLACK + command + output.get_bcolors().ENDC, True)
-
     err = stderr.read().decode()
+
     if err and 0 != exit_status:
         sys.exit(output.message(output.get_subject().ERROR, err, False))
     elif err:
@@ -73,42 +108,133 @@ def run_ssh_command(command):
     return stdout
 
 
-def download_status(sent, size):
-    sent_mb = round(float(sent) / 1024 / 1024, 1)
-    size = round(float(size) / 1024 / 1024, 1)
-    sys.stdout.write(output.get_bcolors().PURPLE + "[REMOTE]" + output.get_bcolors().ENDC + " Status: {0} MB of {1} MB downloaded".
-                     format(sent_mb, size, ))
-    sys.stdout.write('\r')
-
-def remove_remote_database_dump():
+#
+# CLEAN UP
+#
+def remove_origin_database_dump():
     output.message(
-        output.get_subject().REMOTE,
+        output.get_subject().ORIGIN,
         'Cleaning up',
         True
     )
-    sftp = ssh_client.open_sftp()
-    sftp.remove(helper.get_remote_dump_dir() + database.remote_database_dump_file_name)
-    sftp.remove(helper.get_remote_dump_dir() + database.remote_database_dump_file_name + '.tar.gz')
-    sftp.close()
 
-#
-# GET REMOTE DATABASE DUMP
-#
-def get_remote_database_dump():
-    system.create_temporary_data_dir()
+    _file_path = helper.get_origin_dump_dir() + database.origin_database_dump_file_name
+    if mode.is_origin_remote():
+        sftp = ssh_client_origin.open_sftp()
+        sftp.remove(_file_path)
+        sftp.remove(_file_path + '.tar.gz')
+        sftp.close()
+    else:
+        os.remove(_file_path)
+        os.remove(_file_path + '.tar.gz')
 
-    sftp = ssh_client.open_sftp()
+
+def remove_target_database_dump():
     output.message(
-        output.get_subject().REMOTE,
+        output.get_subject().TARGET,
+        'Cleaning up',
+        True
+    )
+
+    _file_path = helper.get_target_dump_dir() + database.origin_database_dump_file_name
+
+    if not system.option['keep_dump']:
+        if mode.is_target_remote():
+            sftp = ssh_client_target.open_sftp()
+            sftp.remove(_file_path)
+            sftp.remove(_file_path + '.tar.gz')
+            sftp.close()
+        else:
+            os.remove(_file_path)
+            os.remove(_file_path + '.tar.gz')
+    else:
+        output.message(
+            output.get_subject().INFO,
+            'Dump file is saved to: ' + _file_path,
+            True
+        )
+
+
+#
+# TRANSFER ORIGIN DATABASE DUMP
+#
+def transfer_origin_database_dump():
+    if mode.get_sync_mode() == mode.get_sync_modes().RECEIVER:
+        get_origin_database_dump(helper.get_target_dump_dir())
+        system.check_target_configuration()
+    elif mode.get_sync_mode() == mode.get_sync_modes().SENDER:
+        system.check_target_configuration()
+        put_origin_database_dump(helper.get_origin_dump_dir())
+    elif mode.get_sync_mode() == mode.get_sync_modes().PROXY:
+        helper.create_local_temporary_data_dir()
+        get_origin_database_dump(system.default_local_sync_path)
+        system.check_target_configuration()
+        put_origin_database_dump(system.default_local_sync_path)
+
+
+def get_origin_database_dump(target_path):
+    sftp = ssh_client_origin.open_sftp()
+    output.message(
+        output.get_subject().ORIGIN,
         'Downloading database dump',
         True
-        )
+    )
 
     #
     # ToDo: Download speed problems
     # https://github.com/paramiko/paramiko/issues/60
     #
-    sftp.get(helper.get_remote_dump_dir() + database.remote_database_dump_file_name + '.tar.gz',
-             system.default_local_sync_path + database.remote_database_dump_file_name + '.tar.gz', download_status)
+    sftp.get(helper.get_origin_dump_dir() + database.origin_database_dump_file_name + '.tar.gz',
+             target_path + database.origin_database_dump_file_name + '.tar.gz', download_status)
     sftp.close()
     print('')
+
+    remove_origin_database_dump()
+
+
+def download_status(sent, size):
+    sent_mb = round(float(sent) / 1024 / 1024, 1)
+    size = round(float(size) / 1024 / 1024, 1)
+    sys.stdout.write(
+        output.get_subject().ORIGIN + output.get_bcolors().BLACK + '[REMOTE]' + output.get_bcolors().ENDC + " Status: {0} MB of {1} MB downloaded".
+        format(sent_mb, size, ))
+    sys.stdout.write('\r')
+
+
+def put_origin_database_dump(origin_path):
+    sftp = ssh_client_target.open_sftp()
+
+    if (mode.get_sync_mode() == mode.get_sync_modes().PROXY):
+        _subject = output.get_subject().LOCAL
+    else:
+        _subject = output.get_subject().ORIGIN
+
+    output.message(
+        _subject,
+        'Uploading database dump',
+        True
+    )
+
+    #
+    # ToDo: Download speed problems
+    # https://github.com/paramiko/paramiko/issues/60
+    #
+    sftp.put(origin_path + database.origin_database_dump_file_name + '.tar.gz',
+             helper.get_target_dump_dir() + database.origin_database_dump_file_name + '.tar.gz', upload_status)
+    sftp.close()
+    print('')
+
+
+def upload_status(sent, size):
+    sent_mb = round(float(sent) / 1024 / 1024, 1)
+    size = round(float(size) / 1024 / 1024, 1)
+
+    if (mode.get_sync_mode() == mode.get_sync_modes().PROXY):
+        _subject = output.get_subject().LOCAL
+    else:
+        _subject = output.get_subject().ORIGIN + output.get_bcolors().BLACK + '[LOCAL]' + output.get_bcolors().ENDC
+
+    sys.stdout.write(
+        _subject + " Status: {0} MB of {1} MB uploaded".
+        format(sent_mb, size, ))
+    sys.stdout.write('\r')

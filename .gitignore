@@ -2,4 +2,5 @@
 .idea
 host.json
 .sync/
+venv/
 *.pyc
