@@ -4,8 +4,8 @@ Simple python script to synchronize a database from a remote to your local syste
 
 Supported framework types:
 
-- _TYPO3_
-- _Symfony_
+- TYPO3 (>= v8.7)
+- Symfony (>= v3.4)
 
 ## Prerequisite
 
