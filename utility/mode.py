@@ -33,17 +33,17 @@ def check_sync_mode():
 
     if 'host' in system.config['host']['origin']:
         sync_mode = sync_modes.RECEIVER
-        _description = output.get_bcolors().BLACK + 'REMOTE --> LOCAL' + output.get_bcolors().ENDC
+        _description = output.get_bcolors().BLACK + '(REMOTE --> LOCAL)' + output.get_bcolors().ENDC
     if 'host' in system.config['host']['target']:
         sync_mode = sync_modes.SENDER
-        _description = output.get_bcolors().BLACK + 'LOCAL --> REMOTE' + output.get_bcolors().ENDC
+        _description = output.get_bcolors().BLACK + '(LOCAL --> REMOTE)' + output.get_bcolors().ENDC
     if 'host' in system.config['host']['origin'] and 'host' in system.config['host']['target']:
         sync_mode = sync_modes.PROXY
-        _description = output.get_bcolors().BLACK + 'REMOTE --> LOCAL(PROXY) --> REMOTE' + output.get_bcolors().ENDC
+        _description = output.get_bcolors().BLACK + '(REMOTE --> LOCAL(PROXY) --> REMOTE)' + output.get_bcolors().ENDC
 
     output.message(
         output.get_subject().INFO,
-        'Sync mode: ' + sync_mode + ' (' + _description + ')',
+        'Sync mode: ' + sync_mode + ' ' + _description,
         True
     )
 
@@ -77,6 +77,6 @@ def run_command(command, client):
                 True
             )
         if is_target_remote():
-            return connect.run_ssh_command_origin(command)
+            return connect.run_ssh_command_target(command)
         else:
             return os.system(command)

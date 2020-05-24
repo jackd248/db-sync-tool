@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys, output, system, database, helper, mode
+import sys, output, system, database, helper, mode, os
 
 #
 # GLOBALS
@@ -55,7 +55,7 @@ def load_ssh_client(ssh):
         try:
             _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
                                 username=system.config['host'][ssh]['user'],
-                                password=system.origin_ssh_password,
+                                password=system.option['ssh_password'][ssh],
                                 compress=True)
 
         except system.paramiko.ssh_exception.AuthenticationException:
@@ -70,7 +70,7 @@ def load_ssh_client(ssh):
         _authentication_method = 'using password'
 
     output.message(
-        output.get_subject().ORIGIN,
+        output.client_to_subject(ssh),
         'Successfully connect to ' + system.config['host'][ssh]['user'] + '@' + system.config['host'][ssh][
             'host'] + ' ' + _authentication_method,
         True
@@ -107,22 +107,64 @@ def run_ssh_command(command, ssh_client=ssh_client_origin):
 
     return stdout
 
-
+#
+# CLEAN UP
+#
 def remove_origin_database_dump():
     output.message(
         output.get_subject().ORIGIN,
         'Cleaning up',
         True
     )
-    sftp = ssh_client_origin.open_sftp()
-    sftp.remove(helper.get_origin_dump_dir() + database.origin_database_dump_file_name)
-    sftp.remove(helper.get_origin_dump_dir() + database.origin_database_dump_file_name + '.tar.gz')
-    sftp.close()
+
+    _file_path = helper.get_origin_dump_dir() + database.origin_database_dump_file_name
+    if mode.is_origin_remote():
+        sftp = ssh_client_origin.open_sftp()
+        sftp.remove(_file_path)
+        sftp.remove(_file_path + '.tar.gz')
+        sftp.close()
+    else:
+        os.remove(_file_path)
+        os.remove(_file_path + '.tar.gz')
+
+def remove_target_database_dump():
+    output.message(
+        output.get_subject().TARGET,
+        'Cleaning up',
+        True
+    )
+
+    _file_path = helper.get_target_dump_dir() + database.origin_database_dump_file_name
+
+    if not system.option['keep_dump']:
+        if mode.is_target_remote():
+            sftp = ssh_client_target.open_sftp()
+            sftp.remove(_file_path)
+            sftp.remove(_file_path + '.tar.gz')
+            sftp.close()
+        else:
+            os.remove(_file_path)
+            os.remove(_file_path + '.tar.gz')
+    else:
+        output.message(
+            output.get_subject().INFO,
+            'Dump file is saved to: ' + _file_path,
+            True
+        )
 
 
 #
-# GET ORIGIN DATABASE DUMP
+# TRANSFER ORIGIN DATABASE DUMP
 #
+def transfer_origin_database_dump():
+    if mode.get_sync_mode() == mode.get_sync_modes().RECEIVER:
+        get_origin_database_dump()
+    elif mode.get_sync_mode() == mode.get_sync_modes().SENDER:
+        put_origin_database_dump()
+    elif mode.get_sync_mode() == mode.get_sync_modes().PROXY:
+        get_origin_database_dump()
+        put_origin_database_dump()
+
 def get_origin_database_dump():
     system.create_local_temporary_data_dir()
 
@@ -142,11 +184,38 @@ def get_origin_database_dump():
     sftp.close()
     print('')
 
-
 def download_status(sent, size):
     sent_mb = round(float(sent) / 1024 / 1024, 1)
     size = round(float(size) / 1024 / 1024, 1)
     sys.stdout.write(
         output.get_subject().ORIGIN + output.get_bcolors().BLACK + '[REMOTE]' + output.get_bcolors().ENDC + " Status: {0} MB of {1} MB downloaded".
+        format(sent_mb, size, ))
+    sys.stdout.write('\r')
+
+def put_origin_database_dump():
+    system.create_local_temporary_data_dir()
+
+    sftp = ssh_client_target.open_sftp()
+    output.message(
+        output.get_subject().ORIGIN,
+        'Uploading database dump',
+        True
+    )
+
+    #
+    # ToDo: Download speed problems
+    # https://github.com/paramiko/paramiko/issues/60
+    #
+    sftp.put(helper.get_origin_dump_dir() + database.origin_database_dump_file_name + '.tar.gz',
+             helper.get_target_dump_dir() + database.origin_database_dump_file_name + '.tar.gz', upload_status)
+    sftp.close()
+    print('')
+
+
+def upload_status(sent, size):
+    sent_mb = round(float(sent) / 1024 / 1024, 1)
+    size = round(float(size) / 1024 / 1024, 1)
+    sys.stdout.write(
+        output.get_subject().ORIGIN + output.get_bcolors().BLACK + '[LOCAL]' + output.get_bcolors().ENDC + " Status: {0} MB of {1} MB uploaded".
         format(sent_mb, size, ))
     sys.stdout.write('\r')

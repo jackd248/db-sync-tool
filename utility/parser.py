@@ -15,7 +15,7 @@ def get_framework():
     return framework
 
 
-def get_database_configuration():
+def get_database_configuration(client):
     system.config['db'] = {}
 
     # check framework type
@@ -46,18 +46,20 @@ def get_database_configuration():
         sys.path.append('./extension')
         from extension import typo3
 
-        load_parser(typo3)
+        _parser = typo3
 
     elif _base == framework.SYMFONY:
         sys.path.append('./extension')
         from extension import symfony
 
-        load_parser(symfony)
+        _parser = symfony
 
+    if client == mode.get_clients().ORIGIN:
+        load_parser_origin(_parser)
+    else:
+        load_parser_target(_parser)
 
-def load_parser(parser):
-    _sync_mode = mode.get_sync_mode()
-
+def load_parser_origin(parser):
     # check origin
     output.message(
         output.get_subject().ORIGIN,
@@ -70,6 +72,7 @@ def load_parser(parser):
     else:
         parser.check_local_configuration(mode.get_clients().ORIGIN)
 
+def load_parser_target(parser):
     # check target
     output.message(
         output.get_subject().TARGET,
@@ -81,3 +84,5 @@ def load_parser(parser):
         parser.check_remote_configuration(mode.get_clients().TARGET)
     else:
         parser.check_local_configuration(mode.get_clients().TARGET)
+
+

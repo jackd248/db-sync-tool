@@ -49,6 +49,12 @@ def extend_output_by_sync_mode(header):
 
     return ''
 
+def client_to_subject(client):
+    if client == mode.get_clients().ORIGIN:
+        return subject.ORIGIN
+    elif client == mode.get_clients().TARGET:
+        return subject.TARGET
+
 
 def get_bcolors():
     return bcolors

@@ -1,14 +1,11 @@
 #!/usr/bin/python
 
 import argparse, sys, os, shutil
-from utility import output, system, database, helper, connect
-
+from utility import output, system, database, helper, connect, info
 
 def main():
-    print(output.get_bcolors().BLACK + '###############################' + output.get_bcolors().ENDC)
-    print(
-                output.get_bcolors().BLACK + '#' + output.get_bcolors().ENDC + '     Database Sync Tool      ' + output.get_bcolors().BLACK + '#' + output.get_bcolors().ENDC)
-    print(output.get_bcolors().BLACK + '###############################' + output.get_bcolors().ENDC)
+
+    info.print_header()
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', help='Path to host file', required=False)
@@ -21,17 +18,17 @@ def main():
 
     system.check_configuration()
     database.create_origin_database_dump()
-    connect.get_origin_database_dump()
+    connect.transfer_origin_database_dump()
+    system.check_target_configuration()
     database.import_database_dump()
     helper.clean_up()
-
     connect.close_ssh_clients()
+
     output.message(
         output.get_subject().INFO,
         'Successfully synchronized databases',
         True
     )
-
 
 #
 # MAIN

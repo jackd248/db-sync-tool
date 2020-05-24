@@ -9,11 +9,16 @@ config = {}
 option = {
     'verbose': False,
     'use_origin_ssh_key': False,
+    'use_target_ssh_key': False,
     'keep_dump': False,
     'default_origin_dump_dir': True,
-    'check_dump': True
+    'default_target_dump_dir': True,
+    'check_dump': True,
+    'ssh_password': {
+        'origin': None,
+        'target': None
+    }
 }
-origin_ssh_password = None
 
 #
 # DEFAULTS
@@ -28,10 +33,17 @@ default_local_sync_path = os.path.abspath(os.getcwd()) + '/.sync/'
 def check_configuration():
     load_pip_modules()
     get_host_configuration()
-    if not option['use_origin_ssh_key']:
-        get_origin_password()
+    if not option['use_origin_ssh_key'] and mode.is_origin_remote():
+        option['ssh_password']['origin'] = get_password(mode.get_clients().ORIGIN)
 
-    parser.get_database_configuration()
+    if not option['use_target_ssh_key'] and mode.is_target_remote():
+        option['ssh_password']['target'] = get_password(mode.get_clients().TARGET)
+
+    # first get data configuration for origin client
+    parser.get_database_configuration(mode.get_clients().ORIGIN)
+
+def check_target_configuration():
+    parser.get_database_configuration(mode.get_clients().TARGET)
 
 def get_host_configuration():
     if os.path.isfile(default_local_host_file_path):
@@ -90,14 +102,12 @@ def load_pip_modules():
             )
         )
 
-
-def get_origin_password():
-    global origin_ssh_password
+def get_password(client):
 
     _password = getpass.getpass(
         output.message(
             output.get_subject().INFO,
-            'SSH password ' + config['host']['origin']['user'] + '@' + config['host']['origin']['host'] + ': ',
+            'SSH password ' + config['host'][client]['user'] + '@' + config['host'][client]['host'] + ': ',
             False
         )
     )
@@ -112,12 +122,12 @@ def get_origin_password():
         _password = getpass.getpass(
             output.message(
                 output.get_subject().INFO,
-                'SSH password ' + config['host']['origin']['user'] + '@' + config['host']['origin']['host'] + ': ',
+                'SSH password ' + config['host'][client]['user'] + '@' + config['host'][client]['host'] + ': ',
                 False
             )
         )
 
-    origin_ssh_password = _password
+    return _password
 
 def check_options():
     # check if ssh key authorization should be used
@@ -135,6 +145,9 @@ def check_options():
 
     if 'dump_dir' in config['host']['origin']:
         option['default_origin_dump_dir'] = False
+
+    if 'dump_dir' in config['host']['target']:
+        option['default_target_dump_dir'] = False
 
     if 'check_dump' in config['host']:
         option['check_dump'] = config['host']['check_dump']

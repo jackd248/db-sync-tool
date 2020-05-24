@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, shutil, output, system, database, connect
+import os, shutil, output, system, database, connect, mode, getpass
 
 
 #
@@ -8,16 +8,9 @@ import os, shutil, output, system, database, connect
 #
 def clean_up():
     connect.remove_origin_database_dump()
-    if not system.option['keep_dump']:
-        remove_temporary_data_dir()
-    else:
-        output.message(
-            output.get_subject().INFO,
-            'Dump file is saved to: ' + system.default_local_sync_path + database.origin_database_dump_file_name,
-            True
-        )
+    connect.remove_target_database_dump()
 
-
+# @Deprecated
 def remove_temporary_data_dir():
     if os.path.exists(system.default_local_sync_path):
         shutil.rmtree(system.default_local_sync_path)
@@ -37,6 +30,18 @@ def get_command(target, command):
 
 def get_origin_dump_dir():
     if system.option['default_origin_dump_dir']:
-        return '/home/' + system.config['host']['origin']['user'] + '/'
+        if not mode.is_origin_remote():
+            return '/home/' + getpass.getuser() + '/'
+        else:
+            return '/home/' + system.config['host']['origin']['user'] + '/'
     else:
         return system.config['host']['origin']['dump_dir']
+
+def get_target_dump_dir():
+    if system.option['default_target_dump_dir']:
+        if not mode.is_target_remote():
+            return '/home/' + getpass.getuser() + '/'
+        else:
+            return '/home/' + system.config['host']['target']['user'] + '/'
+    else:
+        return system.config['host']['target']['dump_dir']
