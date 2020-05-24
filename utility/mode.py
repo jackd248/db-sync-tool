@@ -51,11 +51,14 @@ def check_sync_mode():
 def get_clients():
     return clients
 
+
 def is_target_remote():
     return sync_mode == sync_modes.SENDER or sync_mode == sync_modes.PROXY
 
+
 def is_origin_remote():
     return sync_mode == sync_modes.RECEIVER or sync_mode == sync_modes.PROXY
+
 
 def run_command(command, client):
     if client == clients.ORIGIN:

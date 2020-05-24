@@ -95,7 +95,7 @@ def run_ssh_command_target(command):
 
 
 def run_ssh_command(command, ssh_client=ssh_client_origin):
-    stdin, stdout, stderr = ssh_client.exec_command(command)
+    stdin, stdout, stderr = ssh_client.exec_command(command, get_pty=True)
     exit_status = stdout.channel.recv_exit_status()
 
     err = stderr.read().decode()
@@ -106,6 +106,7 @@ def run_ssh_command(command, ssh_client=ssh_client_origin):
         output.message(output.get_subject().WARNING, err, True)
 
     return stdout
+
 
 #
 # CLEAN UP
@@ -126,6 +127,7 @@ def remove_origin_database_dump():
     else:
         os.remove(_file_path)
         os.remove(_file_path + '.tar.gz')
+
 
 def remove_target_database_dump():
     output.message(
@@ -158,16 +160,19 @@ def remove_target_database_dump():
 #
 def transfer_origin_database_dump():
     if mode.get_sync_mode() == mode.get_sync_modes().RECEIVER:
-        get_origin_database_dump()
+        get_origin_database_dump(helper.get_target_dump_dir())
+        system.check_target_configuration()
     elif mode.get_sync_mode() == mode.get_sync_modes().SENDER:
-        put_origin_database_dump()
+        system.check_target_configuration()
+        put_origin_database_dump(helper.get_origin_dump_dir())
     elif mode.get_sync_mode() == mode.get_sync_modes().PROXY:
-        get_origin_database_dump()
-        put_origin_database_dump()
+        helper.create_local_temporary_data_dir()
+        get_origin_database_dump(system.default_local_sync_path)
+        system.check_target_configuration()
+        put_origin_database_dump(system.default_local_sync_path)
 
-def get_origin_database_dump():
-    system.create_local_temporary_data_dir()
 
+def get_origin_database_dump(target_path):
     sftp = ssh_client_origin.open_sftp()
     output.message(
         output.get_subject().ORIGIN,
@@ -180,9 +185,10 @@ def get_origin_database_dump():
     # https://github.com/paramiko/paramiko/issues/60
     #
     sftp.get(helper.get_origin_dump_dir() + database.origin_database_dump_file_name + '.tar.gz',
-             system.default_local_sync_path + database.origin_database_dump_file_name + '.tar.gz', download_status)
+             target_path + database.origin_database_dump_file_name + '.tar.gz', download_status)
     sftp.close()
     print('')
+
 
 def download_status(sent, size):
     sent_mb = round(float(sent) / 1024 / 1024, 1)
@@ -192,9 +198,8 @@ def download_status(sent, size):
         format(sent_mb, size, ))
     sys.stdout.write('\r')
 
-def put_origin_database_dump():
-    system.create_local_temporary_data_dir()
 
+def put_origin_database_dump(origin_path):
     sftp = ssh_client_target.open_sftp()
     output.message(
         output.get_subject().ORIGIN,
@@ -206,7 +211,7 @@ def put_origin_database_dump():
     # ToDo: Download speed problems
     # https://github.com/paramiko/paramiko/issues/60
     #
-    sftp.put(helper.get_origin_dump_dir() + database.origin_database_dump_file_name + '.tar.gz',
+    sftp.put(origin_path + database.origin_database_dump_file_name + '.tar.gz',
              helper.get_target_dump_dir() + database.origin_database_dump_file_name + '.tar.gz', upload_status)
     sftp.close()
     print('')

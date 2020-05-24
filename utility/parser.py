@@ -59,6 +59,7 @@ def get_database_configuration(client):
     else:
         load_parser_target(_parser)
 
+
 def load_parser_origin(parser):
     # check origin
     output.message(
@@ -72,6 +73,7 @@ def load_parser_origin(parser):
     else:
         parser.check_local_configuration(mode.get_clients().ORIGIN)
 
+
 def load_parser_target(parser):
     # check target
     output.message(
@@ -84,5 +86,3 @@ def load_parser_target(parser):
         parser.check_remote_configuration(mode.get_clients().TARGET)
     else:
         parser.check_local_configuration(mode.get_clients().TARGET)
-
-

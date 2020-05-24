@@ -3,8 +3,8 @@
 import argparse, sys, os, shutil
 from utility import output, system, database, helper, connect, info
 
-def main():
 
+def main():
     info.print_header()
 
     parser = argparse.ArgumentParser()
@@ -19,7 +19,6 @@ def main():
     system.check_configuration()
     database.create_origin_database_dump()
     connect.transfer_origin_database_dump()
-    system.check_target_configuration()
     database.import_database_dump()
     helper.clean_up()
     connect.close_ssh_clients()
@@ -29,6 +28,7 @@ def main():
         'Successfully synchronized databases',
         True
     )
+
 
 #
 # MAIN

@@ -73,8 +73,8 @@ def generate_mysql_credentials(_target):
 def import_database_dump():
     prepare_target_database_dump()
 
-#     if system.option['check_dump']:
-#         check_target_database_dump()
+    #     if system.option['check_dump']:
+    #         check_target_database_dump()
 
     if not system.option['keep_dump']:
         output.message(
@@ -94,9 +94,11 @@ def import_database_dump():
 def prepare_target_database_dump():
     output.message(output.get_subject().TARGET, 'Extracting database dump', True)
     mode.run_command(
-        helper.get_command('target','tar') + ' xzf ' + helper.get_target_dump_dir() + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_target_dump_dir(),
+        helper.get_command('target',
+                           'tar') + ' xzf ' + helper.get_target_dump_dir() + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_target_dump_dir(),
         mode.get_clients().TARGET
     )
+
 
 # @ToDo: make this remote possible
 def check_target_database_dump():

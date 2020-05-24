@@ -9,13 +9,15 @@ import os, shutil, output, system, database, connect, mode, getpass
 def clean_up():
     connect.remove_origin_database_dump()
     connect.remove_target_database_dump()
+    if mode.get_sync_mode() == mode.get_sync_modes().PROXY:
+        remove_temporary_data_dir
 
-# @Deprecated
+
 def remove_temporary_data_dir():
     if os.path.exists(system.default_local_sync_path):
         shutil.rmtree(system.default_local_sync_path)
         output.message(
-            output.get_subject().TARGET,
+            output.get_subject().LOCAL,
             'Cleaning up',
             True
         )
@@ -37,6 +39,7 @@ def get_origin_dump_dir():
     else:
         return system.config['host']['origin']['dump_dir']
 
+
 def get_target_dump_dir():
     if system.option['default_target_dump_dir']:
         if not mode.is_target_remote():
@@ -45,3 +48,8 @@ def get_target_dump_dir():
             return '/home/' + system.config['host']['target']['user'] + '/'
     else:
         return system.config['host']['target']['dump_dir']
+
+
+def create_local_temporary_data_dir():
+    if not os.path.exists(default_local_sync_path):
+        os.mkdir(default_local_sync_path)

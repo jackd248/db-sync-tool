@@ -42,8 +42,10 @@ def check_configuration():
     # first get data configuration for origin client
     parser.get_database_configuration(mode.get_clients().ORIGIN)
 
+
 def check_target_configuration():
     parser.get_database_configuration(mode.get_clients().TARGET)
+
 
 def get_host_configuration():
     if os.path.isfile(default_local_host_file_path):
@@ -102,8 +104,8 @@ def load_pip_modules():
             )
         )
 
-def get_password(client):
 
+def get_password(client):
     _password = getpass.getpass(
         output.message(
             output.get_subject().INFO,
@@ -128,6 +130,7 @@ def get_password(client):
         )
 
     return _password
+
 
 def check_options():
     # check if ssh key authorization should be used
@@ -154,6 +157,7 @@ def check_options():
 
     mode.check_sync_mode()
 
+
 def check_args_options(args):
     global option
     global default_local_host_file_path
@@ -177,8 +181,3 @@ def check_args_options(args):
             '"Keep dump" option chosen',
             True
         )
-
-
-def create_local_temporary_data_dir():
-    if not os.path.exists(default_local_sync_path):
-        os.mkdir(default_local_sync_path)
