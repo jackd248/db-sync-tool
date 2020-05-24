@@ -51,5 +51,5 @@ def get_target_dump_dir():
 
 
 def create_local_temporary_data_dir():
-    if not os.path.exists(default_local_sync_path):
-        os.mkdir(default_local_sync_path)
+    if not os.path.exists(system.default_local_sync_path):
+        os.mkdir(system.default_local_sync_path)

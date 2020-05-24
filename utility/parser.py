@@ -36,12 +36,6 @@ def get_database_configuration(client):
     else:
         _base = framework.TYPO3
 
-    output.message(
-        output.get_subject().INFO,
-        'Sync base: ' + _base,
-        True
-    )
-
     if _base == framework.TYPO3:
         sys.path.append('./extension')
         from extension import typo3
@@ -55,6 +49,12 @@ def get_database_configuration(client):
         _parser = symfony
 
     if client == mode.get_clients().ORIGIN:
+        output.message(
+            output.get_subject().INFO,
+            'Sync base: ' + _base,
+            True
+        )
+
         load_parser_origin(_parser)
     else:
         load_parser_target(_parser)

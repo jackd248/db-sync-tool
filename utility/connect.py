@@ -189,6 +189,8 @@ def get_origin_database_dump(target_path):
     sftp.close()
     print('')
 
+    remove_origin_database_dump()
+
 
 def download_status(sent, size):
     sent_mb = round(float(sent) / 1024 / 1024, 1)
@@ -201,8 +203,14 @@ def download_status(sent, size):
 
 def put_origin_database_dump(origin_path):
     sftp = ssh_client_target.open_sftp()
+
+    if (mode.get_sync_mode() == mode.get_sync_modes().PROXY):
+        _subject = output.get_subject().LOCAL
+    else:
+        _subject = output.get_subject().ORIGIN
+
     output.message(
-        output.get_subject().ORIGIN,
+        _subject,
         'Uploading database dump',
         True
     )
@@ -220,7 +228,13 @@ def put_origin_database_dump(origin_path):
 def upload_status(sent, size):
     sent_mb = round(float(sent) / 1024 / 1024, 1)
     size = round(float(size) / 1024 / 1024, 1)
+
+    if (mode.get_sync_mode() == mode.get_sync_modes().PROXY):
+        _subject = output.get_subject().LOCAL
+    else:
+        _subject = output.get_subject().ORIGIN + output.get_bcolors().BLACK + '[LOCAL]' + output.get_bcolors().ENDC
+
     sys.stdout.write(
-        output.get_subject().ORIGIN + output.get_bcolors().BLACK + '[LOCAL]' + output.get_bcolors().ENDC + " Status: {0} MB of {1} MB uploaded".
+        _subject + " Status: {0} MB of {1} MB uploaded".
         format(sent_mb, size, ))
     sys.stdout.write('\r')

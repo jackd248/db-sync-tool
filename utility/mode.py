@@ -39,7 +39,7 @@ def check_sync_mode():
         _description = output.get_bcolors().BLACK + '(LOCAL --> REMOTE)' + output.get_bcolors().ENDC
     if 'host' in system.config['host']['origin'] and 'host' in system.config['host']['target']:
         sync_mode = sync_modes.PROXY
-        _description = output.get_bcolors().BLACK + '(REMOTE --> LOCAL(PROXY) --> REMOTE)' + output.get_bcolors().ENDC
+        _description = output.get_bcolors().BLACK + '(REMOTE --> LOCAL --> REMOTE)' + output.get_bcolors().ENDC
 
     output.message(
         output.get_subject().INFO,
