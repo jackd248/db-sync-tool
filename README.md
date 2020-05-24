@@ -43,7 +43,7 @@ cp dist/t3-db-sync.json.dist host.json
 cp dist/sf-db-sync.json.dist host.json
 ```
 
-Example structure of `host.json` for a Symfony system:
+Example structure of `host.json` for a Symfony system in receiver mode:
 ```json
 {
   "name": "project",
@@ -60,59 +60,17 @@ Example structure of `host.json` for a Symfony system:
 }
 ```
 
-### Ignore tables
+### Adjustments
 
-Often it is better to exclude some tables from the sql dump for performance reasons, e.g. caching tables. Specify them as comma separeted list in the `ignore_table` array.
+It is possible to adjust the `host.json` [configuration](documentation/CONFIG.md).
 
-### SSH key authentification
+### Sync modes
 
-If you want to authenticate with a private ssh key instead of a password to the server (useful for CI/CD), you can a add the file path to the private key file in your `host.json`:
+The script provides three different kinds of [synchronisation modes](documentation/MODE.md).
 
-```json
-{
-  "origin": {
-    "ssh_key": "~/bob/.ssh/id_rsa"
-  }
-}
-```
-
-### Console commands
-
-The script using among other things the `php`, `mysql`, `mysqldump`, `grep` commands to synchronize the databases. Sometimes these commands are not available via the path variable, so you have to specify the full path to the source in the `host.json` depending on the target system:
-
-```json
-{
-  "origin": {
-    "console": {
-      "php": "/usr/bin/php",
-      "mysql": "/usr/bin/mysql",
-      "mysqldump": "/usr/bin/mysqldump"
-    }
-  }
-}
-```
-
-### Remote temporary dump directory
-
-Normally is the script creating the origin sql dump in the `home` directory of the given ssh user. If this directory is not writable, you can specify an alternative directory in the `host.json`, where the temporary sql dump will be saved:
-
-```json
-{
-  "origin": {
-    "dump_dir": "/path/to/writable/dir/"
-  }
-}
-```
-
-### Check dump
-
-The script is checking the target dump if the file is being downloaded completely. If you want to prevent this check, you can disable them in the `host.json`:
-
-```json
-{
-  "check_dump": false
-}
-```
+- Receiver
+- Sender
+- Proxy
 
 ## Usage
 
@@ -129,7 +87,7 @@ python sync.py
 -kd, --keepdump         Skipping target import of the database dump and saving the available dump file in the given directory
 ```
 
-If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the origin system. 
+If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 
 
 
 ## FAQ
