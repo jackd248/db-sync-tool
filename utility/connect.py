@@ -165,6 +165,7 @@ def transfer_origin_database_dump():
     elif mode.get_sync_mode() == mode.get_sync_modes().SENDER:
         system.check_target_configuration()
         put_origin_database_dump(helper.get_origin_dump_dir())
+        remove_origin_database_dump()
     elif mode.get_sync_mode() == mode.get_sync_modes().PROXY:
         helper.create_local_temporary_data_dir()
         get_origin_database_dump(system.default_local_sync_path)

@@ -7,10 +7,9 @@ import os, shutil, output, system, database, connect, mode, getpass
 # CLEAN UP
 #
 def clean_up():
-    connect.remove_origin_database_dump()
     connect.remove_target_database_dump()
     if mode.get_sync_mode() == mode.get_sync_modes().PROXY:
-        remove_temporary_data_dir
+        remove_temporary_data_dir()
 
 
 def remove_temporary_data_dir():
