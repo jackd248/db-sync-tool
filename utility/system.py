@@ -146,6 +146,18 @@ def check_options():
                 )
             )
 
+    if 'ssh_key' in config['host']['target']:
+        if os.path.isfile(config['host']['origin']['ssh_key']):
+            option['use_target_ssh_key'] = True
+        else:
+            sys.exit(
+                output.message(
+                    output.get_subject().ERROR,
+                    'SSH target private key not found',
+                    False
+                )
+            )
+
     if 'dump_dir' in config['host']['origin']:
         option['default_origin_dump_dir'] = False
 
