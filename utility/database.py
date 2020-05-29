@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import output, connect, calendar, time, system, os, sys, helper, mode
+import calendar, time, os, sys
+from utility import output, connect, system, helper, mode
 
 #
 # GLOBALS

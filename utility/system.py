@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import sys, json, os, getpass, output, connect, mode, parser
+import sys, json, os, getpass
+from utility import output, connect, mode, parser
 
 #
 # GLOBALS

@@ -1,6 +1,6 @@
 # Database Sync Tool
 
-Simple python script to synchronize a database from a origin to your target system.
+Python script to synchronize a database from an origin to a target system.
 
 Supported framework types:
 
@@ -9,7 +9,7 @@ Supported framework types:
 
 ## Prerequisite
 
-The script using python 2. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
+The script using python 3. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
 You can do this e.g. by the following command:
 
 ```bash

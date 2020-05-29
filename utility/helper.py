@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import os, shutil, output, system, database, connect, mode, getpass
+import os, shutil, getpass
+from utility import output, system, database, connect, mode
 
 
 #

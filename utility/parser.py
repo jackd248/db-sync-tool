@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import system, mode, output, sys, connect
+import sys
+from utility import output, system, mode, connect
 
 
 #

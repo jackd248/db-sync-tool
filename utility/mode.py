@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import system, output, os, connect
+import os
+from utility import system, output, connect
 
 
 #

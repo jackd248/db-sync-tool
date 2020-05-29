@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import sys, output, system, database, helper, mode, os
+import sys, os
+from utility import output, system, database, helper, mode
 
 #
 # GLOBALS

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import mode
+from utility import mode
 
 
 #

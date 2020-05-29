@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import output, os, json, sys
+import os, json, sys
+from utility import output
 
 
 def print_header():
