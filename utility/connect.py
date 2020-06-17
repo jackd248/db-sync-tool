@@ -131,29 +131,41 @@ def remove_origin_database_dump():
 
 
 def remove_target_database_dump():
+    _file_path = helper.get_target_dump_dir() + database.origin_database_dump_file_name
+
+    #
+    # Move dump to specified directory
+    #
+    if system.option['keep_dump']:
+        _keep_dump_path = system.default_local_sync_path + '/' + database.origin_database_dump_file_name
+        mode.run_command(
+            helper.get_command('target',
+                               'cp') + ' ' + _file_path + ' ' + _keep_dump_path,
+            mode.get_clients().TARGET
+        )
+        output.message(
+            output.get_subject().INFO,
+            'Dump file is saved to: ' + _keep_dump_path,
+            True
+        )
+
+    #
+    # Clean up
+    #
     output.message(
         output.get_subject().TARGET,
         'Cleaning up',
         True
     )
 
-    _file_path = helper.get_target_dump_dir() + database.origin_database_dump_file_name
-
-    if not system.option['keep_dump']:
-        if mode.is_target_remote():
-            sftp = ssh_client_target.open_sftp()
-            sftp.remove(_file_path)
-            sftp.remove(_file_path + '.tar.gz')
-            sftp.close()
-        else:
-            os.remove(_file_path)
-            os.remove(_file_path + '.tar.gz')
+    if mode.is_target_remote():
+        sftp = ssh_client_target.open_sftp()
+        sftp.remove(_file_path)
+        sftp.remove(_file_path + '.tar.gz')
+        sftp.close()
     else:
-        output.message(
-            output.get_subject().INFO,
-            'Dump file is saved to: ' + _file_path,
-            True
-        )
+        os.remove(_file_path)
+        os.remove(_file_path + '.tar.gz')
 
 
 #
