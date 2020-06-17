@@ -1,7 +1,7 @@
 {
   "name": "kmi/db-sync-tool",
   "description": "Python script to synchronize a database from an origin to a target system",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "license": "MIT",
   "homepage": "https://github.com/jackd248/db-sync-tool",
   "type": "project",
