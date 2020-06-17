@@ -18,6 +18,18 @@ If you want to authenticate with a private ssh key instead of a password to the 
 }
 ```
 
+### SSH Port
+
+You can also specify a different SSH port to the client in your `host.json` (the default port is `22`):
+
+```json
+{
+  "origin": {
+    "port": "1234"
+  }
+}
+```
+
 ### Console commands
 
 The script using among other things the `php`, `mysql`, `mysqldump`, `grep` commands to synchronize the databases. Sometimes these commands are not available via the path variable, so you have to specify the full path to the source in the `host.json` depending on the system:

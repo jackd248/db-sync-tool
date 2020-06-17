@@ -35,11 +35,17 @@ def load_ssh_client(ssh):
     _ssh_client = system.paramiko.SSHClient()
     _ssh_client.set_missing_host_key_policy(system.paramiko.AutoAddPolicy())
 
+    if 'port' in system.config['host'][ssh]:
+        _ssh_port = system.config['host'][ssh]['port']
+    else:
+        _ssh_port = 22
+
     if 'ssh_key' in system.config['host'][ssh]:
         try:
             _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
                                 username=system.config['host'][ssh]['user'],
                                 key_filename=system.config['host'][ssh]['ssh_key'],
+                                port=_ssh_port,
                                 compress=True)
 
         except system.paramiko.ssh_exception.AuthenticationException:
@@ -56,6 +62,7 @@ def load_ssh_client(ssh):
         try:
             _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
                                 username=system.config['host'][ssh]['user'],
+                                port=_ssh_port,
                                 password=system.option['ssh_password'][ssh],
                                 compress=True)
 
