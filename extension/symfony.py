@@ -48,6 +48,7 @@ def check_remote_configuration(client):
 
 
 def parse_database_credentials(_db_credentials):
+    _db_credentials = str(_db_credentials).replace('\\n\'','')
     # DATABASE_URL=mysql://db-user:1234@db-host:3306/db-name
     _db_credentials = re.findall(r"\/{2}(.+):(.+)@(.+):(\d+)\/(.+)", _db_credentials)[0]
 
