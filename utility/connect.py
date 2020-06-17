@@ -96,7 +96,7 @@ def run_ssh_command_target(command):
 
 
 def run_ssh_command(command, ssh_client=ssh_client_origin):
-    stdin, stdout, stderr = ssh_client.exec_command(command, get_pty=True)
+    stdin, stdout, stderr = ssh_client.exec_command(command)
     exit_status = stdout.channel.recv_exit_status()
 
     err = stderr.read().decode()
