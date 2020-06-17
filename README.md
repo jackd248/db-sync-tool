@@ -4,7 +4,7 @@ Python script to synchronize a database from an origin to a target system.
 
 Supported framework types:
 
-- TYPO3 (>= v8.7)
+- TYPO3 (>= v7.6)
 - Symfony (>= v3.4)
 
 ## Prerequisite

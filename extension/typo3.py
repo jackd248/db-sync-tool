@@ -20,7 +20,7 @@ def check_local_configuration(client):
     _db_config = check_output(
         [helper.get_command(client, 'php'), '-r',
          'echo json_encode(include "' + system.config['host'][client]['path'] + '");'])
-    _db_config = json.loads(_db_config)['DB']['Connections']['Default']
+    _db_config = parse_database_credentials(json.loads(_db_config)['DB'])
 
     if system.option['verbose']:
         if client == mode.get_clients().TARGET:
@@ -41,5 +41,20 @@ def check_remote_configuration(client):
         client
     )
     _db_config = stdout.readlines()[0]
-    _db_config = json.loads(_db_config)['DB']['Connections']['Default']
+    _db_config = parse_database_credentials(json.loads(_db_config)['DB'])
+
     system.config['db'][client] = _db_config
+
+
+def parse_database_credentials(_db_credentials):
+    #
+    # Distinguish between database config scheme of TYPO3 v8+ and TYPO3 v7-
+    #
+    if 'Connections' in _db_credentials:
+        _db_config = _db_credentials['Connections']['Default']
+    else:
+        _db_config = _db_credentials
+        _db_config['user'] = _db_config['username']
+        _db_config['dbname'] = _db_config['database']
+
+    return _db_config
