@@ -29,3 +29,11 @@ The _proxy_ mode offers the possibility to get a database dump from a remote sys
 This mode can be used, when origin and target system can't or shouldn't connect directly (because of security restrictions). So your local system acts as proxy between both of them.  
 
 This mode is enabled, if a `host` entry is be stored in the `origin` __and__ `target` section of the `host.json` configuration.
+
+## Local
+
+The _local_ mode offers the possibility to save a database dump just from your local system. No database import will be performed. You can specify the dump file location with the "keep dump" option (`--kd`).
+
+![Sync mode sender](images/sync-mode-local.png)
+
+This mode is enabled, if no `host` entry is be stored in the `target` or `origin` section of the `host.json` configuration.

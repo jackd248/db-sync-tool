@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import os, json, sys
-from utility import output
+from utility import output, system, mode
 
 
 def print_header():
@@ -27,4 +27,18 @@ def get_composer_information():
                 'Local composer information not found',
                 False
             )
+        )
+
+def print_footer():
+    if not system.option['keep_dump'] and mode.get_sync_mode() != mode.get_sync_modes().LOCAL:
+        output.message(
+            output.get_subject().INFO,
+            'Successfully synchronized databases',
+            True
+        )
+    else:
+        output.message(
+            output.get_subject().INFO,
+            'Successfully created database dump',
+            True
         )

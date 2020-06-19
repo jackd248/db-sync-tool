@@ -143,8 +143,9 @@ def remove_target_database_dump():
     #
     # Move dump to specified directory
     #
-    if system.option['keep_dump']:
-        _keep_dump_path = system.default_local_sync_path + '/' + database.origin_database_dump_file_name
+    if system.option['keep_dump'] or mode.get_sync_mode() == mode.get_sync_modes().LOCAL:
+        helper.create_local_temporary_data_dir()
+        _keep_dump_path = system.default_local_sync_path +  database.origin_database_dump_file_name
         mode.run_command(
             helper.get_command('target',
                                'cp') + ' ' + _file_path + ' ' + _keep_dump_path,
@@ -152,7 +153,7 @@ def remove_target_database_dump():
         )
         output.message(
             output.get_subject().INFO,
-            'Dump file is saved to: ' + _keep_dump_path,
+            'Database dump file is saved to: ' + _keep_dump_path,
             True
         )
 
@@ -171,8 +172,10 @@ def remove_target_database_dump():
         sftp.remove(_file_path + '.tar.gz')
         sftp.close()
     else:
-        os.remove(_file_path)
-        os.remove(_file_path + '.tar.gz')
+        if os.path.isfile(_file_path):
+            os.remove(_file_path)
+        if os.path.isfile(_file_path + '.tar.gz'):
+            os.remove(_file_path + '.tar.gz')
 
 
 #

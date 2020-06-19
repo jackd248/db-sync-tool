@@ -43,8 +43,7 @@ def extend_output_by_sync_mode(header):
                     _sync_mode == mode.get_sync_modes().SENDER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.TARGET):
         return bcolors.BLACK + '[REMOTE]' + bcolors.ENDC
 
-    if (_sync_mode == mode.get_sync_modes().SENDER and header == subject.ORIGIN) or (
-            _sync_mode == mode.get_sync_modes().RECEIVER and header == subject.TARGET):
+    if (_sync_mode == mode.get_sync_modes().SENDER and header == subject.ORIGIN) or (_sync_mode == mode.get_sync_modes().RECEIVER and header == subject.TARGET) or (_sync_mode == mode.get_sync_modes().LOCAL):
         return bcolors.BLACK + '[LOCAL]' + bcolors.ENDC
 
     return ''

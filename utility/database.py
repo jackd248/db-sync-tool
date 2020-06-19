@@ -27,7 +27,8 @@ def create_origin_database_dump():
         mode.get_clients().ORIGIN
     )
 
-    prepare_origin_database_dump()
+    if (mode.get_sync_mode() != mode.get_sync_modes().LOCAL):
+        prepare_origin_database_dump()
 
 
 def prepare_origin_database_dump():
@@ -77,7 +78,7 @@ def import_database_dump():
     #     if system.option['check_dump']:
     #         check_target_database_dump()
 
-    if not system.option['keep_dump']:
+    if not system.option['keep_dump'] and mode.get_sync_mode() != mode.get_sync_modes().LOCAL:
         output.message(
             output.get_subject().TARGET,
             'Importing database dump',
@@ -93,12 +94,13 @@ def import_database_dump():
 
 
 def prepare_target_database_dump():
-    output.message(output.get_subject().TARGET, 'Extracting database dump', True)
-    mode.run_command(
-        helper.get_command('target',
-                           'tar') + ' xzf ' + helper.get_target_dump_dir() + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_target_dump_dir(),
-        mode.get_clients().TARGET
-    )
+    if (mode.get_sync_mode() != mode.get_sync_modes().LOCAL):
+        output.message(output.get_subject().TARGET, 'Extracting database dump', True)
+        mode.run_command(
+            helper.get_command('target',
+                               'tar') + ' xzf ' + helper.get_target_dump_dir() + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_target_dump_dir(),
+            mode.get_clients().TARGET
+        )
 
 
 # @ToDo: make this remote possible

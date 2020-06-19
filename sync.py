@@ -23,12 +23,7 @@ def main():
     helper.clean_up()
     connect.close_ssh_clients()
 
-    output.message(
-        output.get_subject().INFO,
-        'Successfully synchronized databases',
-        True
-    )
-
+    info.print_footer()
 
 #
 # MAIN

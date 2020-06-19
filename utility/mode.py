@@ -8,6 +8,7 @@ from utility import system, output, connect
 # GLOBALS
 #
 class sync_modes:
+    LOCAL = 'LOCAL'
     RECEIVER = 'RECEIVER'
     SENDER = 'SENDER'
     PROXY = 'PROXY'
@@ -41,6 +42,9 @@ def check_sync_mode():
     if 'host' in system.config['host']['origin'] and 'host' in system.config['host']['target']:
         sync_mode = sync_modes.PROXY
         _description = output.get_bcolors().BLACK + '(REMOTE --> LOCAL --> REMOTE)' + output.get_bcolors().ENDC
+    if not 'host' in system.config['host']['origin'] and not 'host' in system.config['host']['target']:
+        sync_mode = sync_modes.LOCAL
+        _description = output.get_bcolors().BLACK + '(LOCAL --> LOCAL)' + output.get_bcolors().ENDC
 
     output.message(
         output.get_subject().INFO,
