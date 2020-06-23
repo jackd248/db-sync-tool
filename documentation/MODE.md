@@ -30,10 +30,18 @@ This mode can be used, when origin and target system can't or shouldn't connect 
 
 This mode is enabled, if a `host` entry is be stored in the `origin` __and__ `target` section of the `host.json` configuration.
 
-## Local
+## Dump Local
 
-The _local_ mode offers the possibility to save a database dump just from your local system. No database import will be performed. You can specify the dump file location with the "keep dump" option (`--kd`).
+The _dump local_ mode offers the possibility to only save a database dump from your local system. This is not really a synchronisation mode, just an easy way to save a database dump on your local maschine. No file transfer or database import will be performed. You can specify the dump file location with the `dump_dir` setting in your `host.json`.
 
-![Sync mode sender](images/sync-mode-local.png)
+![Sync mode sender](images/sync-mode-dump-local.png)
 
-This mode is enabled, if no `host` entry is be stored in the `target` or `origin` section of the `host.json` configuration.
+This mode is enabled, if _no_ `host` entry is be stored in the `target` or `origin` section of the `host.json` configuration.
+
+## Dump Remote
+
+The _dump local_ mode offers the possibility to only save a database dump from your local system. This is not really a synchronisation mode, just an easy way to save a database dump on a remote maschine (e.g. as backup mechanism). No file transfer or database import will be performed. You can specify the dump file location with the `dump_dir` setting in your `host.json`.
+
+![Sync mode sender](images/sync-mode-dump-remote.png)
+
+This mode is enabled, if the `host` entry are equal in the `target` and `origin` section of the `host.json` configuration.

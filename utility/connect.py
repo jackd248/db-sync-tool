@@ -119,7 +119,7 @@ def run_ssh_command(command, ssh_client=ssh_client_origin):
 #
 # CLEAN UP
 #
-def remove_origin_database_dump():
+def remove_origin_database_dump(keep_compressed_file = False):
     output.message(
         output.get_subject().ORIGIN,
         'Cleaning up',
@@ -130,11 +130,20 @@ def remove_origin_database_dump():
     if mode.is_origin_remote():
         sftp = ssh_client_origin.open_sftp()
         sftp.remove(_file_path)
-        sftp.remove(_file_path + '.tar.gz')
+        if not keep_compressed_file:
+            sftp.remove(_file_path + '.tar.gz')
         sftp.close()
     else:
         os.remove(_file_path)
-        os.remove(_file_path + '.tar.gz')
+        if not keep_compressed_file:
+            os.remove(_file_path + '.tar.gz')
+
+    if keep_compressed_file:
+        output.message(
+            output.get_subject().INFO,
+            'Database dump file is saved to: ' + _file_path+ '.tar.gz',
+            True
+        )
 
 
 def remove_target_database_dump():
@@ -143,7 +152,7 @@ def remove_target_database_dump():
     #
     # Move dump to specified directory
     #
-    if system.option['keep_dump'] or mode.get_sync_mode() == mode.get_sync_modes().LOCAL:
+    if system.option['keep_dump']:
         helper.create_local_temporary_data_dir()
         _keep_dump_path = system.default_local_sync_path +  database.origin_database_dump_file_name
         mode.run_command(
@@ -160,22 +169,23 @@ def remove_target_database_dump():
     #
     # Clean up
     #
-    output.message(
-        output.get_subject().TARGET,
-        'Cleaning up',
-        True
-    )
+    if not system.option['is_same_client']:
+        output.message(
+            output.get_subject().TARGET,
+            'Cleaning up',
+            True
+        )
 
-    if mode.is_target_remote():
-        sftp = ssh_client_target.open_sftp()
-        sftp.remove(_file_path)
-        sftp.remove(_file_path + '.tar.gz')
-        sftp.close()
-    else:
-        if os.path.isfile(_file_path):
-            os.remove(_file_path)
-        if os.path.isfile(_file_path + '.tar.gz'):
-            os.remove(_file_path + '.tar.gz')
+        if mode.is_target_remote():
+            sftp = ssh_client_target.open_sftp()
+            sftp.remove(_file_path)
+            sftp.remove(_file_path + '.tar.gz')
+            sftp.close()
+        else:
+            if os.path.isfile(_file_path):
+                os.remove(_file_path)
+            if os.path.isfile(_file_path + '.tar.gz'):
+                os.remove(_file_path + '.tar.gz')
 
 
 #
@@ -194,6 +204,8 @@ def transfer_origin_database_dump():
         get_origin_database_dump(system.default_local_sync_path)
         system.check_target_configuration()
         put_origin_database_dump(system.default_local_sync_path)
+    elif system.option['is_same_client']:
+        remove_origin_database_dump(True)
 
 
 def get_origin_database_dump(target_path):

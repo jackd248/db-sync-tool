@@ -30,7 +30,7 @@ def get_composer_information():
         )
 
 def print_footer():
-    if not system.option['keep_dump'] and mode.get_sync_mode() != mode.get_sync_modes().LOCAL:
+    if not system.option['keep_dump'] and not system.option['is_same_client']:
         output.message(
             output.get_subject().INFO,
             'Successfully synchronized databases',

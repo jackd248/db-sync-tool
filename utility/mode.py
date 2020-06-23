@@ -8,7 +8,8 @@ from utility import system, output, connect
 # GLOBALS
 #
 class sync_modes:
-    LOCAL = 'LOCAL'
+    DUMP_LOCAL = 'DUMP_LOCAL'
+    DUMP_REMOTE = 'DUMP_REMOTE'
     RECEIVER = 'RECEIVER'
     SENDER = 'SENDER'
     PROXY = 'PROXY'
@@ -43,8 +44,13 @@ def check_sync_mode():
         sync_mode = sync_modes.PROXY
         _description = output.get_bcolors().BLACK + '(REMOTE --> LOCAL --> REMOTE)' + output.get_bcolors().ENDC
     if not 'host' in system.config['host']['origin'] and not 'host' in system.config['host']['target']:
-        sync_mode = sync_modes.LOCAL
-        _description = output.get_bcolors().BLACK + '(LOCAL --> LOCAL)' + output.get_bcolors().ENDC
+        sync_mode = sync_modes.DUMP_LOCAL
+        _description = output.get_bcolors().BLACK + '(LOCAL, NO TRANSFER/IMPORT)' + output.get_bcolors().ENDC
+        system.option['is_same_client'] = True
+    if 'host' in system.config['host']['origin'] and 'host' in system.config['host']['target'] and system.config['host']['origin']['host'] == system.config['host']['target']['host']:
+        sync_mode = sync_modes.DUMP_REMOTE
+        _description = output.get_bcolors().BLACK + '(REMOTE, NO TRANSFER/IMPORT)' + output.get_bcolors().ENDC
+        system.option['is_same_client'] = True
 
     output.message(
         output.get_subject().INFO,
@@ -58,11 +64,11 @@ def get_clients():
 
 
 def is_target_remote():
-    return sync_mode == sync_modes.SENDER or sync_mode == sync_modes.PROXY
+    return sync_mode == sync_modes.SENDER or sync_mode == sync_modes.PROXY or sync_mode == sync_modes.DUMP_REMOTE
 
 
 def is_origin_remote():
-    return sync_mode == sync_modes.RECEIVER or sync_mode == sync_modes.PROXY
+    return sync_mode == sync_modes.RECEIVER or sync_mode == sync_modes.PROXY or sync_mode == sync_modes.DUMP_REMOTE
 
 
 def run_command(command, client):

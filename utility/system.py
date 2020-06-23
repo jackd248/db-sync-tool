@@ -15,6 +15,7 @@ option = {
     'default_origin_dump_dir': True,
     'default_target_dump_dir': True,
     'check_dump': True,
+    'is_same_client': False,
     'ssh_password': {
         'origin': None,
         'target': None
@@ -37,7 +38,11 @@ def check_configuration():
     if not option['use_origin_ssh_key'] and mode.is_origin_remote():
         option['ssh_password']['origin'] = get_password(mode.get_clients().ORIGIN)
 
-    if not option['use_target_ssh_key'] and mode.is_target_remote():
+        if mode.get_sync_mode() == mode.get_sync_modes().DUMP_REMOTE:
+            option['ssh_password']['target'] = option['ssh_password']['origin']
+
+
+    if not option['use_target_ssh_key'] and mode.is_target_remote() and mode.get_sync_mode() != mode.get_sync_modes().DUMP_REMOTE:
         option['ssh_password']['target'] = get_password(mode.get_clients().TARGET)
 
     # first get data configuration for origin client

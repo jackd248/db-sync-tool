@@ -40,10 +40,10 @@ def extend_output_by_sync_mode(header):
     if ((
                 _sync_mode == mode.get_sync_modes().RECEIVER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.ORIGIN) or (
             (
-                    _sync_mode == mode.get_sync_modes().SENDER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.TARGET):
+                    _sync_mode == mode.get_sync_modes().SENDER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.TARGET) or (_sync_mode == mode.get_sync_modes().DUMP_REMOTE and (header == subject.ORIGIN or header == subject.TARGET)):
         return bcolors.BLACK + '[REMOTE]' + bcolors.ENDC
 
-    if (_sync_mode == mode.get_sync_modes().SENDER and header == subject.ORIGIN) or (_sync_mode == mode.get_sync_modes().RECEIVER and header == subject.TARGET) or (_sync_mode == mode.get_sync_modes().LOCAL):
+    if (_sync_mode == mode.get_sync_modes().SENDER and header == subject.ORIGIN) or (_sync_mode == mode.get_sync_modes().RECEIVER and header == subject.TARGET) or (_sync_mode == mode.get_sync_modes().DUMP_LOCAL and (header == subject.ORIGIN or header == subject.TARGET)):
         return bcolors.BLACK + '[LOCAL]' + bcolors.ENDC
 
     return ''

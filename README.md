@@ -66,12 +66,13 @@ It is possible to adjust the `host.json` [configuration](documentation/CONFIG.md
 
 ### Sync modes
 
-The script provides four different kinds of [synchronisation modes](documentation/MODE.md).
+The script provides five different kinds of [synchronisation modes](documentation/MODE.md).
 
 - Receiver
 - Sender
 - Proxy
-- Local
+- Dump Local
+- Dump Remote
 
 ## Usage
 
