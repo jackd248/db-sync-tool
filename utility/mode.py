@@ -48,9 +48,10 @@ def check_sync_mode():
         _description = output.get_bcolors().BLACK + '(LOCAL, NO TRANSFER/IMPORT)' + output.get_bcolors().ENDC
         system.option['is_same_client'] = True
     if 'host' in system.config['host']['origin'] and 'host' in system.config['host']['target'] and system.config['host']['origin']['host'] == system.config['host']['target']['host']:
-        sync_mode = sync_modes.DUMP_REMOTE
-        _description = output.get_bcolors().BLACK + '(REMOTE, NO TRANSFER/IMPORT)' + output.get_bcolors().ENDC
-        system.option['is_same_client'] = True
+        if ('port' in system.config['host']['origin'] and 'port' in system.config['host']['target'] and system.config['host']['origin']['port'] == system.config['host']['target']['port']) or ('port' not in system.config['host']['origin'] and 'port' not in system.config['host']['target']):
+            sync_mode = sync_modes.DUMP_REMOTE
+            _description = output.get_bcolors().BLACK + '(REMOTE, NO TRANSFER/IMPORT)' + output.get_bcolors().ENDC
+            system.option['is_same_client'] = True
 
     output.message(
         output.get_subject().INFO,
