@@ -48,8 +48,8 @@ def generate_database_dump_filename():
 
     if system.option['dump_name'] == '':
         # _project-db_20-08-2020_12-37.sql
-        _now = datetime.now()
-        origin_database_dump_file_name = '_' + system.config['db']['origin']['dbname'] + '_' + now.strftime("%d-%m-%Y_%H-%M") + '.sql'
+        _now = datetime.datetime.now()
+        origin_database_dump_file_name = '_' + system.config['db']['origin']['dbname'] + '_' + _now.strftime("%d-%m-%Y_%H-%M") + '.sql'
     else:
         origin_database_dump_file_name = system.option['dump_name'] + '.sql'
 
