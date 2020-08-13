@@ -57,7 +57,7 @@ def load_ssh_client(ssh):
                 )
             )
 
-        _authentication_method = 'using key'
+        _authentication_method = '(authentication: key)'
     else:
         try:
             _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
@@ -75,7 +75,7 @@ def load_ssh_client(ssh):
                 )
             )
 
-        _authentication_method = 'using password'
+        _authentication_method = '(authentication: password)'
 
     output.message(
         output.client_to_subject(ssh),
