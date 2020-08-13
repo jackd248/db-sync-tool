@@ -12,6 +12,7 @@ option = {
     'use_origin_ssh_key': False,
     'use_target_ssh_key': False,
     'keep_dump': False,
+    'dump_name': '',
     'default_origin_dump_dir': True,
     'default_target_dump_dir': True,
     'check_dump': True,
@@ -186,6 +187,9 @@ def check_args_options(args):
 
     if not args.verbose is None:
         option['verbose'] = True
+
+    if not args.dumpname is None:
+        option['dump_name'] = args.dumpname
 
     if not args.keepdump is None:
         default_local_sync_path = args.keepdump

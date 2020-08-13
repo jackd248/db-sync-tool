@@ -86,6 +86,7 @@ python sync.py
 -h, --help              Show help
 -v, --verbose           Enable extended console output
 -f, --file              Path to host file
+-dn, --dumpname         Set a specific dump file name (default is "_[dbname]_[date]")
 -kd, --keepdump         Skipping target import of the database dump and saving the available dump file in the given directory
 ```
 

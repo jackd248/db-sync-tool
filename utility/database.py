@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import calendar, time, os, sys
+import calendar, time, os, sys, datetime
 from utility import output, connect, system, helper, mode
 
 #
@@ -44,10 +44,14 @@ def prepare_origin_database_dump():
 
 
 def generate_database_dump_filename():
-    # _project_typo3_db_dump_1586780116.sql
     global origin_database_dump_file_name
-    _timestamp = calendar.timegm(time.gmtime())
-    origin_database_dump_file_name = '_' + system.config['host']['name'] + '_db_dump_' + str(_timestamp) + '.sql'
+
+    if system.option['dump_name'] == '':
+        # _project-db_20-08-2020_12-37.sql
+        _now = datetime.now()
+        origin_database_dump_file_name = '_' + system.config['db']['origin']['dbname'] + '_' + now.strftime("%d-%m-%Y_%H-%M") + '.sql'
+    else:
+        origin_database_dump_file_name = system.option['dump_name']
 
 
 def generate_ignore_database_tables():
