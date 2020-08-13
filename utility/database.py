@@ -51,7 +51,7 @@ def generate_database_dump_filename():
         _now = datetime.now()
         origin_database_dump_file_name = '_' + system.config['db']['origin']['dbname'] + '_' + now.strftime("%d-%m-%Y_%H-%M") + '.sql'
     else:
-        origin_database_dump_file_name = system.option['dump_name']
+        origin_database_dump_file_name = system.option['dump_name'] + '.sql'
 
 
 def generate_ignore_database_tables():
