@@ -10,6 +10,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', help='Path to host file', required=False)
     parser.add_argument('-v', '--verbose', help='Enable extended console output', required=False)
+    parser.add_argument('-i', '--importfile', help='Import database from a specific file dump', required=False)
     parser.add_argument('-dn', '--dumpname', help='Set a specific dump file name (default is "_[dbname]_[date]")', required=False)
     parser.add_argument('-kd', '--keepdump',
                         help='Skipping target import of the database dump and saving the available dump file in the given directory',

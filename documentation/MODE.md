@@ -45,3 +45,19 @@ The _dump local_ mode offers the possibility to only save a database dump from y
 ![Sync mode sender](images/sync-mode-dump-remote.png)
 
 This mode is enabled, if the `host` entry are equal in the `target` and `origin` section of the `host.json` configuration.
+
+## Import Local
+
+The _import local_ mode offers the possibility to only import a database dump from a local file dump. This is not really a synchronisation mode, just an easy way to import a database dump on your local maschine. No file transfer will be performed.
+
+![Sync mode sender](images/sync-mode-dump-local.png)
+
+This mode is enabled, if you add the `-i` or `--importfile` option and specify the location of the local dump file.
+
+## Import Remote
+
+The _import remote_ mode offers the possibility to only import a database dump on a remote file dump. This is not really a synchronisation mode, just an easy way to import a database dump on a remote maschine. No file transfer will be performed.
+
+![Sync mode sender](images/sync-mode-dump-remote.png)
+
+This mode is enabled, if you add the `-i` or `--importfile` option, specify the location of the remote dump file and the `target` in your `host.json` is a remote system.

@@ -6,28 +6,31 @@ from utility import output, connect, system, helper, mode
 #
 # GLOBALS
 #
+
 origin_database_dump_file_name = None
 
+#
+# FUNCTIONS
+#
 
-#
-# CREATE ORIGIN DATABASE DUMP
-#
 def create_origin_database_dump():
-    generate_database_dump_filename()
 
-    output.message(
-        output.get_subject().ORIGIN,
-        'Creating database dump',
-        True
-    )
-    mode.run_command(
-        helper.get_command('origin', 'mysqldump') + ' ' + generate_mysql_credentials('origin') + ' ' +
-        system.config['db']['origin'][
-            'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_origin_dump_dir() + origin_database_dump_file_name,
-        mode.get_clients().ORIGIN
-    )
+    if not mode.is_import():
+        generate_database_dump_filename()
 
-    prepare_origin_database_dump()
+        output.message(
+            output.get_subject().ORIGIN,
+            'Creating database dump',
+            True
+        )
+        mode.run_command(
+            helper.get_command('origin', 'mysqldump') + ' ' + generate_mysql_credentials('origin') + ' ' +
+            system.config['db']['origin'][
+                'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_origin_dump_dir() + origin_database_dump_file_name,
+            mode.get_clients().ORIGIN
+        )
+
+        prepare_origin_database_dump()
 
 
 def prepare_origin_database_dump():
@@ -76,7 +79,7 @@ def generate_mysql_credentials(_target):
 # IMPORT DATABASE DUMP
 #
 def import_database_dump():
-    if (not system.option['is_same_client']):
+    if (not system.option['is_same_client'] and not mode.is_import()):
         prepare_target_database_dump()
 
     # @ToDo: Enable check_dump feature again
@@ -90,10 +93,15 @@ def import_database_dump():
             True
         )
 
+        if not mode.is_import():
+           _dump_path = helper.get_target_dump_dir() + origin_database_dump_file_name
+        else:
+           _dump_path = system.option['import']
+
         mode.run_command(
             helper.get_command('target', 'mysql') + ' ' + generate_mysql_credentials('target') + ' ' +
             system.config['db']['target'][
-                'dbname'] + ' < ' + helper.get_target_dump_dir() + origin_database_dump_file_name,
+                'dbname'] + ' < ' + _dump_path,
             mode.get_clients().TARGET
         )
 

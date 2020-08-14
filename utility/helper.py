@@ -5,12 +5,14 @@ from utility import output, system, database, connect, mode
 
 
 #
-# CLEAN UP
+# FUNCTIONS
 #
+
 def clean_up():
-    connect.remove_target_database_dump()
-    if mode.get_sync_mode() == mode.get_sync_modes().PROXY:
-        remove_temporary_data_dir()
+    if not mode.is_import():
+        connect.remove_target_database_dump()
+        if mode.get_sync_mode() == mode.get_sync_modes().PROXY:
+            remove_temporary_data_dir()
 
 
 def remove_temporary_data_dir():

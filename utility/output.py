@@ -2,10 +2,10 @@
 
 from utility import mode
 
+#
+# GLOBALS
+#
 
-#
-# SYSTEM UTILITY
-#
 class bcolors:
     BEIGE = '\033[96m'
     PURPLE = '\033[95m'
@@ -27,6 +27,9 @@ class subject:
     ERROR = bcolors.RED + '[ERROR]' + bcolors.ENDC
     WARNING = bcolors.YELLOW + '[WARNING]' + bcolors.ENDC
 
+#
+# FUNCTIONS
+#
 
 def message(header, message, do_print):
     if do_print:
@@ -40,10 +43,10 @@ def extend_output_by_sync_mode(header):
     if ((
                 _sync_mode == mode.get_sync_modes().RECEIVER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.ORIGIN) or (
             (
-                    _sync_mode == mode.get_sync_modes().SENDER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.TARGET) or (_sync_mode == mode.get_sync_modes().DUMP_REMOTE and (header == subject.ORIGIN or header == subject.TARGET)):
+                    _sync_mode == mode.get_sync_modes().SENDER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.TARGET) or (_sync_mode == mode.get_sync_modes().DUMP_REMOTE and (header == subject.ORIGIN or header == subject.TARGET)) or (_sync_mode == mode.get_sync_modes().IMPORT_REMOTE and (header == subject.ORIGIN or header == subject.TARGET)):
         return bcolors.BLACK + '[REMOTE]' + bcolors.ENDC
 
-    if (_sync_mode == mode.get_sync_modes().SENDER and header == subject.ORIGIN) or (_sync_mode == mode.get_sync_modes().RECEIVER and header == subject.TARGET) or (_sync_mode == mode.get_sync_modes().DUMP_LOCAL and (header == subject.ORIGIN or header == subject.TARGET)):
+    if (_sync_mode == mode.get_sync_modes().SENDER and header == subject.ORIGIN) or (_sync_mode == mode.get_sync_modes().RECEIVER and header == subject.TARGET) or (_sync_mode == mode.get_sync_modes().DUMP_LOCAL and (header == subject.ORIGIN or header == subject.TARGET)) or (_sync_mode == mode.get_sync_modes().IMPORT_LOCAL and (header == subject.ORIGIN or header == subject.TARGET)):
         return bcolors.BLACK + '[LOCAL]' + bcolors.ENDC
 
     return ''

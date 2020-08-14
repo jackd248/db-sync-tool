@@ -6,13 +6,15 @@ from utility import output, system, database, helper, mode
 #
 # GLOBALS
 #
+
 ssh_client_origin = None
 ssh_client_target = None
 
 
 #
-# SSH UTILITY
+# FUNCTIONS
 #
+
 def load_ssh_client_origin():
     global ssh_client_origin
     ssh_client_origin = load_ssh_client(mode.get_clients().ORIGIN)
@@ -169,7 +171,7 @@ def remove_target_database_dump():
     #
     # Clean up
     #
-    if not system.option['is_same_client']:
+    if (not system.option['is_same_client'] and not mode.is_import()):
         output.message(
             output.get_subject().TARGET,
             'Cleaning up',
@@ -192,20 +194,23 @@ def remove_target_database_dump():
 # TRANSFER ORIGIN DATABASE DUMP
 #
 def transfer_origin_database_dump():
-    if mode.get_sync_mode() == mode.get_sync_modes().RECEIVER:
-        get_origin_database_dump(helper.get_target_dump_dir())
+    if not mode.is_import():
+        if mode.get_sync_mode() == mode.get_sync_modes().RECEIVER:
+            get_origin_database_dump(helper.get_target_dump_dir())
+            system.check_target_configuration()
+        elif mode.get_sync_mode() == mode.get_sync_modes().SENDER:
+            system.check_target_configuration()
+            put_origin_database_dump(helper.get_origin_dump_dir())
+            remove_origin_database_dump()
+        elif mode.get_sync_mode() == mode.get_sync_modes().PROXY:
+            helper.create_local_temporary_data_dir()
+            get_origin_database_dump(system.default_local_sync_path)
+            system.check_target_configuration()
+            put_origin_database_dump(system.default_local_sync_path)
+        elif system.option['is_same_client']:
+            remove_origin_database_dump(True)
+    else:
         system.check_target_configuration()
-    elif mode.get_sync_mode() == mode.get_sync_modes().SENDER:
-        system.check_target_configuration()
-        put_origin_database_dump(helper.get_origin_dump_dir())
-        remove_origin_database_dump()
-    elif mode.get_sync_mode() == mode.get_sync_modes().PROXY:
-        helper.create_local_temporary_data_dir()
-        get_origin_database_dump(system.default_local_sync_path)
-        system.check_target_configuration()
-        put_origin_database_dump(system.default_local_sync_path)
-    elif system.option['is_same_client']:
-        remove_origin_database_dump(True)
 
 
 def get_origin_database_dump(target_path):

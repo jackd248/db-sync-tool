@@ -7,9 +7,12 @@ from utility import system, output, connect
 #
 # GLOBALS
 #
+
 class sync_modes:
     DUMP_LOCAL = 'DUMP_LOCAL'
     DUMP_REMOTE = 'DUMP_REMOTE'
+    IMPORT_LOCAL = 'IMPORT_LOCAL'
+    IMPORT_REMOTE = 'IMPORT_REMOTE'
     RECEIVER = 'RECEIVER'
     SENDER = 'SENDER'
     PROXY = 'PROXY'
@@ -19,17 +22,17 @@ class clients:
     ORIGIN = 'origin'
     TARGET = 'target'
 
-
 sync_mode = sync_modes.RECEIVER
 
+#
+# FUNCTIONS
+#
 
 def get_sync_modes():
     return sync_modes
 
-
 def get_sync_mode():
     return sync_mode
-
 
 def check_sync_mode():
     global sync_mode
@@ -52,6 +55,18 @@ def check_sync_mode():
             sync_mode = sync_modes.DUMP_REMOTE
             _description = output.get_bcolors().BLACK + '(REMOTE, NO TRANSFER/IMPORT)' + output.get_bcolors().ENDC
             system.option['is_same_client'] = True
+    if system.option['import'] != '':
+        output.message(
+            output.get_subject().INFO,
+            'Import file: ' + system.option['import'],
+            True
+        )
+        if 'host' in system.config['host']['target']:
+            sync_mode = sync_modes.IMPORT_REMOTE
+            _description = output.get_bcolors().BLACK + '(REMOTE, NO TRANSFER)' + output.get_bcolors().ENDC
+        else:
+            sync_mode = sync_modes.IMPORT_LOCAL
+            _description = output.get_bcolors().BLACK + '(LOCAL, NO TRANSFER)' + output.get_bcolors().ENDC
 
     output.message(
         output.get_subject().INFO,
@@ -59,18 +74,17 @@ def check_sync_mode():
         True
     )
 
-
 def get_clients():
     return clients
 
-
 def is_target_remote():
-    return sync_mode == sync_modes.SENDER or sync_mode == sync_modes.PROXY or sync_mode == sync_modes.DUMP_REMOTE
-
+    return sync_mode == sync_modes.SENDER or sync_mode == sync_modes.PROXY or sync_mode == sync_modes.DUMP_REMOTE or sync_mode == sync_modes.IMPORT_REMOTE
 
 def is_origin_remote():
-    return sync_mode == sync_modes.RECEIVER or sync_mode == sync_modes.PROXY or sync_mode == sync_modes.DUMP_REMOTE
+    return sync_mode == sync_modes.RECEIVER or sync_mode == sync_modes.PROXY or sync_mode == sync_modes.DUMP_REMOTE or sync_mode == sync_modes.IMPORT_REMOTE
 
+def is_import():
+    return sync_mode == sync_modes.IMPORT_LOCAL or sync_mode == sync_modes.IMPORT_REMOTE
 
 def run_command(command, client):
     if client == clients.ORIGIN:

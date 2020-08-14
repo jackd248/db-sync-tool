@@ -3,6 +3,9 @@
 import os, json, sys
 from utility import output, system, mode
 
+#
+# FUNCTIONS
+#
 
 def print_header():
     _information = get_composer_information()
@@ -30,12 +33,18 @@ def get_composer_information():
         )
 
 def print_footer():
-    if not system.option['keep_dump'] and not system.option['is_same_client']:
+    if not system.option['keep_dump'] and not system.option['is_same_client'] and not mode.is_import():
         output.message(
             output.get_subject().INFO,
             'Successfully synchronized databases',
             True
         )
+    elif mode.is_import():
+            output.message(
+                output.get_subject().INFO,
+                'Successfully imported database dump',
+                True
+            )
     else:
         output.message(
             output.get_subject().INFO,

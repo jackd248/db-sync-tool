@@ -6,6 +6,7 @@ from utility import output, connect, mode, parser
 #
 # GLOBALS
 #
+
 config = {}
 option = {
     'verbose': False,
@@ -13,6 +14,7 @@ option = {
     'use_target_ssh_key': False,
     'keep_dump': False,
     'dump_name': '',
+    'import': '',
     'default_origin_dump_dir': True,
     'default_target_dump_dir': True,
     'check_dump': True,
@@ -26,17 +28,19 @@ option = {
 #
 # DEFAULTS
 #
+
 default_local_host_file_path = 'host.json'
 default_local_sync_path = os.path.abspath(os.getcwd()) + '/.sync/'
 
 
 #
-# CHECK CONFIGURATION
+# FUNCTIONS
 #
+
 def check_configuration():
     load_pip_modules()
     get_host_configuration()
-    if not option['use_origin_ssh_key'] and mode.is_origin_remote():
+    if not option['use_origin_ssh_key'] and mode.is_origin_remote() and option['import'] == '':
         option['ssh_password']['origin'] = get_password(mode.get_clients().ORIGIN)
 
         if mode.get_sync_mode() == mode.get_sync_modes().DUMP_REMOTE:
@@ -46,8 +50,9 @@ def check_configuration():
     if not option['use_target_ssh_key'] and mode.is_target_remote() and mode.get_sync_mode() != mode.get_sync_modes().DUMP_REMOTE:
         option['ssh_password']['target'] = get_password(mode.get_clients().TARGET)
 
-    # first get data configuration for origin client
-    parser.get_database_configuration(mode.get_clients().ORIGIN)
+    if not mode.is_import():
+        # first get data configuration for origin client
+        parser.get_database_configuration(mode.get_clients().ORIGIN)
 
 
 def check_target_configuration():
@@ -187,6 +192,9 @@ def check_args_options(args):
 
     if not args.verbose is None:
         option['verbose'] = True
+
+    if not args.importfile is None:
+            option['import'] = args.importfile
 
     if not args.dumpname is None:
         option['dump_name'] = args.dumpname

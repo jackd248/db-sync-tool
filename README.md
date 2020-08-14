@@ -66,13 +66,15 @@ It is possible to adjust the `host.json` [configuration](documentation/CONFIG.md
 
 ### Sync modes
 
-The script provides five different kinds of [synchronisation modes](documentation/MODE.md).
+The script provides seven different kinds of [synchronisation modes](documentation/MODE.md).
 
 - Receiver
 - Sender
 - Proxy
 - Dump Local
 - Dump Remote
+- Import Local
+- Import Remote
 
 ## Usage
 
@@ -86,6 +88,7 @@ python sync.py
 -h, --help              Show help
 -v, --verbose           Enable extended console output
 -f, --file              Path to host file
+-i, --importfile        Import database from a specific file dump
 -dn, --dumpname         Set a specific dump file name (default is "_[dbname]_[date]")
 -kd, --keepdump         Skipping target import of the database dump and saving the available dump file in the given directory
 ```

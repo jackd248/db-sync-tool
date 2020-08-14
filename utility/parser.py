@@ -7,10 +7,14 @@ from utility import output, system, mode, connect
 #
 # GLOBALS
 #
+
 class framework:
     TYPO3 = 'TYPO3'
     SYMFONY = 'Symfony'
 
+#
+# FUNCTIONS
+#
 
 def get_framework():
     return framework
