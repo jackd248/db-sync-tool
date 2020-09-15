@@ -76,6 +76,7 @@ def load_parser_origin(parser):
         connect.load_ssh_client_origin()
         parser.check_remote_configuration(mode.get_clients().ORIGIN)
     else:
+        connect.run_before_script(mode.get_clients().ORIGIN)
         parser.check_local_configuration(mode.get_clients().ORIGIN)
 
 
@@ -90,4 +91,5 @@ def load_parser_target(parser):
         connect.load_ssh_client_target()
         parser.check_remote_configuration(mode.get_clients().TARGET)
     else:
+        connect.run_before_script(mode.get_clients().TARGET)
         parser.check_local_configuration(mode.get_clients().TARGET)

@@ -58,6 +58,23 @@ Normally is the script creating the sql dump in the `home` directory of the give
 }
 ```
 
+### Before and after script
+
+Sometimes it is necessary to run a specific command before or after the dump creation on the origin or target system to ensure the correct synchronisation process. Therefore you can specify theses commands in the `host.json`:
+
+```json
+{
+  "origin": {
+    "before_script": "",
+    "after_script": ""
+  },
+  "target": {
+    "before_script": "",
+    "after_script": ""
+  }
+}
+```
+
 ### Check dump
 
 The script is checking the target dump if the file is being downloaded completely. If you want to prevent this check, you can disable them in the `host.json`:

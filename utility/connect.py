@@ -18,11 +18,13 @@ ssh_client_target = None
 def load_ssh_client_origin():
     global ssh_client_origin
     ssh_client_origin = load_ssh_client(mode.get_clients().ORIGIN)
+    run_before_script(mode.get_clients().ORIGIN)
 
 
 def load_ssh_client_target():
     global ssh_client_target
     ssh_client_target = load_ssh_client(mode.get_clients().TARGET)
+    run_before_script(mode.get_clients().TARGET)
 
 
 def get_ssh_client_origin():
@@ -89,11 +91,43 @@ def load_ssh_client(ssh):
     return _ssh_client
 
 
+def run_before_script(client):
+    # Run before_script after successful connection
+    if 'before_script' in system.config['host'][client]:
+        output.message(
+            output.host_to_subject(client),
+            'Running before_script',
+            True
+        )
+        mode.run_command(
+            system.config['host'][client]['before_script'],
+            client
+        )
+
+
+def run_after_script(client):
+    # Run after_script after successful connection
+    if 'after_script' in system.config['host'][client]:
+        output.message(
+            output.host_to_subject(client),
+            'Running after_script',
+            True
+        )
+        mode.run_command(
+            system.config['host'][client]['after_script'],
+            client
+        )
+
+
 def close_ssh_clients():
+    run_after_script(mode.get_clients().ORIGIN)
     if not ssh_client_origin is None:
         ssh_client_origin.close()
+
+    run_after_script(mode.get_clients().TARGET)
     if not ssh_client_target is None:
         ssh_client_target.close()
+
 
 
 def run_ssh_command_origin(command):
@@ -121,7 +155,7 @@ def run_ssh_command(command, ssh_client=ssh_client_origin):
 #
 # CLEAN UP
 #
-def remove_origin_database_dump(keep_compressed_file = False):
+def remove_origin_database_dump(keep_compressed_file=False):
     output.message(
         output.get_subject().ORIGIN,
         'Cleaning up',
@@ -143,7 +177,7 @@ def remove_origin_database_dump(keep_compressed_file = False):
     if keep_compressed_file:
         output.message(
             output.get_subject().INFO,
-            'Database dump file is saved to: ' + _file_path+ '.tar.gz',
+            'Database dump file is saved to: ' + _file_path + '.tar.gz',
             True
         )
 
@@ -156,7 +190,7 @@ def remove_target_database_dump():
     #
     if system.option['keep_dump']:
         helper.create_local_temporary_data_dir()
-        _keep_dump_path = system.default_local_sync_path +  database.origin_database_dump_file_name
+        _keep_dump_path = system.default_local_sync_path + database.origin_database_dump_file_name
         mode.run_command(
             helper.get_command('target',
                                'cp') + ' ' + _file_path + ' ' + _keep_dump_path,

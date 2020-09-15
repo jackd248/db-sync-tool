@@ -59,6 +59,13 @@ def client_to_subject(client):
         return subject.TARGET
 
 
+def host_to_subject(host):
+    if host == mode.get_clients().ORIGIN:
+        return subject.ORIGIN
+    elif host == mode.get_clients().TARGET:
+        return subject.TARGET
+
+
 def get_bcolors():
     return bcolors
 
