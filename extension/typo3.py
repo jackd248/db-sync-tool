@@ -19,7 +19,7 @@ def check_local_configuration(client):
     #
     _db_config = check_output(
         [helper.get_command(client, 'php'), '-r',
-         'echo json_encode(include "' + system.config['host'][client]['path'] + '");'])
+         'echo json_encode(include "' + system.config['host'][client]['path'] + '");']).decode()
     _db_config = parse_database_credentials(json.loads(_db_config)['DB'])
 
     if system.option['verbose']:

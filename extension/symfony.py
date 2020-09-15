@@ -16,7 +16,7 @@ def check_local_configuration(client):
             'path'] + ' | ' + helper.get_command(client, 'grep') + ' DATABASE_URL',
         stderr=subprocess.STDOUT,
         shell=True
-    )
+    ).decode()
 
     _db_config = parse_database_credentials(_db_credentials)
 
