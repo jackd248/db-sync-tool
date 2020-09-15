@@ -13,13 +13,7 @@ The script using python 3. It is necessary for some additional functionalities t
 You can do this e.g. by the following command:
 
 ```bash
-apt install -y python-pip
-```
-
-Additionally the python module [paramiko](https://github.com/paramiko/paramiko) is needed, to connect to the origin system. The module will be installed within the first script run or you can add the module using pip on your own:
-
-```bash
-pip install paramiko
+apt install -y python-pip3
 ```
 
 ## Install
@@ -29,6 +23,12 @@ While using the script within the PHP framework context, the script is available
 ```bash
 composer require kmi/db-sync-tool
 ```
+
+Additionally install the python requirements via the following pip command:
+
+````bash
+pip3 install -r vendor/kmi/db-sync-tool/requirements.txt
+````
 
 ## Configuration
 
