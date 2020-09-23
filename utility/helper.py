@@ -52,6 +52,19 @@ def get_target_dump_dir():
         return system.config['host']['target']['dump_dir']
 
 
+def check_and_create_dump_dir(client, path):
+    """
+    Check if a path exists on the client system and creates the given path if necessary
+    :param client:
+    :param path
+    :return:
+    """
+    mode.run_command(
+        '[ ! -d "' + path + '"] & & mkdir - p "' + path + '"',
+        client
+    )
+
+
 def create_local_temporary_data_dir():
     if not os.path.exists(system.default_local_sync_path):
         os.mkdir(system.default_local_sync_path)

@@ -79,7 +79,6 @@ def get_host_configuration():
             )
         )
 
-
 def load_pip_modules():
     import importlib
     import subprocess
@@ -183,6 +182,11 @@ def check_options():
 
 
 def check_args_options(args):
+    """
+    Checking arguments and fill options array
+    :param args:
+    :return:
+    """
     global option
     global default_local_host_file_path
     global default_local_sync_path

@@ -254,6 +254,7 @@ def get_origin_database_dump(target_path):
         'Downloading database dump',
         True
     )
+    helper.check_and_create_dump_dir(mode.get_clients().TARGET, target_path)
 
     #
     # ToDo: Download speed problems
@@ -289,6 +290,7 @@ def put_origin_database_dump(origin_path):
         'Uploading database dump',
         True
     )
+    helper.check_and_create_dump_dir(mode.get_clients().ORIGIN, origin_path)
 
     #
     # ToDo: Download speed problems
