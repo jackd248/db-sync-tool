@@ -178,6 +178,7 @@ def remove_origin_database_dump(keep_compressed_file=False):
         output.message(
             output.get_subject().INFO,
             'Database dump file is saved to: ' + _file_path + '.tar.gz',
+            True,
             True
         )
 
@@ -199,6 +200,7 @@ def remove_target_database_dump():
         output.message(
             output.get_subject().INFO,
             'Database dump file is saved to: ' + _keep_dump_path,
+            True,
             True
         )
 

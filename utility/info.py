@@ -28,7 +28,8 @@ def get_composer_information():
             output.message(
                 output.get_subject().ERROR,
                 'Local composer information not found',
-                False
+                False,
+                True
             )
         )
 
@@ -37,17 +38,20 @@ def print_footer():
         output.message(
             output.get_subject().INFO,
             'Successfully synchronized databases',
+            True,
             True
         )
     elif mode.is_import():
-            output.message(
-                output.get_subject().INFO,
-                'Successfully imported database dump',
-                True
-            )
+        output.message(
+            output.get_subject().INFO,
+            'Successfully imported database dump',
+            True,
+            True
+        )
     else:
         output.message(
             output.get_subject().INFO,
             'Successfully created database dump',
+            True,
             True
         )

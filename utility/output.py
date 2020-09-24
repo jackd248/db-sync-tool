@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-from utility import mode
+from utility import mode, log
+
 
 #
 # GLOBALS
@@ -27,11 +28,22 @@ class subject:
     ERROR = bcolors.RED + '[ERROR]' + bcolors.ENDC
     WARNING = bcolors.YELLOW + '[WARNING]' + bcolors.ENDC
 
+
 #
 # FUNCTIONS
 #
 
-def message(header, message, do_print):
+def message(header, message, do_print=True, do_log=False):
+
+    if do_log:
+        # @ToDo: Can this be done better? Dynamic functions?
+        if header == subject.WARNING:
+            log.get_logger().warning(message)
+        elif header == subject.ERROR:
+            log.get_logger().error(message)
+        else:
+            log.get_logger().info(message)
+
     if do_print:
         print(header + extend_output_by_sync_mode(header) + ' ' + message)
     else:
@@ -43,10 +55,19 @@ def extend_output_by_sync_mode(header):
     if ((
                 _sync_mode == mode.get_sync_modes().RECEIVER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.ORIGIN) or (
             (
-                    _sync_mode == mode.get_sync_modes().SENDER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.TARGET) or (_sync_mode == mode.get_sync_modes().DUMP_REMOTE and (header == subject.ORIGIN or header == subject.TARGET)) or (_sync_mode == mode.get_sync_modes().IMPORT_REMOTE and (header == subject.ORIGIN or header == subject.TARGET)):
+                    _sync_mode == mode.get_sync_modes().SENDER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.TARGET) or (
+            _sync_mode == mode.get_sync_modes().DUMP_REMOTE and (
+            header == subject.ORIGIN or header == subject.TARGET)) or (
+            _sync_mode == mode.get_sync_modes().IMPORT_REMOTE and (
+            header == subject.ORIGIN or header == subject.TARGET)):
         return bcolors.BLACK + '[REMOTE]' + bcolors.ENDC
 
-    if (_sync_mode == mode.get_sync_modes().SENDER and header == subject.ORIGIN) or (_sync_mode == mode.get_sync_modes().RECEIVER and header == subject.TARGET) or (_sync_mode == mode.get_sync_modes().DUMP_LOCAL and (header == subject.ORIGIN or header == subject.TARGET)) or (_sync_mode == mode.get_sync_modes().IMPORT_LOCAL and (header == subject.ORIGIN or header == subject.TARGET)):
+    if (_sync_mode == mode.get_sync_modes().SENDER and header == subject.ORIGIN) or (
+            _sync_mode == mode.get_sync_modes().RECEIVER and header == subject.TARGET) or (
+            _sync_mode == mode.get_sync_modes().DUMP_LOCAL and (
+            header == subject.ORIGIN or header == subject.TARGET)) or (
+            _sync_mode == mode.get_sync_modes().IMPORT_LOCAL and (
+            header == subject.ORIGIN or header == subject.TARGET)):
         return bcolors.BLACK + '[LOCAL]' + bcolors.ENDC
 
     return ''

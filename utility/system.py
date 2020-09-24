@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys, json, os, getpass
-from utility import output, connect, mode, parser
+from utility import output, log, mode, parser
 
 #
 # GLOBALS
@@ -79,6 +79,14 @@ def get_host_configuration():
             )
         )
 
+    log.get_logger().info('Starting db_sync_tool')
+    output.message(
+        output.get_subject().INFO,
+        'Configuration: ' + default_local_host_file_path,
+        True,
+        True
+    )
+
 def load_pip_modules():
     import importlib
     import subprocess
@@ -125,7 +133,7 @@ def get_password(client):
         )
     )
 
-    while _password.strip() is '':
+    while _password.strip() == '':
         output.message(
             output.get_subject().WARNING,
             'Password is empty. Please enter a valid password.',
