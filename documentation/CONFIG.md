@@ -60,7 +60,7 @@ Normally is the script creating the sql dump in the `home` directory of the give
 
 ### Before and after script
 
-Sometimes it is necessary to run a specific command before or after the dump creation on the origin or target system to ensure the correct synchronisation process. Therefore you can specify theses commands in the `host.json`:
+Sometimes it is necessary to run a specific command before or after the dump creation on the origin or target system to ensure the correct synchronisation process. Therefore you can specify these commands in the `host.json`:
 
 ```json
 {
@@ -72,6 +72,16 @@ Sometimes it is necessary to run a specific command before or after the dump cre
     "before_script": "",
     "after_script": ""
   }
+}
+```
+
+### Logging
+
+You can enable the logging to a separate log file via the `log_file` entry in the `host.json`:
+
+```json
+{
+  "log_file": "/path/to/file/info.log"
 }
 ```
 
