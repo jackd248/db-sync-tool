@@ -25,6 +25,50 @@ def remove_temporary_data_dir():
         )
 
 
+def clean_up_dump_dir(client, path, num=5):
+    """
+    Clean up the dump directory from old dump files
+    :param client:
+    :param path:
+    :param num:
+    :return:
+    """
+    # Distinguish stat command on os system (Darwin|Linux)
+    if check_os(client).strip() == 'Darwin':
+        _command = 'stat -f "%Sm %N" ' + path + ' | sort -rn'
+    else:
+        _command = 'stat -c "%y %n" ' + path + ' | sort -rn'
+
+    # List files in directory sorted by change date
+    _files = mode.run_command(
+        _command,
+        client,
+        True
+    ).splitlines()
+
+    for i in range(len(_files)):
+        _filename = _files[i].rsplit(' ', 1)[-1]
+
+        # Remove oldest files chosen by keep_dumps count
+        if not i < num:
+            mode.run_command(
+                'rm ' + _filename,
+                client
+            )
+
+
+def check_os(client):
+    """
+    Check which system is running (Linux|Darwin)
+    :param client:
+    :return:
+    """
+    return mode.run_command(
+        'uname -s',
+        client,
+        True
+    )
+
 def get_command(target, command):
     if 'console' in system.config['host'][target]:
         if command in system.config['host'][target]['console']:
@@ -56,7 +100,7 @@ def check_and_create_dump_dir(client, path):
     """
     Check if a path exists on the client system and creates the given path if necessary
     :param client:
-    :param path
+    :param path:
     :return:
     """
     mode.run_command(

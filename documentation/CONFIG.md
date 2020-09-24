@@ -85,6 +85,22 @@ You can enable the logging to a separate log file via the `log_file` entry in th
 }
 ```
 
+
+### Cleaning up / keeping dumps cound
+
+With the concept of the *DUMP_REMOTE* or *DUMP_LOCAL* mode can you implement an automatic backup system. However it's a good option to clean up old dump files and only keep the newest ones. Therefore you can use the `keep_dumps` entry in the `host.json`:
+
+```json
+{
+  "origin": {
+    "dump_dir": "/path/to/writable/dir/",
+    "keep_dumps": 5
+  }
+}
+```
+
+**Note**: Be aware of this feature. It will only keep the latest (e.g. 5) files in the `dump_dir` directory and delete all other files.
+
 ### Check dump
 
 The script is checking the target dump if the file is being downloaded completely. If you want to prevent this check, you can disable them in the `host.json`:

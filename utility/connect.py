@@ -175,6 +175,9 @@ def remove_origin_database_dump(keep_compressed_file=False):
             os.remove(_file_path + '.tar.gz')
 
     if keep_compressed_file:
+        if 'keep_dumps' in system.config['host'][mode.get_clients().ORIGIN]:
+            helper.clean_up_dump_dir(mode.get_clients().ORIGIN, helper.get_origin_dump_dir() + '*', system.config['host'][mode.get_clients().ORIGIN]['keep_dumps'])
+
         output.message(
             output.get_subject().INFO,
             'Database dump file is saved to: ' + _file_path + '.tar.gz',

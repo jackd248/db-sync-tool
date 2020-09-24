@@ -86,7 +86,7 @@ def is_origin_remote():
 def is_import():
     return sync_mode == sync_modes.IMPORT_LOCAL or sync_mode == sync_modes.IMPORT_REMOTE
 
-def run_command(command, client):
+def run_command(command, client, force_output=False):
     if client == clients.ORIGIN:
         if system.option['verbose']:
             output.message(
@@ -95,9 +95,15 @@ def run_command(command, client):
                 True
             )
         if is_origin_remote():
-            return connect.run_ssh_command_origin(command)
+            if force_output:
+                return ''.join(connect.run_ssh_command_origin(command).readlines())
+            else:
+                return connect.run_ssh_command_origin(command)
         else:
-            return os.system(command)
+            if force_output:
+                return os.popen(command).read()
+            else:
+                return os.system(command)
     elif client == clients.TARGET:
         if system.option['verbose']:
             output.message(
@@ -106,6 +112,12 @@ def run_command(command, client):
                 True
             )
         if is_target_remote():
-            return connect.run_ssh_command_target(command)
+            if force_output:
+                return ''.join(connect.run_ssh_command_target(command).readlines())
+            else:
+                return connect.run_ssh_command_target(command)
         else:
-            return os.system(command)
+            if force_output:
+                return os.popen(command).read()
+            else:
+                return os.system(command)
