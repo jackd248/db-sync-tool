@@ -60,7 +60,7 @@ def check_and_create_dump_dir(client, path):
     :return:
     """
     mode.run_command(
-        '[ ! -d "' + path + '"] && mkdir - p "' + path + '"',
+        '[ ! -d "' + path + '" ] && mkdir - p "' + path + '"',
         client
     )
 
