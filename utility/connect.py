@@ -258,7 +258,7 @@ def get_origin_database_dump(target_path):
         'Downloading database dump',
         True
     )
-    if mode.get_sync_mode != mode.get_sync_modes.PROXY:
+    if mode.get_sync_mode() != mode.get_sync_modes().PROXY:
         helper.check_and_create_dump_dir(mode.get_clients().TARGET, target_path)
 
     #
