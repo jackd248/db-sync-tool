@@ -56,12 +56,12 @@ def load_ssh_client(ssh):
             sys.exit(
                 output.message(
                     output.get_subject().ERROR,
-                    'SSH authentification for ' + system.config['host'][ssh]['host'] + ' failed',
+                    'SSH authentication for ' + helper.get_ssh_host_name(ssh, True) +  ' failed',
                     False
                 )
             )
 
-        _authentication_method = '(authentication: key)'
+        _authentication_method = ' - (authentication: key)'
     else:
         try:
             _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
@@ -74,17 +74,16 @@ def load_ssh_client(ssh):
             sys.exit(
                 output.message(
                     output.get_subject().ERROR,
-                    'SSH authentification for ' + system.config['host'][ssh]['host'] + ' failed',
+                    'SSH authentication for ' + system.config['host'][ssh]['host'] + ' failed',
                     False
                 )
             )
 
-        _authentication_method = '(authentication: password)'
+        _authentication_method = ' - (authentication: password)'
 
     output.message(
         output.client_to_subject(ssh),
-        'Successfully connect to ' + system.config['host'][ssh]['user'] + '@' + system.config['host'][ssh][
-            'host'] + ' ' + _authentication_method,
+        'Successfully connect to ' + helper.get_ssh_host_name(ssh, True) + _authentication_method,
         True
     )
 

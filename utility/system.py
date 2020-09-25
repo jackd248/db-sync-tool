@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import sys, json, os, getpass
-from utility import output, log, mode, parser
+from utility import output, log, mode, parser, helper
 
 #
 # GLOBALS
@@ -128,7 +128,7 @@ def get_password(client):
     _password = getpass.getpass(
         output.message(
             output.get_subject().INFO,
-            'SSH password ' + config['host'][client]['user'] + '@' + config['host'][client]['host'] + ': ',
+            'SSH password ' + helper.get_ssh_host_name(client, True) + ': ',
             False
         )
     )
@@ -143,7 +143,7 @@ def get_password(client):
         _password = getpass.getpass(
             output.message(
                 output.get_subject().INFO,
-                'SSH password ' + config['host'][client]['user'] + '@' + config['host'][client]['host'] + ': ',
+                'SSH password ' + helper.get_ssh_host_name(client, True) + ': ',
                 False
             )
         )

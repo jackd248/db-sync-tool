@@ -6,7 +6,7 @@ Here you can find an overview over the possible configuration adjustments.
 
 Often it is better to exclude some tables from the sql dump for performance reasons, e.g. caching tables. Specify them as comma separeted list in the `ignore_table` array.
 
-### SSH key authentification
+### SSH key authentication
 
 If you want to authenticate with a private ssh key instead of a password to the server (useful for CI/CD), you can add the file path to the private key file in your `host.json`:
 
@@ -103,6 +103,21 @@ With the concept of the *DUMP_REMOTE* or *DUMP_LOCAL* mode can you implement an 
 ```
 
 **Note**: Be aware of this feature. It will only keep the latest (e.g. 5) files in the `dump_dir` directory and delete all other `.sql` and `.tar.gz` files.
+
+### Naming
+
+For a better differentiation of the different host systems you can optionally provide a specific name in the `host.json`:
+
+```json
+{
+  "origin": {
+    "name": "Prod"
+  },
+  "target": {
+    "name": "Stage"
+  }
+}
+```
 
 ### Check dump
 

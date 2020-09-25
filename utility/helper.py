@@ -109,6 +109,24 @@ def check_and_create_dump_dir(client, path):
     )
 
 
+def get_ssh_host_name(client, with_user=False):
+    """
+    Format ssh host name depending on existing client name
+    :param client:
+    :param with_user:
+    :return:
+    """
+    if with_user:
+        _host = system.config['host'][client]['user'] + '@' + system.config['host'][client]['host']
+    else:
+        _host = system.config['host'][client]['host']
+
+    if 'name' in system.config['host'][client]:
+        return output.get_bcolors().BOLD + system.config['host'][client]['name'] + output.get_bcolors().ENDC + output.get_bcolors().BLACK + ' (' + _host + ')' + output.get_bcolors().ENDC
+    else:
+        return _host
+
+
 def create_local_temporary_data_dir():
     if not os.path.exists(system.default_local_sync_path):
         os.mkdir(system.default_local_sync_path)
