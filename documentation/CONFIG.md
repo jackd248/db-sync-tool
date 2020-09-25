@@ -102,7 +102,7 @@ With the concept of the *DUMP_REMOTE* or *DUMP_LOCAL* mode can you implement an 
 }
 ```
 
-**Note**: Be aware of this feature. It will only keep the latest (e.g. 5) files in the `dump_dir` directory and delete all other files.
+**Note**: Be aware of this feature. It will only keep the latest (e.g. 5) files in the `dump_dir` directory and delete all other `.sql` and `.tar.gz` files.
 
 ### Check dump
 
