@@ -46,9 +46,9 @@ The script using among other things the `php`, `mysql`, `mysqldump`, `grep` comm
 }
 ```
 
-### Temporary dump directory
+### (Temporary) dump directory
 
-Normally is the script creating the sql dump in the `home` directory of the given ssh user. If this directory is not writable, you can specify an alternative directory in the `host.json`, where the temporary sql dump will be saved:
+Normally is the script creating the sql dump in the `home` directory of the given ssh user. If this directory is not writable or you want to export the database automatically in another directory, you can specify an alternative directory in the `host.json`, where the temporary sql dump will be saved:
 
 ```json
 {
@@ -57,6 +57,8 @@ Normally is the script creating the sql dump in the `home` directory of the give
   }
 }
 ```
+
+**Note:** It is recommended to use for every application another directory to avoid side effects (e.g. cleaning up feature).
 
 ### Before and after script
 
@@ -86,7 +88,7 @@ You can enable the logging to a separate log file via the `log_file` entry in th
 ```
 
 
-### Cleaning up / keeping dumps cound
+### Cleaning up / keeping dumps count
 
 With the concept of the *DUMP_REMOTE* or *DUMP_LOCAL* mode can you implement an automatic backup system. However it's a good option to clean up old dump files and only keep the newest ones. Therefore you can use the `keep_dumps` entry in the `host.json`:
 
