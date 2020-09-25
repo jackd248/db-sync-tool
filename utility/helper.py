@@ -35,9 +35,9 @@ def clean_up_dump_dir(client, path, num=5):
     """
     # Distinguish stat command on os system (Darwin|Linux)
     if check_os(client).strip() == 'Darwin':
-        _command = 'stat -f "%Sm %N" ' + path + ' | sort -rn'
+        _command = get_command(client, 'stat') + ' -f "%Sm %N" ' + path + ' | ' + get_command(client, 'sort') + ' -rn'
     else:
-        _command = 'stat -c "%y %n" ' + path + ' | sort -rn'
+        _command = get_command(client, 'stat') + ' -c "%y %n" ' + path + ' | ' + get_command(client, 'sort') + ' -rn'
 
     # List files in directory sorted by change date
     _files = mode.run_command(
@@ -64,7 +64,7 @@ def check_os(client):
     :return:
     """
     return mode.run_command(
-        'uname -s',
+        get_command(client, 'uname') + ' -s',
         client,
         True
     )
