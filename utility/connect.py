@@ -258,7 +258,8 @@ def get_origin_database_dump(target_path):
         'Downloading database dump',
         True
     )
-    helper.check_and_create_dump_dir(mode.get_clients().TARGET, target_path)
+    if mode.get_sync_mode != mode.get_sync_modes.PROXY:
+        helper.check_and_create_dump_dir(mode.get_clients().TARGET, target_path)
 
     #
     # ToDo: Download speed problems
@@ -294,7 +295,7 @@ def put_origin_database_dump(origin_path):
         'Uploading database dump',
         True
     )
-    helper.check_and_create_dump_dir(mode.get_clients().ORIGIN, origin_path)
+    helper.check_and_create_dump_dir(mode.get_clients().TARGET, helper.get_target_dump_dir())
 
     #
     # ToDo: Download speed problems
