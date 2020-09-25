@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from utility import mode, log
+from utility import mode, log, system
 
 
 #
@@ -35,7 +35,7 @@ class subject:
 
 def message(header, message, do_print=True, do_log=False):
 
-    if do_log:
+    if do_log or system.option['verbose']:
         # @ToDo: Can this be done better? Dynamic functions?
         if header == subject.WARNING:
             log.get_logger().warning(message)

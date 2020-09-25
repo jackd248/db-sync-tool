@@ -87,6 +87,7 @@ You can enable the logging to a separate log file via the `log_file` entry in th
 }
 ```
 
+**Note**: By default only a summary of the sync actions will be logged. If you enable the verbose option (`-v`) all console output will also be logged in the given log file.
 
 ### Cleaning up / keeping dumps count
 
