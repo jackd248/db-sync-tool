@@ -4,16 +4,26 @@ Here you can find an overview over the possible configuration adjustments.
 
 ### Ignore tables
 
-Often it is better to exclude some tables from the sql dump for performance reasons, e.g. caching tables. Specify them as comma separeted list in the `ignore_table` array.
+Often it is better to exclude some tables from the sql dump for performance reasons, e.g. caching tables. Specify them as comma separated list in the `ignore_table` array.
 
-### SSH key authentication
+### Authentication
 
-If you want to authenticate with a private ssh key instead of a password to the server (useful for CI/CD), you can add the file path to the private key file in your `host.json`:
+If you want to authenticate with a private ssh key instead of a user entered password to the server (useful for CI/CD), you can add the file path to the private key file in your `host.json`:
 
 ```json
 {
   "origin": {
     "ssh_key": "~/bob/.ssh/id_rsa"
+  }
+}
+```
+
+It's not recommended, but you can also specify the plain password inside the host configuration in the `host.json`:
+
+```json
+{
+  "origin": {
+    "password": "1234"
   }
 }
 ```
