@@ -41,14 +41,20 @@ def check_configuration():
     load_pip_modules()
     get_host_configuration()
     if not option['use_origin_ssh_key'] and mode.is_origin_remote() and option['import'] == '':
-        option['ssh_password']['origin'] = get_password(mode.get_clients().ORIGIN)
+        if 'password' in config['host']['origin']:
+            option['ssh_password']['origin'] = config['host']['origin']['password']
+        else:
+            option['ssh_password']['origin'] = get_password(mode.get_clients().ORIGIN)
 
         if mode.get_sync_mode() == mode.get_sync_modes().DUMP_REMOTE:
             option['ssh_password']['target'] = option['ssh_password']['origin']
 
 
     if not option['use_target_ssh_key'] and mode.is_target_remote() and mode.get_sync_mode() != mode.get_sync_modes().DUMP_REMOTE:
-        option['ssh_password']['target'] = get_password(mode.get_clients().TARGET)
+        if 'password' in config['host']['target']:
+            option['ssh_password']['target'] = config['host']['target']['password']
+        else:
+            option['ssh_password']['target'] = get_password(mode.get_clients().TARGET)
 
     if not mode.is_import():
         # first get data configuration for origin client
