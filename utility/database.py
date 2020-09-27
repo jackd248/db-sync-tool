@@ -25,7 +25,7 @@ def create_origin_database_dump():
             True
         )
         mode.run_command(
-            helper.get_command('origin', 'mysqldump') + ' ' + generate_mysql_credentials('origin') + ' ' +
+            helper.get_command('origin', 'mysqldump') + ' --no-tablespaces ' + generate_mysql_credentials('origin') + ' ' +
             system.config['db']['origin'][
                 'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_origin_dump_dir() + origin_database_dump_file_name,
             mode.get_clients().ORIGIN
