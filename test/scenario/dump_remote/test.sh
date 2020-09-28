@@ -22,10 +22,12 @@ docker-compose exec www2 python3 /var/www/html/sync.py -f /var/www/html/test/sce
 FILE=./../files/www1/database_backup/test.sql.tar.gz
 if [ -f "$FILE" ]; then
     echo "\033[92m[SUCCESS]\033[m Remote database dump file created"
-    echo "\033[90m#############################################\033[m"
     echo ""
 else
     echo "\033[91m[FAILURE]\033[m Remote database dump file not created"
     echo "\033[90m#############################################\033[m"
     exit 1
 fi
+
+sh ../helper/cleanup.sh
+echo "\033[90m#############################################\033[m"

@@ -5,16 +5,15 @@ cd "$parent_path"
 #
 # Starting docker container
 #
-echo "\033[90m#####################################\033[m"
-echo "\033[94m[INFO]\033[m Cleaning up files"
+# Cleaning up files
 rm -rf ../files/www1/database_backup
 rm -rf ../files/www2/database_backup
+rm -rf ../files/test.log
 
-echo "\033[94m[INFO]\033[m Cleaning up databases"
+# Remove database tables
 cd ../docker
-docker-compose exec db1 mysql -udb -pdb db -e 'DROP TABLE IF EXISTS person'
-docker-compose exec db2 mysql -udb -pdb db -e 'DROP TABLE IF EXISTS person'
-echo "\033[94m[INFO]\033[m Importing dump"
-cat dump/db.sql | docker-compose exec -T db1 mysql -udb -pdb db
+docker-compose exec db1 mysql -udb -pdb db -e 'DROP TABLE IF EXISTS person' > /dev/null
+docker-compose exec db2 mysql -udb -pdb db -e 'DROP TABLE IF EXISTS person' > /dev/null
+# Import database dump
+cat dump/db.sql | docker-compose exec -T db1 mysql -udb -pdb db > /dev/null
 echo "\033[94m[INFO]\033[m Scenario reset"
-echo "\033[90m#####################################\033[m"

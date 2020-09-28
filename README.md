@@ -99,10 +99,10 @@ If you haven't declare a path to a SSH key, during the script execution you are 
 
 ## Tests
 
-A docker container set up is available for testing purpose. You can run the simple shell script tests via:
+A docker container set up is available for testing purpose. You can run the simple shell script tests via the following command:
 
 ```bash
-$ sh test/helper/test.sh
+$ sh test/helper/scenario.sh [scenario]
 ```
 
 ## FAQ
