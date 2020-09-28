@@ -1,7 +1,22 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-import calendar, time, os, sys, datetime
-from utility import output, connect, system, helper, mode
+import sys
+from utility import output, connect, system, helper, mode, parser
+
+# Check requirements
+try:
+    import calendar
+    import time
+    import datetime
+    import os
+except ImportError:
+     sys.exit(
+         output.message(
+             output.Subject.ERROR,
+             'Python requirements missing! Install with: pip3 install -r requirements.txt'
+         )
+     )
 
 #
 # GLOBALS
@@ -14,27 +29,36 @@ origin_database_dump_file_name = None
 #
 
 def create_origin_database_dump():
+    """
+    Creating the origin database dump file
+    :return:
+    """
 
     if not mode.is_import():
+        parser.get_database_configuration(mode.Client.ORIGIN)
         generate_database_dump_filename()
-        helper.check_and_create_dump_dir(mode.get_clients().ORIGIN, helper.get_origin_dump_dir())
+        helper.check_and_create_dump_dir(mode.Client.ORIGIN, helper.get_dump_dir(mode.Client.ORIGIN))
 
         output.message(
-            output.get_subject().ORIGIN,
+            output.Subject.ORIGIN,
             'Creating database dump',
             True
         )
         mode.run_command(
             helper.get_command('origin', 'mysqldump') + ' --no-tablespaces ' + generate_mysql_credentials('origin') + ' ' +
             system.config['db']['origin'][
-                'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_origin_dump_dir() + origin_database_dump_file_name,
-            mode.get_clients().ORIGIN
+                'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_dump_dir(mode.Client.ORIGIN) + origin_database_dump_file_name,
+            mode.Client.ORIGIN
         )
 
         prepare_origin_database_dump()
 
 
 def generate_database_dump_filename():
+    """
+    Generate a database dump filename like "_[dbname]_[date].sql" or using the give filename
+    :return:
+    """
     global origin_database_dump_file_name
 
     if system.option['dump_name'] == '':
@@ -46,6 +70,10 @@ def generate_database_dump_filename():
 
 
 def generate_ignore_database_tables():
+    """
+    Generate the ignore tables options for the mysqldump command by the given table list
+    :return: String
+    """
     _ignore_tables = []
     if 'ignore_table' in system.config['host']:
         for table in system.config['host']['ignore_table']:
@@ -53,13 +81,18 @@ def generate_ignore_database_tables():
         return ' '.join(_ignore_tables)
 
 
-def generate_mysql_credentials(_target):
-    _credentials = '-u\'' + system.config['db'][_target]['user'] + '\' -p\'' + system.config['db'][_target][
+def generate_mysql_credentials(client):
+    """
+    Generate the needed database credential information for the mysql command
+    :param client: String
+    :return:
+    """
+    _credentials = '-u\'' + system.config['db'][client]['user'] + '\' -p\'' + system.config['db'][client][
         'password'] + '\''
-    if 'host' in system.config['db'][_target]:
-        _credentials += ' -h\'' + system.config['db'][_target]['host'] + '\''
-    if 'port' in system.config['db'][_target]:
-        _credentials += ' -P\'' + str(system.config['db'][_target]['port']) + '\''
+    if 'host' in system.config['db'][client]:
+        _credentials += ' -h\'' + system.config['db'][client]['host'] + '\''
+    if 'port' in system.config['db'][client]:
+        _credentials += ' -P\'' + str(system.config['db'][client]['port']) + '\''
     return _credentials
 
 
@@ -67,6 +100,10 @@ def generate_mysql_credentials(_target):
 # IMPORT DATABASE DUMP
 #
 def import_database_dump():
+    """
+    Importing the selected database dump file
+    :return:
+    """
     if (not system.option['is_same_client'] and not mode.is_import()):
         prepare_target_database_dump()
 
@@ -76,13 +113,13 @@ def import_database_dump():
 
     if not system.option['keep_dump'] and not system.option['is_same_client']:
         output.message(
-            output.get_subject().TARGET,
+            output.Subject.TARGET,
             'Importing database dump',
             True
         )
 
         if not mode.is_import():
-           _dump_path = helper.get_target_dump_dir() + origin_database_dump_file_name
+           _dump_path = helper.get_dump_dir(mode.Client.TARGET) + origin_database_dump_file_name
         else:
            _dump_path = system.option['import']
 
@@ -90,34 +127,46 @@ def import_database_dump():
             helper.get_command('target', 'mysql') + ' ' + generate_mysql_credentials('target') + ' ' +
             system.config['db']['target'][
                 'dbname'] + ' < ' + _dump_path,
-            mode.get_clients().TARGET
+            mode.Client.TARGET
         )
 
 def prepare_origin_database_dump():
+    """
+    Preparing the origin database dump file by compressing them as .tar.gz
+    :return:
+    """
     output.message(
-        output.get_subject().ORIGIN,
+        output.Subject.ORIGIN,
         'Compressing database dump',
         True
     )
     mode.run_command(
         helper.get_command('origin',
-                           'tar') + ' cfvz ' + helper.get_origin_dump_dir() + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_origin_dump_dir() + ' ' + origin_database_dump_file_name,
-        mode.get_clients().ORIGIN
+                           'tar') + ' cfvz ' + helper.get_dump_dir(mode.Client.ORIGIN) + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(mode.Client.ORIGIN) + ' ' + origin_database_dump_file_name,
+        mode.Client.ORIGIN
     )
 
 
 def prepare_target_database_dump():
-    output.message(output.get_subject().TARGET, 'Extracting database dump', True)
+    """
+    Preparing the target database dump by the unpacked .tar.gz file
+    :return:
+    """
+    output.message(output.Subject.TARGET, 'Extracting database dump', True)
     mode.run_command(
         helper.get_command('target',
-                           'tar') + ' xzf ' + helper.get_target_dump_dir() + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_target_dump_dir(),
-        mode.get_clients().TARGET
+                           'tar') + ' xzf ' + helper.get_dump_dir(mode.Client.TARGET) + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(mode.Client.TARGET),
+        mode.Client.TARGET
     )
 
 
 # @ToDo: make this remote possible
 def check_target_database_dump():
+    """
+    Checking the last line of the dump file if it contains "-- Dump completed on"
+    :return:
+    """
     with open(system.default_local_sync_path + origin_database_dump_file_name) as f:
         lines = f.readlines()
         if "-- Dump completed on" not in lines[-1]:
-            sys.exit(output.message(output.get_subject().ERROR, 'Dump was not fully transferred', False))
+            sys.exit(output.message(output.Subject.ERROR, 'Dump file is corrupted', False))

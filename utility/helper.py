@@ -1,25 +1,46 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-import os, shutil, getpass
+import sys
 from utility import output, system, database, connect, mode
 
+# Check requirements
+try:
+    import getpass
+    import shutil
+    import os
+except ImportError:
+     sys.exit(
+         output.message(
+             output.Subject.ERROR,
+             'Python requirements missing! Install with: pip3 install -r requirements.txt'
+         )
+     )
 
 #
 # FUNCTIONS
 #
 
 def clean_up():
+    """
+    Clean up
+    :return:
+    """
     if not mode.is_import():
         connect.remove_target_database_dump()
-        if mode.get_sync_mode() == mode.get_sync_modes().PROXY:
+        if mode.get_sync_mode() == mode.SyncMode.PROXY:
             remove_temporary_data_dir()
 
 
 def remove_temporary_data_dir():
+    """
+    Remove temporary data directory for storing database dump files
+    :return:
+    """
     if os.path.exists(system.default_local_sync_path):
         shutil.rmtree(system.default_local_sync_path)
         output.message(
-            output.get_subject().LOCAL,
+            output.Subject.LOCAL,
             'Cleaning up',
             True
         )
@@ -69,31 +90,33 @@ def check_os(client):
         True
     )
 
-def get_command(target, command):
-    if 'console' in system.config['host'][target]:
-        if command in system.config['host'][target]['console']:
-            return system.config['host'][target]['console'][command]
+
+def get_command(client, command):
+    """
+    Get command helper for overriding default commands on the given client
+    :param client:
+    :param command:
+    :return: String command
+    """
+    if 'console' in system.config['host'][client]:
+        if command in system.config['host'][client]['console']:
+            return system.config['host'][client]['console'][command]
     return command
 
 
-def get_origin_dump_dir():
-    if system.option['default_origin_dump_dir']:
-        if not mode.is_origin_remote():
+def get_dump_dir(client):
+    """
+    Get database dump directory by client
+    :param client:
+    :return: String path
+    """
+    if system.option[f'default_{client}_dump_dir']:
+        if not mode.is_remote(client):
             return '/home/' + getpass.getuser() + '/'
         else:
-            return '/home/' + system.config['host']['origin']['user'] + '/'
+            return '/home/' + system.config['host'][client]['user'] + '/'
     else:
-        return system.config['host']['origin']['dump_dir']
-
-
-def get_target_dump_dir():
-    if system.option['default_target_dump_dir']:
-        if not mode.is_target_remote():
-            return '/home/' + getpass.getuser() + '/'
-        else:
-            return '/home/' + system.config['host']['target']['user'] + '/'
-    else:
-        return system.config['host']['target']['dump_dir']
+        return system.config['host'][client]['dump_dir']
 
 
 def check_and_create_dump_dir(client, path):
@@ -122,11 +145,16 @@ def get_ssh_host_name(client, with_user=False):
         _host = system.config['host'][client]['host']
 
     if 'name' in system.config['host'][client]:
-        return output.get_bcolors().BOLD + system.config['host'][client]['name'] + output.get_bcolors().ENDC + output.get_bcolors().BLACK + ' (' + _host + ')' + output.get_bcolors().ENDC
+        return output.CliFormat.BOLD + system.config['host'][client]['name'] + output.CliFormat.ENDC + output.CliFormat.BLACK + ' (' + _host + ')' + output.CliFormat.ENDC
     else:
         return _host
 
 
 def create_local_temporary_data_dir():
+    """
+    Create local temporary data dir
+    :return:
+    """
+    # @ToDo: Combine with check_and_create_dump_dir()
     if not os.path.exists(system.default_local_sync_path):
         os.mkdir(system.default_local_sync_path)

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import os
 from utility import system, output, connect
@@ -8,7 +9,7 @@ from utility import system, output, connect
 # GLOBALS
 #
 
-class sync_modes:
+class SyncMode:
     DUMP_LOCAL = 'DUMP_LOCAL'
     DUMP_REMOTE = 'DUMP_REMOTE'
     IMPORT_LOCAL = 'IMPORT_LOCAL'
@@ -18,80 +19,119 @@ class sync_modes:
     PROXY = 'PROXY'
 
 
-class clients:
+class Client:
     ORIGIN = 'origin'
     TARGET = 'target'
 
-sync_mode = sync_modes.RECEIVER
+
+# Default sync mode
+sync_mode = SyncMode.RECEIVER
 
 #
 # FUNCTIONS
 #
 
-def get_sync_modes():
-    return sync_modes
-
 def get_sync_mode():
+    """
+    Returning the sync mode
+    :return: String sync_mode
+    """
     return sync_mode
 
 def check_sync_mode():
+    """
+    Checking the sync_mode based on the given configuration
+    :return: String subject
+    """
     global sync_mode
 
     if 'host' in system.config['host']['origin']:
-        sync_mode = sync_modes.RECEIVER
-        _description = output.get_bcolors().BLACK + '(REMOTE --> LOCAL)' + output.get_bcolors().ENDC
+        sync_mode = SyncMode.RECEIVER
+        _description = output.CliFormat.BLACK + '(REMOTE --> LOCAL)' + output.CliFormat.ENDC
     if 'host' in system.config['host']['target']:
-        sync_mode = sync_modes.SENDER
-        _description = output.get_bcolors().BLACK + '(LOCAL --> REMOTE)' + output.get_bcolors().ENDC
+        sync_mode = SyncMode.SENDER
+        _description = output.CliFormat.BLACK + '(LOCAL --> REMOTE)' + output.CliFormat.ENDC
     if 'host' in system.config['host']['origin'] and 'host' in system.config['host']['target']:
-        sync_mode = sync_modes.PROXY
-        _description = output.get_bcolors().BLACK + '(REMOTE --> LOCAL --> REMOTE)' + output.get_bcolors().ENDC
+        sync_mode = SyncMode.PROXY
+        _description = output.CliFormat.BLACK + '(REMOTE --> LOCAL --> REMOTE)' + output.CliFormat.ENDC
     if not 'host' in system.config['host']['origin'] and not 'host' in system.config['host']['target']:
-        sync_mode = sync_modes.DUMP_LOCAL
-        _description = output.get_bcolors().BLACK + '(LOCAL, NO TRANSFER/IMPORT)' + output.get_bcolors().ENDC
+        sync_mode = SyncMode.DUMP_LOCAL
+        _description = output.CliFormat.BLACK + '(LOCAL, NO TRANSFER/IMPORT)' + output.CliFormat.ENDC
         system.option['is_same_client'] = True
     if 'host' in system.config['host']['origin'] and 'host' in system.config['host']['target'] and system.config['host']['origin']['host'] == system.config['host']['target']['host']:
         if ('port' in system.config['host']['origin'] and 'port' in system.config['host']['target'] and system.config['host']['origin']['port'] == system.config['host']['target']['port']) or ('port' not in system.config['host']['origin'] and 'port' not in system.config['host']['target']):
-            sync_mode = sync_modes.DUMP_REMOTE
-            _description = output.get_bcolors().BLACK + '(REMOTE, NO TRANSFER/IMPORT)' + output.get_bcolors().ENDC
+            sync_mode = SyncMode.DUMP_REMOTE
+            _description = output.CliFormat.BLACK + '(REMOTE, NO TRANSFER/IMPORT)' + output.CliFormat.ENDC
             system.option['is_same_client'] = True
     if system.option['import'] != '':
         output.message(
-            output.get_subject().INFO,
+            output.Subject.INFO,
             'Import file: ' + system.option['import'],
             True
         )
         if 'host' in system.config['host']['target']:
-            sync_mode = sync_modes.IMPORT_REMOTE
-            _description = output.get_bcolors().BLACK + '(REMOTE, NO TRANSFER)' + output.get_bcolors().ENDC
+            sync_mode = SyncMode.IMPORT_REMOTE
+            _description = output.CliFormat.BLACK + '(REMOTE, NO TRANSFER)' + output.CliFormat.ENDC
         else:
-            sync_mode = sync_modes.IMPORT_LOCAL
-            _description = output.get_bcolors().BLACK + '(LOCAL, NO TRANSFER)' + output.get_bcolors().ENDC
+            sync_mode = SyncMode.IMPORT_LOCAL
+            _description = output.CliFormat.BLACK + '(LOCAL, NO TRANSFER)' + output.CliFormat.ENDC
 
     output.message(
-        output.get_subject().INFO,
+        output.Subject.INFO,
         'Sync mode: ' + sync_mode + ' ' + _description,
         True
     )
 
-def get_clients():
-    return clients
+
+def is_remote(client):
+    """
+    Check if given client is remote client
+    :param client: String
+    :return: Boolean
+    """
+    if client == Client.ORIGIN:
+        return is_origin_remote()
+    elif client == Client.TARGET:
+        return is_target_remote()
+
 
 def is_target_remote():
-    return sync_mode == sync_modes.SENDER or sync_mode == sync_modes.PROXY or sync_mode == sync_modes.DUMP_REMOTE or sync_mode == sync_modes.IMPORT_REMOTE
+    """
+    Check if target is remote client
+    :return: Boolean
+    """
+    return sync_mode == SyncMode.SENDER or sync_mode == SyncMode.PROXY or sync_mode == SyncMode.DUMP_REMOTE or sync_mode == SyncMode.IMPORT_REMOTE
 
 def is_origin_remote():
-    return sync_mode == sync_modes.RECEIVER or sync_mode == sync_modes.PROXY or sync_mode == sync_modes.DUMP_REMOTE or sync_mode == sync_modes.IMPORT_REMOTE
+    """
+    Check if origin is remote client
+    :return: Boolean
+    """
+    return sync_mode == SyncMode.RECEIVER or sync_mode == SyncMode.PROXY or sync_mode == SyncMode.DUMP_REMOTE or sync_mode == SyncMode.IMPORT_REMOTE
+
 
 def is_import():
-    return sync_mode == sync_modes.IMPORT_LOCAL or sync_mode == sync_modes.IMPORT_REMOTE
+    """
+    Check if sync mode is import
+    :return: Boolean
+    """
+    return sync_mode == SyncMode.IMPORT_LOCAL or sync_mode == SyncMode.IMPORT_REMOTE
+
 
 def run_command(command, client, force_output=False):
-    if client == clients.ORIGIN:
+    """
+    Check if target is remote client
+    :param command: String
+    :param client: String
+    :param force_output: Boolean
+    :return:
+    """
+    # @ToDo: Code duplication
+    if client == Client.ORIGIN:
         if system.option['verbose']:
             output.message(
-                output.get_subject().ORIGIN,
-                output.get_bcolors().BLACK + command + output.get_bcolors().ENDC,
+                output.Subject.ORIGIN,
+                output.CliFormat.BLACK + command + output.CliFormat.ENDC,
                 True
             )
         if is_origin_remote():
@@ -104,11 +144,11 @@ def run_command(command, client, force_output=False):
                 return os.popen(command).read()
             else:
                 return os.system(command)
-    elif client == clients.TARGET:
+    elif client == Client.TARGET:
         if system.option['verbose']:
             output.message(
-                output.get_subject().TARGET,
-                output.get_bcolors().BLACK + command + output.get_bcolors().ENDC,
+                output.Subject.TARGET,
+                output.CliFormat.BLACK + command + output.CliFormat.ENDC,
                 True
             )
         if is_target_remote():

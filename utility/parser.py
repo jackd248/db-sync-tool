@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import sys
 from utility import output, system, mode, connect
@@ -8,7 +9,7 @@ from utility import output, system, mode, connect
 # GLOBALS
 #
 
-class framework:
+class Framework:
     TYPO3 = 'TYPO3'
     SYMFONY = 'Symfony'
 
@@ -17,45 +18,53 @@ class framework:
 #
 
 def get_framework():
-    return framework
+    return Framework
 
 
 def get_database_configuration(client):
+    """
+    Getting database configuration of given client and defined sync base (framework type)
+    :param client: String
+    :return:
+    """
     system.config['db'] = {}
 
     # check framework type
     _base = ''
     if 'type' in system.config['host']:
-        if system.config['host']['type'] == 'TYPO3':
-            _base = framework.TYPO3
-        elif system.config['host']['type'] == 'Symfony':
-            _base = framework.SYMFONY
+        _type = system.config['host']['type'].lower()
+        if _type == 'typo3':
+            # TYPO3 sync base
+            _base = Framework.TYPO3
+        elif _type == 'symfony':
+            # Symfony sync base
+            _base = Framework.SYMFONY
         else:
             sys.exit(
                 output.message(
-                    output.get_subject().ERROR,
-                    'Framework type not supported',
+                    output.Subject.ERROR,
+                    f'Framework type not supported: {_type}',
                     False
                 )
             )
     else:
-        _base = framework.TYPO3
+        # Default is TYPO3 sync base
+        _base = Framework.TYPO3
 
-    if _base == framework.TYPO3:
-        sys.path.append('./extension')
+    sys.path.append('./extension')
+    if _base == Framework.TYPO3:
+        # Import TYPO3 parser
         from extension import typo3
-
         _parser = typo3
 
-    elif _base == framework.SYMFONY:
-        sys.path.append('./extension')
+    elif _base == Framework.SYMFONY:
+        # Import Symfony parser
         from extension import symfony
-
         _parser = symfony
 
-    if client == mode.get_clients().ORIGIN:
+    if client == mode.Client.ORIGIN:
         output.message(
-            output.get_subject().INFO,
+            output.Subject.INFO,
             'Sync base: ' + _base,
             True
         )
@@ -66,30 +75,40 @@ def get_database_configuration(client):
 
 
 def load_parser_origin(parser):
-    # check origin
+    """
+    Loading origin parser
+    :param parser:
+    :return:
+    """
+    # @ToDo: Code duplication
     output.message(
-        output.get_subject().ORIGIN,
+        output.Subject.ORIGIN,
         'Checking database configuration',
         True
     )
     if mode.is_origin_remote():
         connect.load_ssh_client_origin()
-        parser.check_remote_configuration(mode.get_clients().ORIGIN)
+        parser.check_remote_configuration(mode.Client.ORIGIN)
     else:
-        connect.run_before_script(mode.get_clients().ORIGIN)
-        parser.check_local_configuration(mode.get_clients().ORIGIN)
+        connect.run_before_script(mode.Client.ORIGIN)
+        parser.check_local_configuration(mode.Client.ORIGIN)
 
 
 def load_parser_target(parser):
-    # check target
+    """
+    Loading target parser
+    :param parser:
+    :return:
+    """
+    # @ToDo: Code duplication
     output.message(
-        output.get_subject().TARGET,
+        output.Subject.TARGET,
         'Checking database configuration',
         True
     )
     if mode.is_target_remote():
         connect.load_ssh_client_target()
-        parser.check_remote_configuration(mode.get_clients().TARGET)
+        parser.check_remote_configuration(mode.Client.TARGET)
     else:
-        connect.run_before_script(mode.get_clients().TARGET)
-        parser.check_local_configuration(mode.get_clients().TARGET)
+        connect.run_before_script(mode.Client.TARGET)
+        parser.check_local_configuration(mode.Client.TARGET)

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 from utility import mode, log, system
 
@@ -7,7 +8,7 @@ from utility import mode, log, system
 # GLOBALS
 #
 
-class bcolors:
+class CliFormat:
     BEIGE = '\033[96m'
     PURPLE = '\033[95m'
     BLUE = '\033[94m'
@@ -20,13 +21,13 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-class subject:
-    INFO = bcolors.GREEN + '[INFO]' + bcolors.ENDC
-    LOCAL = bcolors.BEIGE + '[LOCAL]' + bcolors.ENDC
-    TARGET = bcolors.BLUE + '[TARGET]' + bcolors.ENDC
-    ORIGIN = bcolors.PURPLE + '[ORIGIN]' + bcolors.ENDC
-    ERROR = bcolors.RED + '[ERROR]' + bcolors.ENDC
-    WARNING = bcolors.YELLOW + '[WARNING]' + bcolors.ENDC
+class Subject:
+    INFO = CliFormat.GREEN + '[INFO]' + CliFormat.ENDC
+    LOCAL = CliFormat.BEIGE + '[LOCAL]' + CliFormat.ENDC
+    TARGET = CliFormat.BLUE + '[TARGET]' + CliFormat.ENDC
+    ORIGIN = CliFormat.PURPLE + '[ORIGIN]' + CliFormat.ENDC
+    ERROR = CliFormat.RED + '[ERROR]' + CliFormat.ENDC
+    WARNING = CliFormat.YELLOW + '[WARNING]' + CliFormat.ENDC
 
 
 #
@@ -34,62 +35,69 @@ class subject:
 #
 
 def message(header, message, do_print=True, do_log=False):
-
+    """
+    Formatting a message for print or log
+    :param header: String
+    :param message: String
+    :param do_print: Boolean
+    :param do_log: Boolean
+    :return: String message
+    """
+    # Logging if explicitly forced or verbose option is active
     if do_log or system.option['verbose']:
         # @ToDo: Can this be done better? Dynamic functions?
-        if header == subject.WARNING:
+        if header == Subject.WARNING:
             log.get_logger().warning(message)
-        elif header == subject.ERROR:
+        elif header == Subject.ERROR:
             log.get_logger().error(message)
         else:
             log.get_logger().info(message)
 
-    if do_print:
-        print(header + extend_output_by_sync_mode(header) + ' ' + message)
-    else:
-        return header + extend_output_by_sync_mode(header) + ' ' + message
+    # Formatting message if mute option is inactive
+    if (system.option['mute'] and header == Subject.ERROR) or (not system.option['mute']):
+        if do_print:
+            print(header + extend_output_by_sync_mode(header) + ' ' + message)
+        else:
+            return header + extend_output_by_sync_mode(header) + ' ' + message
 
 
 def extend_output_by_sync_mode(header):
+    """
+    Extending the output by a client information (LOCAL|REMOTE)
+    :param header: String
+    :return: String message
+    """
     _sync_mode = mode.get_sync_mode()
-    if ((
-                _sync_mode == mode.get_sync_modes().RECEIVER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.ORIGIN) or (
-            (
-                    _sync_mode == mode.get_sync_modes().SENDER or _sync_mode == mode.get_sync_modes().PROXY) and header == subject.TARGET) or (
-            _sync_mode == mode.get_sync_modes().DUMP_REMOTE and (
-            header == subject.ORIGIN or header == subject.TARGET)) or (
-            _sync_mode == mode.get_sync_modes().IMPORT_REMOTE and (
-            header == subject.ORIGIN or header == subject.TARGET)):
-        return bcolors.BLACK + '[REMOTE]' + bcolors.ENDC
 
-    if (_sync_mode == mode.get_sync_modes().SENDER and header == subject.ORIGIN) or (
-            _sync_mode == mode.get_sync_modes().RECEIVER and header == subject.TARGET) or (
-            _sync_mode == mode.get_sync_modes().DUMP_LOCAL and (
-            header == subject.ORIGIN or header == subject.TARGET)) or (
-            _sync_mode == mode.get_sync_modes().IMPORT_LOCAL and (
-            header == subject.ORIGIN or header == subject.TARGET)):
-        return bcolors.BLACK + '[LOCAL]' + bcolors.ENDC
-
-    return ''
-
-
-def client_to_subject(client):
-    if client == mode.get_clients().ORIGIN:
-        return subject.ORIGIN
-    elif client == mode.get_clients().TARGET:
-        return subject.TARGET
+    if header == Subject.INFO or header == Subject.LOCAL or header == Subject.WARNING or header == Subject.ERROR:
+        return ''
+    else:
+        if mode.is_remote(subject_to_host(header)):
+            return CliFormat.BLACK + '[REMOTE]' + CliFormat.ENDC
+        else:
+            return CliFormat.BLACK + '[LOCAL]' + CliFormat.ENDC
 
 
 def host_to_subject(host):
-    if host == mode.get_clients().ORIGIN:
-        return subject.ORIGIN
-    elif host == mode.get_clients().TARGET:
-        return subject.TARGET
+    """
+    Converting the client to the according subject
+    :param client: String
+    :return: String subject
+    """
+    if host == mode.Client.ORIGIN:
+        return Subject.ORIGIN
+    elif host == mode.Client.TARGET:
+        return Subject.TARGET
 
 
-def get_bcolors():
-    return bcolors
+def subject_to_host(subject):
+    """
+    Converting the subject to the according host
+    :param subject: String
+    :return: String host
+    """
+    if subject == Subject.ORIGIN:
+        return mode.Client.ORIGIN
+    elif subject == Subject.TARGET:
+        return mode.Client.TARGET
 
-
-def get_subject():
-    return subject

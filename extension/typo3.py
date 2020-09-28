@@ -1,14 +1,21 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import os, json, sys
 from subprocess import check_output
 from utility import output, system, connect, helper, mode
 
+
 def check_local_configuration(client):
+    """
+    Checking local TYPO3 database configuration
+    :param client: String
+    :return:
+    """
     if os.path.isfile(system.config['host'][client]['path']) == False:
         sys.exit(
             output.message(
-                output.get_subject().ERROR,
+                output.Subject.ERROR,
                 'Local database configuration not found',
                 False
             )
@@ -23,18 +30,22 @@ def check_local_configuration(client):
     _db_config = parse_database_credentials(json.loads(_db_config)['DB'])
 
     if system.option['verbose']:
-        if client == mode.get_clients().TARGET:
-            _subject = output.get_subject().TARGET
+        if client == mode.Client.TARGET:
+            _subject = output.Subject.TARGET
         else:
-            _subject = output.get_subject().ORIGIN
-        output.message(_subject, output.get_bcolors().BLACK + helper.get_command(client,
-                                                                                                    'php') + ' -r "echo json_encode(include "' +
-                       system.config['host'][client]['path'] + '");"' + output.get_bcolors().ENDC, True)
+            _subject = output.Subject.ORIGIN
+        output.message(_subject, output.CliFormat.BLACK + helper.get_command(client,'php') + ' -r "echo json_encode(include "' +
+                       system.config['host'][client]['path'] + '");"' + output.CliFormat.ENDC, True)
 
     system.config['db'][client] = _db_config
 
 
 def check_remote_configuration(client):
+    """
+    Checking remote TYPO3 database configuration
+    :param client: String
+    :return:
+    """
     stdout = mode.run_command(
         helper.get_command(client, 'php') + ' -r "echo json_encode(include \'' + system.config['host'][client][
             'path'] + '\');"',
@@ -46,14 +57,19 @@ def check_remote_configuration(client):
     system.config['db'][client] = _db_config
 
 
-def parse_database_credentials(_db_credentials):
+def parse_database_credentials(db_credentials):
+    """
+    Parsing database credentials to needed format
+    :param db_credentials: Dictionary
+    :return: Dictionary
+    """
     #
     # Distinguish between database config scheme of TYPO3 v8+ and TYPO3 v7-
     #
-    if 'Connections' in _db_credentials:
-        _db_config = _db_credentials['Connections']['Default']
+    if 'Connections' in db_credentials:
+        _db_config = db_credentials['Connections']['Default']
     else:
-        _db_config = _db_credentials
+        _db_config = db_credentials
         _db_config['user'] = _db_config['username']
         _db_config['dbname'] = _db_config['database']
 
