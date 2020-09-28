@@ -1,0 +1,6 @@
+# Folders
+test/ export-ignore
+
+# Files
+.gitattributes export-ignore
+.gitignore export-ignore

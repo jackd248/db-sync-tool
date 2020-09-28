@@ -13,7 +13,7 @@ The script using python 3. It is necessary for some additional functionalities t
 You can do this e.g. by the following command:
 
 ```bash
-apt install -y python-pip3
+$ apt install -y python-pip3
 ```
 
 ## Install
@@ -21,13 +21,13 @@ apt install -y python-pip3
 While using the script within the PHP framework context, the script is available via [packagist.org](https://packagist.org/packages/kmi/db-sync-tool) using composer:
 
 ```bash
-composer require kmi/db-sync-tool
+$ composer require kmi/db-sync-tool
 ```
 
 Additionally install the python requirements via the following pip command:
 
 ````bash
-pip3 install -r vendor/kmi/db-sync-tool/requirements.txt
+$ pip3 install -r vendor/kmi/db-sync-tool/requirements.txt
 ````
 
 ## Configuration
@@ -37,10 +37,10 @@ You need to specify the SSH credentials for the origin system and the path to th
 
 ```bash
 # Copy/edit host.json for TYPO3
-cp dist/t3-db-sync.json.dist host.json
+$ cp dist/t3-db-sync.json.dist host.json
 
 # Copy/edit host.json for Symfony
-cp dist/sf-db-sync.json.dist host.json
+$ cp dist/sf-db-sync.json.dist host.json
 ```
 
 Example structure of `host.json` for a Symfony system in receiver mode:
@@ -78,9 +78,10 @@ The script provides seven different kinds of [synchronisation modes](documentati
 
 ## Usage
 
+Run the python script:
+
 ```bash
-# Run python script
-python sync.py
+$ python sync.py
 ```
 
 ```bash
@@ -95,6 +96,14 @@ python sync.py
 ```
 
 If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 
+
+## Tests
+
+A docker container set up is available for testing purpose. You can run the simple shell script tests via:
+
+```bash
+$ sh test/helper/test.sh
+```
 
 ## FAQ
 

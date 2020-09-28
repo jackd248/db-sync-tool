@@ -1,0 +1,17 @@
+{
+  "name": "project",
+  "type": "TYPO3",
+  "target": {
+    "host": "www2",
+    "user": "user",
+    "password": "password",
+    "path": "/var/www/html/test/files/www2/LocalConfiguration.php"
+  },
+  "origin": {
+    "host": "www1",
+    "user": "user",
+    "password": "password",
+    "path": "/var/www/html/test/files/www1/LocalConfiguration.php"
+  },
+  "ignore_table": []
+}

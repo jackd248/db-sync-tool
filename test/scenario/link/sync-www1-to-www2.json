@@ -1,0 +1,11 @@
+{
+  "name": "project",
+  "type": "TYPO3",
+  "target": {
+    "link": "@www2"
+  },
+  "origin": {
+    "link": "@www1"
+  },
+  "ignore_table": []
+}
