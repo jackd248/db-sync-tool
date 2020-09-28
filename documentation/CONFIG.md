@@ -8,7 +8,7 @@ Often it is better to exclude some tables from the sql dump for performance reas
 
 ### Authentication
 
-If you want to authenticate with a private ssh key instead of a user entered password to the server (useful for CI/CD), you can add the file path to the private key file in your `host.json`:
+If you want to authenticate with a private ssh key instead of a user entered password to the server (useful for CI/CD), you can add the file path to the private key file in your `config.json`:
 
 ```json
 {
@@ -18,7 +18,7 @@ If you want to authenticate with a private ssh key instead of a user entered pas
 }
 ```
 
-It's not recommended, but you can also specify the plain password inside the host configuration in the `host.json`:
+It's not recommended, but you can also specify the plain password inside the host configuration in the `config.json`:
 
 ```json
 {
@@ -28,9 +28,42 @@ It's not recommended, but you can also specify the plain password inside the hos
 }
 ```
 
+### Linking hosts
+
+For larger project setups with multiple configuration files, it's better to reuse the host configuration in every sync scenario. So you can link to predefined host in your `config.json`:
+
+```json
+{
+  "origin": {
+    "link": "@prod"
+  },
+  "target": {
+    "link": "@dev"
+  }
+}
+```
+
+You specify the path to the `hosts.json` file with the `-o` option within the script call. The `hosts.json` should look like this:
+
+```json
+{
+  "prod": {
+    "host": "host",
+    "user": "user",
+    "path": "/var/www/html/project/shared/typo3conf/LocalConfiguration.php"
+  },
+  "dev": {
+    "host": "host",
+    "user": "user",
+    "path": "/var/www/html/project/shared/typo3conf/LocalConfiguration.php"
+  }
+}
+```
+
+
 ### SSH Port
 
-You can also specify a different SSH port to the client in your `host.json` (the default port is `22`):
+You can also specify a different SSH port to the client in your `config.json` (the default port is `22`):
 
 ```json
 {
@@ -42,7 +75,7 @@ You can also specify a different SSH port to the client in your `host.json` (the
 
 ### Console commands
 
-The script using among other things the `php`, `mysql`, `mysqldump`, `grep` commands to synchronize the databases. Sometimes these commands are not available via the path variable, so you have to specify the full path to the source in the `host.json` depending on the system:
+The script using among other things the `php`, `mysql`, `mysqldump`, `grep` commands to synchronize the databases. Sometimes these commands are not available via the path variable, so you have to specify the full path to the source in the `config.json` depending on the system:
 
 ```json
 {
@@ -58,7 +91,7 @@ The script using among other things the `php`, `mysql`, `mysqldump`, `grep` comm
 
 ### (Temporary) dump directory
 
-Normally is the script creating the sql dump in the `home` directory of the given ssh user. If this directory is not writable or you want to export the database automatically in another directory, you can specify an alternative directory in the `host.json`, where the temporary sql dump will be saved:
+Normally is the script creating the sql dump in the `home` directory of the given ssh user. If this directory is not writable or you want to export the database automatically in another directory, you can specify an alternative directory in the `config.json`, where the temporary sql dump will be saved:
 
 ```json
 {
@@ -72,7 +105,7 @@ Normally is the script creating the sql dump in the `home` directory of the give
 
 ### Before and after script
 
-Sometimes it is necessary to run a specific command before or after the dump creation on the origin or target system to ensure the correct synchronisation process. Therefore you can specify these commands in the `host.json`:
+Sometimes it is necessary to run a specific command before or after the dump creation on the origin or target system to ensure the correct synchronisation process. Therefore you can specify these commands in the `config.json`:
 
 ```json
 {
@@ -89,7 +122,7 @@ Sometimes it is necessary to run a specific command before or after the dump cre
 
 ### Logging
 
-You can enable the logging to a separate log file via the `log_file` entry in the `host.json`:
+You can enable the logging to a separate log file via the `log_file` entry in the `config.json`:
 
 ```json
 {
@@ -101,7 +134,7 @@ You can enable the logging to a separate log file via the `log_file` entry in th
 
 ### Cleaning up / keeping dumps count
 
-With the concept of the *DUMP_REMOTE* or *DUMP_LOCAL* mode can you implement an automatic backup system. However it's a good option to clean up old dump files and only keep the newest ones. Therefore you can use the `keep_dumps` entry in the `host.json`:
+With the concept of the *DUMP_REMOTE* or *DUMP_LOCAL* mode can you implement an automatic backup system. However it's a good option to clean up old dump files and only keep the newest ones. Therefore you can use the `keep_dumps` entry in the `config.json`:
 
 ```json
 {
@@ -116,7 +149,7 @@ With the concept of the *DUMP_REMOTE* or *DUMP_LOCAL* mode can you implement an 
 
 ### Naming
 
-For a better differentiation of the different host systems you can optionally provide a specific name in the `host.json`:
+For a better differentiation of the different host systems you can optionally provide a specific name in the `config.json`:
 
 ```json
 {
@@ -131,7 +164,7 @@ For a better differentiation of the different host systems you can optionally pr
 
 ### Check dump
 
-The script is checking the target dump if the file is being downloaded completely. If you want to prevent this check, you can disable them in the `host.json`:
+The script is checking the target dump if the file is being downloaded completely. If you want to prevent this check, you can disable them in the `config.json`:
 
 ```json
 {

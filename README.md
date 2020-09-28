@@ -91,10 +91,10 @@ python sync.py
 -i, --importfile        Import database from a specific file dump
 -dn, --dumpname         Set a specific dump file name (default is "_[dbname]_[date]")
 -kd, --keepdump         Skipping target import of the database dump and saving the available dump file in the given directory
+-o, --hosts             Using an additional hosts file for merging hosts information with the configuration file
 ```
 
 If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 
-
 
 ## FAQ
 

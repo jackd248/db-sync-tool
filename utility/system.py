@@ -15,6 +15,7 @@ option = {
     'keep_dump': False,
     'dump_name': '',
     'import': '',
+    'link_hosts': '',
     'default_origin_dump_dir': True,
     'default_target_dump_dir': True,
     'check_dump': True,
@@ -192,6 +193,9 @@ def check_options():
     if 'check_dump' in config['host']:
         option['check_dump'] = config['host']['check_dump']
 
+    if option['link_hosts'] != '':
+        link_configuration_with_hosts()
+
     mode.check_sync_mode()
 
 
@@ -217,6 +221,9 @@ def check_args_options(args):
     if not args.dumpname is None:
         option['dump_name'] = args.dumpname
 
+    if not args.hosts is None:
+        option['link_hosts'] = args.hosts
+
     if not args.keepdump is None:
         default_local_sync_path = args.keepdump
 
@@ -229,3 +236,22 @@ def check_args_options(args):
             '"Keep dump" option chosen',
             True
         )
+
+def link_configuration_with_hosts():
+    """
+    Merging the hosts definition with the given configuration file
+    :return:
+    """
+    if os.path.isfile(option['link_hosts']):
+        with open(option['link_hosts'], 'r') as read_file:
+            _hosts = json.load(read_file)
+            if 'link' in config['host']['origin']:
+                _host_name = str(config['host']['origin']['link']).replace('@','')
+                if _host_name in _hosts:
+                    config['host']['origin'] = {**config['host']['origin'], **_hosts[_host_name]}
+
+            if 'link' in config['host']['target']:
+                _host_name = str(config['host']['target']['link']).replace('@','')
+                if _host_name in _hosts:
+                    config['host']['target'] = {**config['host']['target'], **_hosts[_host_name]}
+
