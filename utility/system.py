@@ -100,11 +100,6 @@ def check_options():
     :param args:
     :return:
     """
-
-    mode.check_sync_mode()
-    check_authorization(mode.Client.ORIGIN)
-    check_authorization(mode.Client.TARGET)
-
     if 'dump_dir' in config['host']['origin']:
         option['default_origin_dump_dir'] = False
 
@@ -117,6 +112,10 @@ def check_options():
     if option['link_hosts'] != '':
         link_configuration_with_hosts()
 
+    mode.check_sync_mode()
+    check_authorization(mode.Client.ORIGIN)
+    check_authorization(mode.Client.TARGET)
+
 
 def check_authorization(client):
     """
@@ -127,7 +126,7 @@ def check_authorization(client):
     # only need authorization if client is remote
     if mode.is_remote(client):
         # Workaround
-        if (mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and client == mode.Client.TARGET) or (mode.get_sync_mode() == mode.SyncMode.DUMP_LOCAL and client == mode.Client.ORIGIN):
+        if (mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and client == mode.Client.TARGET) or (mode.get_sync_mode() == mode.SyncMode.DUMP_LOCAL and client == mode.Client.ORIGIN) or (mode.get_sync_mode() == mode.SyncMode.IMPORT_REMOTE and client == mode.Client.ORIGIN):
             return
 
         # ssh key authorization
@@ -244,4 +243,5 @@ def link_configuration_with_hosts():
                 _host_name = str(config['host']['target']['link']).replace('@','')
                 if _host_name in _hosts:
                     config['host']['target'] = {**config['host']['target'], **_hosts[_host_name]}
+
 
