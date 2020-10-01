@@ -29,6 +29,7 @@ if [ "$#" -eq "0" ]; then
   sh ../scenario/symfony/test.sh
   sh ../scenario/logging/test.sh
   sh ../scenario/link/test.sh
+  sh ../scenario/download/test.sh
 else
   sh ../scenario/$1/test.sh
 fi

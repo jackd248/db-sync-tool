@@ -39,6 +39,8 @@ def create_origin_database_dump():
         generate_database_dump_filename()
         helper.check_and_create_dump_dir(mode.Client.ORIGIN, helper.get_dump_dir(mode.Client.ORIGIN))
 
+        _dump_file_path = helper.get_dump_dir(mode.Client.ORIGIN) + origin_database_dump_file_name
+
         output.message(
             output.Subject.ORIGIN,
             'Creating database dump',
@@ -47,10 +49,11 @@ def create_origin_database_dump():
         mode.run_command(
             helper.get_command('origin', 'mysqldump') + ' --no-tablespaces ' + generate_mysql_credentials('origin') + ' ' +
             system.config['db']['origin'][
-                'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + helper.get_dump_dir(mode.Client.ORIGIN) + origin_database_dump_file_name,
+                'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + _dump_file_path,
             mode.Client.ORIGIN
         )
 
+        check_database_dump(mode.Client.ORIGIN, _dump_file_path)
         prepare_origin_database_dump()
 
 
@@ -107,9 +110,6 @@ def import_database_dump():
     if (not system.option['is_same_client'] and not mode.is_import()):
         prepare_target_database_dump()
 
-    # @ToDo: Enable check_dump feature again
-    #     if system.option['check_dump']:
-    #         check_target_database_dump()
 
     if not system.option['keep_dump'] and not system.option['is_same_client']:
         output.message(
@@ -123,6 +123,7 @@ def import_database_dump():
         else:
            _dump_path = system.option['import']
 
+        check_database_dump(mode.Client.TARGET, _dump_path)
         mode.run_command(
             helper.get_command('target', 'mysql') + ' ' + generate_mysql_credentials('target') + ' ' +
             system.config['db']['target'][
@@ -160,13 +161,20 @@ def prepare_target_database_dump():
     )
 
 
-# @ToDo: make this remote possible
-def check_target_database_dump():
+def check_database_dump(client, filepath):
     """
     Checking the last line of the dump file if it contains "-- Dump completed on"
+    :param client: String
+    :param filepath: String
     :return:
     """
-    with open(system.default_local_sync_path + origin_database_dump_file_name) as f:
-        lines = f.readlines()
-        if "-- Dump completed on" not in lines[-1]:
+
+    if system.option['check_dump']:
+        _line = mode.run_command(
+                helper.get_command(client,'tail') + ' -n 1 ' + filepath,
+                client,
+                True
+            )
+
+        if "-- Dump completed on" not in _line:
             sys.exit(output.message(output.Subject.ERROR, 'Dump file is corrupted', False))
