@@ -74,6 +74,7 @@ def check_sync_mode():
             _description = output.CliFormat.BLACK + '(REMOTE, NO TRANSFER)' + output.CliFormat.ENDC
         else:
             sync_mode = SyncMode.IMPORT_LOCAL
+            system.option['is_same_client'] = False
             _description = output.CliFormat.BLACK + '(LOCAL, NO TRANSFER)' + output.CliFormat.ENDC
 
     output.message(

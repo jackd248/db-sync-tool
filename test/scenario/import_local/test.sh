@@ -8,9 +8,8 @@ echo "\033[90m#############################################\033[m"
 echo "\033[94m[INFO]\033[m Testing sync mode: IMPORT_LOCAL"
 
 mkdir -p ./../files/www2/database_backup/
-cp ./../docker/dump/test.sql.tar.gz ./../files/www2/database_backup/
-tar -xvzf ./../files/www2/database_backup/test.sql.tar.gz -C ./../files/www2/database_backup/
-docker-compose exec www2 python3 /var/www/html/sync.py -f /var/www/html/test/scenario/import_local/import-local.json -v -i /var/www/html/test/files/www2/database_backup/test.sql
+cp ./../docker/dump/test.sql ./../files/www2/database_backup/
+docker-compose exec www2 python3 /var/www/html/sync.py -f /var/www/html/test/scenario/import_local/import-local.json -m -i /var/www/html/test/files/www2/database_backup/test.sql
 # Expecting 3 results in the database
 count=$(docker-compose exec db2 mysql -udb -pdb db -e 'SELECT COUNT(*) FROM person' | grep 3 | tr -d '[:space:]')
 if [[ $count == '|3|' ]]; then

@@ -110,7 +110,6 @@ def import_database_dump():
     if (not system.option['is_same_client'] and not mode.is_import()):
         prepare_target_database_dump()
 
-
     if not system.option['keep_dump'] and not system.option['is_same_client']:
         output.message(
             output.Subject.TARGET,
