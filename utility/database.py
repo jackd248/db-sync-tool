@@ -141,8 +141,7 @@ def prepare_origin_database_dump():
         True
     )
     mode.run_command(
-        helper.get_command('origin',
-                           'tar') + ' cfvz ' + helper.get_dump_dir(mode.Client.ORIGIN) + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(mode.Client.ORIGIN) + ' ' + origin_database_dump_file_name,
+        helper.get_command(mode.Client.ORIGIN, 'tar') + ' cfvz ' + helper.get_dump_dir(mode.Client.ORIGIN) + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(mode.Client.ORIGIN) + ' ' + origin_database_dump_file_name + ' > /dev/null',
         mode.Client.ORIGIN
     )
 
@@ -154,8 +153,7 @@ def prepare_target_database_dump():
     """
     output.message(output.Subject.TARGET, 'Extracting database dump', True)
     mode.run_command(
-        helper.get_command('target',
-                           'tar') + ' xzf ' + helper.get_dump_dir(mode.Client.TARGET) + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(mode.Client.TARGET),
+        helper.get_command('target', 'tar') + ' xzf ' + helper.get_dump_dir(mode.Client.TARGET) + origin_database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(mode.Client.TARGET) + ' > /dev/null',
         mode.Client.TARGET
     )
 

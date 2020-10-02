@@ -34,24 +34,28 @@ class Subject:
 # FUNCTIONS
 #
 
-def message(header, message, do_print=True, do_log=False):
+def message(header, message, do_print=True, do_log=False, debug=False):
     """
     Formatting a message for print or log
     :param header: String
     :param message: String
     :param do_print: Boolean
     :param do_log: Boolean
+    :param debug: Boolean
     :return: String message
     """
     # Logging if explicitly forced or verbose option is active
     if do_log or system.option['verbose']:
+        _message = remove_multiple_elements_from_string([CliFormat.BEIGE, CliFormat.PURPLE, CliFormat.BLUE, CliFormat.YELLOW, CliFormat.GREEN, CliFormat.RED, CliFormat.BLACK, CliFormat.ENDC, CliFormat.BOLD, CliFormat.UNDERLINE], message)
         # @ToDo: Can this be done better? Dynamic functions?
-        if header == Subject.WARNING:
-            log.get_logger().warning(message)
+        if debug:
+            log.get_logger().debug(_message)
+        elif header == Subject.WARNING:
+            log.get_logger().warning(_message)
         elif header == Subject.ERROR:
-            log.get_logger().error(message)
+            log.get_logger().error(_message)
         else:
-            log.get_logger().info(message)
+            log.get_logger().info(_message)
 
     # Formatting message if mute option is inactive
     if (system.option['mute'] and header == Subject.ERROR) or (not system.option['mute']):
@@ -100,4 +104,17 @@ def subject_to_host(subject):
         return mode.Client.ORIGIN
     elif subject == Subject.TARGET:
         return mode.Client.TARGET
+
+
+def remove_multiple_elements_from_string(elements, string):
+    """
+    Removing multiple elements from a string
+    :param elements: List
+    :param string: String
+    :return: String string
+    """
+    for element in elements:
+        if element in string:
+            string = string.replace(element, '')
+    return string
 

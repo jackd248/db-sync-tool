@@ -9,6 +9,7 @@ cd "$parent_path"
 rm -rf ../files/www1/database_backup
 rm -rf ../files/www2/database_backup
 rm -rf ../files/test.log
+rm -rf ../files/www2/download
 
 # Remove database tables
 cd ../docker

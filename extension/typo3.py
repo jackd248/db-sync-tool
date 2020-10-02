@@ -35,7 +35,7 @@ def check_local_configuration(client):
         else:
             _subject = output.Subject.ORIGIN
         output.message(_subject, output.CliFormat.BLACK + helper.get_command(client,'php') + ' -r "echo json_encode(include "' +
-                       system.config['host'][client]['path'] + '");"' + output.CliFormat.ENDC, True)
+                       system.config['host'][client]['path'] + '");"' + output.CliFormat.ENDC, True, False, True)
 
     system.config['db'][client] = _db_config
 

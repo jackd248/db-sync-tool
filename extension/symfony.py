@@ -36,6 +36,8 @@ def check_local_configuration(client):
             output.CliFormat.BLACK + helper.get_command(client, 'grep') + ' -v "^#" ' +
             system.config['host'][client]['path'] + ' | ' + helper.get_command(client,
                                                                                  'grep') + ' DATABASE_URL' + output.CliFormat.ENDC,
+            True,
+            False,
             True
         )
 

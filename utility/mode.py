@@ -133,6 +133,8 @@ def run_command(command, client, force_output=False):
             output.message(
                 output.Subject.ORIGIN,
                 output.CliFormat.BLACK + command + output.CliFormat.ENDC,
+                True,
+                False,
                 True
             )
         if is_origin_remote():
@@ -150,6 +152,8 @@ def run_command(command, client, force_output=False):
             output.message(
                 output.Subject.TARGET,
                 output.CliFormat.BLACK + command + output.CliFormat.ENDC,
+                True,
+                False,
                 True
             )
         if is_target_remote():
