@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os
+import sys, os, subprocess
 from utility import system, output, connect
 
 
@@ -121,48 +121,34 @@ def is_import():
 
 def run_command(command, client, force_output=False):
     """
-    Check if target is remote client
+    Run command depending on the given client
     :param command: String
     :param client: String
     :param force_output: Boolean
     :return:
     """
-    # @ToDo: Code duplication
-    if client == Client.ORIGIN:
-        if system.option['verbose']:
-            output.message(
-                output.Subject.ORIGIN,
-                output.CliFormat.BLACK + command + output.CliFormat.ENDC,
-                True,
-                False,
-                True
-            )
-        if is_origin_remote():
-            if force_output:
-                return ''.join(connect.run_ssh_command_origin(command).readlines())
-            else:
-                return connect.run_ssh_command_origin(command)
+    if system.option['verbose']:
+        output.message(
+            output.host_to_subject(client),
+            output.CliFormat.BLACK + command + output.CliFormat.ENDC,
+            True,
+            False,
+            True
+        )
+
+    if is_remote(client):
+        if force_output:
+            return ''.join(connect.run_ssh_command_by_client(client, command).readlines())
         else:
-            if force_output:
-                return os.popen(command).read()
-            else:
-                return os.system(command)
-    elif client == Client.TARGET:
-        if system.option['verbose']:
-            output.message(
-                output.Subject.TARGET,
-                output.CliFormat.BLACK + command + output.CliFormat.ENDC,
-                True,
-                False,
-                True
-            )
-        if is_target_remote():
-            if force_output:
-                return ''.join(connect.run_ssh_command_target(command).readlines())
-            else:
-                return connect.run_ssh_command_target(command)
-        else:
-            if force_output:
-                return os.popen(command).read()
-            else:
-                return os.system(command)
+            return connect.run_ssh_command_by_client(client, command)
+    else:
+        res = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        # Wait for the process end and print error in case of failure
+        out, err = res.communicate()
+
+        if res.wait() != 0 and err.decode() != '':
+            sys.exit(output.message(output.Subject.ERROR, err.decode(), False))
+
+        if force_output:
+            return(out.decode())
+

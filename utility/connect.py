@@ -175,6 +175,19 @@ def close_ssh_clients():
         ssh_client_target.close()
 
 
+def run_ssh_command_by_client(client, command):
+    """
+    Running origin ssh command
+    :param client: String
+    :param command: String
+    :return:
+    """
+    if client == mode.Client.ORIGIN:
+        return run_ssh_command(command, ssh_client_origin)
+    elif client == mode.Client.TARGET:
+        return run_ssh_command(command, ssh_client_target)
+
+
 def run_ssh_command_origin(command):
     """
     Running origin ssh command
