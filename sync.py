@@ -4,7 +4,7 @@
 __author__ = "Konrad Michalik"
 __copyright__ = "Copyright 2020"
 __license__ = "MIT"
-__version__ = "1.7.2"
+__version__ = "1.8.0"
 __maintainer__ = "Konrad Michalik"
 __email__ = "support@konradmichalik.eu"
 
