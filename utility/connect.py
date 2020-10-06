@@ -66,7 +66,7 @@ def load_ssh_client(ssh):
     :param ssh: String
     :return:
     """
-    _host_name = system.config['host'][ssh]['host']
+    _host_name = helper.get_ssh_host_name(ssh, True)
     _ssh_client = paramiko.SSHClient()
     _ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -94,7 +94,7 @@ def load_ssh_client(ssh):
                 )
             )
 
-        _authentication_method = ' - (authentication: key)'
+        _authentication_method = f'{output.CliFormat.BLACK} - (authentication: key){output.CliFormat.ENDC}'
     else:
         try:
             _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
@@ -112,7 +112,7 @@ def load_ssh_client(ssh):
                 )
             )
 
-        _authentication_method = ' - (authentication: password)'
+        _authentication_method = f'{output.CliFormat.BLACK} - (authentication: password){output.CliFormat.ENDC}'
 
     output.message(
         output.host_to_subject(ssh),
