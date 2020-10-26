@@ -3,3 +3,5 @@ files/
 !files/www2/LocalConfiguration.php
 !files/www1/.env
 !files/www2/.env
+!files/www1/settings.php
+!files/www2/settings.php

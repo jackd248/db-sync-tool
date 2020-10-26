@@ -6,6 +6,7 @@ Supported framework types:
 
 - TYPO3 (>= v7.6)
 - Symfony (>= v3.4)
+- Drupal (>= v8.0)
 
 ## Prerequisite
 

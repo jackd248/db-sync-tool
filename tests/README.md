@@ -33,3 +33,4 @@ and select one of the following scenarios:
 - receiver
 - sender
 - symfony
+- drupal

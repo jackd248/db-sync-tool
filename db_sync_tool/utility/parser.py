@@ -12,6 +12,7 @@ from db_sync_tool.utility import mode, connect, system, output
 class Framework:
     TYPO3 = 'TYPO3'
     SYMFONY = 'Symfony'
+    DRUPAL = 'Drupal'
 
 #
 # FUNCTIONS
@@ -38,6 +39,9 @@ def get_database_configuration(client):
         elif _type == 'symfony':
             # Symfony sync base
             _base = Framework.SYMFONY
+        elif _type == 'drupal':
+            # Symfony sync base
+            _base = Framework.DRUPAL
         else:
             sys.exit(
                 output.message(
@@ -53,13 +57,18 @@ def get_database_configuration(client):
     sys.path.append('../extension')
     if _base == Framework.TYPO3:
         # Import TYPO3 parser
-        from extension import typo3
+        from ..extension import typo3
         _parser = typo3
 
     elif _base == Framework.SYMFONY:
         # Import Symfony parser
-        from extension import symfony
+        from ..extension import symfony
         _parser = symfony
+
+    elif _base == Framework.DRUPAL:
+        # Import Symfony parser
+        from ..extension import drupal
+        _parser = drupal
 
     if client == mode.Client.ORIGIN:
         output.message(
