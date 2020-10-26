@@ -3,8 +3,7 @@
 #
 # Sync mode: PROXY
 #
-echo ""
-echo "\033[90m#############################################\033[m"
+
 echo "\033[94m[INFO]\033[m Testing sync mode: PROXY"
 echo "\033[94m[INFO]\033[m \033[90mSync: WWW1 -> PROXY -> WWW2, Initiator: PROXY\033[m"
 docker-compose exec proxy python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/proxy/sync-www1-to-www2.json -m

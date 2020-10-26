@@ -3,8 +3,7 @@
 #
 # Framework Symfony
 #
-echo ""
-echo "\033[90m#############################################\033[m"
+
 echo "\033[94m[INFO]\033[m Testing application symfony"
 echo "\033[94m[INFO]\033[m \033[90mSync: WWW1 -> WWW2, Initiator: WWW2\033[m"
 docker-compose exec www2 python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/symfony/sync-www1-to-local.json -m

@@ -18,4 +18,3 @@ docker-compose exec db2 mysql -udb -pdb db -e 'DROP TABLE IF EXISTS person' > /d
 # Import database dump
 #cat dump/db.sql | $(docker-compose exec -T db1 mysql -udb -pdb db > /dev/null)
 docker-compose exec db1 bash -c "mysql -udb -pdb db < /tmp/dump/db.sql" > /dev/null
-echo "\033[94m[INFO]\033[m Scenario reset"

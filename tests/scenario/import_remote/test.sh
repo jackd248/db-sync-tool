@@ -3,8 +3,7 @@
 #
 # Sync mode: IMPORT_REMOTE
 #
-echo ""
-echo "\033[90m#############################################\033[m"
+
 echo "\033[94m[INFO]\033[m Testing sync mode: IMPORT_REMOTE"
 echo "\033[94m[INFO]\033[m \033[90mSync: test.sql -> WWW1, Initiator: WWW2\033[m"
 

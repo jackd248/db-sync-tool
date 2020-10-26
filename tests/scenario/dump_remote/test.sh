@@ -3,8 +3,7 @@
 #
 # Sync mode: DUMP_REMOTE
 #
-echo ""
-echo "\033[90m#############################################\033[m"
+
 echo "\033[94m[INFO]\033[m Testing sync mode: DUMP_REMOTE"
 echo "\033[94m[INFO]\033[m \033[90mSync: WWW1 -> test.sql, Initiator: WWW2\033[m"
 docker-compose exec www2 python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/dump_remote/dump-www1-from-local.json -m -dn test

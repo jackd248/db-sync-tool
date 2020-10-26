@@ -3,8 +3,7 @@
 #
 # Sync mode: IMPORT_LOCAL
 #
-echo ""
-echo "\033[90m#############################################\033[m"
+
 echo "\033[94m[INFO]\033[m Testing sync mode: IMPORT_LOCAL"
 echo "\033[94m[INFO]\033[m \033[90mSync: test.sql -> WWW2, Initiator: WWW2\033[m"
 mkdir -p ./files/www2/database_backup/

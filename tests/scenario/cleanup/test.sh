@@ -3,8 +3,7 @@
 #
 # CleanUp
 #
-echo ""
-echo "\033[90m#############################################\033[m"
+
 echo "\033[94m[INFO]\033[m Testing clean up"
 echo "\033[94m[INFO]\033[m \033[90mSync: WWW1 -> WWW1, Initiator: WWW2\033[m"
 

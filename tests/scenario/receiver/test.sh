@@ -3,8 +3,7 @@
 #
 # Sync mode: RECEIVER
 #
-echo ""
-echo "\033[90m#############################################\033[m"
+
 echo "\033[94m[INFO]\033[m Testing sync mode: RECEIVER"
 echo "\033[94m[INFO]\033[m \033[90mSync: WWW1 -> WWW2, Initiator: WWW2\033[m"
 docker-compose exec www2 python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/receiver/sync-www1-to-local.json -m
