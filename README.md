@@ -9,15 +9,17 @@ Supported framework types:
 
 ## Prerequisite
 
-The script using python 3. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
-You can do this e.g. by the following command:
+The script needs python 3.7 or higher. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
 
+## Installation
+
+### pip
+The library can be installed from [PyPI](https://pypi.org/):
 ```bash
-$ apt install -y python-pip3
+$ pip3 install db-sync-tool-kmi
 ```
 
-## Install
-
+### composer
 While using the script within the PHP framework context, the script is available via [packagist.org](https://packagist.org/packages/kmi/db-sync-tool) using composer:
 
 ```bash
@@ -32,18 +34,17 @@ $ pip3 install -r vendor/kmi/db-sync-tool/requirements.txt
 
 ## Configuration
 
-The `host.json` contains important information about the origin and the target system. 
-You need to specify the SSH credentials for the origin system and the path to the database credentials of both systems.
+The `config.json` contains important information about the origin and the target system. In dependence on the given configuration the synchronisation mode is implicitly selected.
 
 ```bash
 # Copy/edit host.json for TYPO3
-$ cp dist/t3-db-sync.json.dist host.json
+$ cp docs/dist/t3-db-sync.json.dist config.json
 
 # Copy/edit host.json for Symfony
-$ cp dist/sf-db-sync.json.dist host.json
+$ cp docs/dist/sf-db-sync.json.dist config.json
 ```
 
-Example structure of `host.json` for a Symfony system in receiver mode:
+Example structure of `config.json` for a Symfony system in receiver mode:
 ```json
 {
   "name": "project",
@@ -62,11 +63,11 @@ Example structure of `host.json` for a Symfony system in receiver mode:
 
 ### Adjustments
 
-It is possible to adjust the `host.json` [configuration](documentation/CONFIG.md).
+It is possible to adjust the `config.json` [configuration](docs/CONFIG.md).
 
 ### Sync modes
 
-The script provides seven different kinds of [synchronisation modes](documentation/MODE.md).
+The script provides seven different kinds of [synchronisation modes](docs/MODE.md).
 
 - Receiver
 - Sender
@@ -81,7 +82,7 @@ The script provides seven different kinds of [synchronisation modes](documentati
 Run the python script:
 
 ```bash
-$ python sync.py
+$ python3 db_sync_tool/sync.py
 ```
 
 ```bash
@@ -97,20 +98,10 @@ $ python sync.py
 
 If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 
 
+## Build
+
+The packaging process of the python module is described on [python.org](https://packaging.python.org/tutorials/packaging-projects/).
+
 ## Tests
 
-A docker container set up is available for testing purpose. You can run the simple shell script tests via the following command:
-
-```bash
-$ sh test/helper/scenario.sh [scenario]
-```
-
-## FAQ
-
-- First script run was aborted with the message `First install of additional pip modules completed. Please re-run the script.`
-   
-   Actually it is not possible to load the required pip modules and add them dynamically to the script execution. So you need to re-run the script again with the available dependencies.
-
-- TYPO3 error message: `Unknown column '?' in 'field list'` 
-   
-   Sometimes your local environment differ from the origin system. So you maybe need to update the database schema either manually via the install tool or using the TYPO3 console by `typo3cms database:updateschema`
+A docker container set up is available for testing purpose. See [here](tests/README.md).

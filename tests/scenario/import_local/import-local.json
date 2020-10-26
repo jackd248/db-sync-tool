@@ -1,0 +1,10 @@
+{
+  "name": "project",
+  "type": "TYPO3",
+  "target": {
+    "path": "/var/www/html/tests/files/www2/LocalConfiguration.php"
+  },
+  "origin": {
+  },
+  "ignore_table": []
+}
