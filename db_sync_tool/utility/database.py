@@ -2,21 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import datetime
 from db_sync_tool.utility import parser, mode, system, helper, output
-
-# Check requirements
-try:
-    import calendar
-    import time
-    import datetime
-    import os
-except ImportError:
-     sys.exit(
-         output.message(
-             output.Subject.ERROR,
-             'Python requirements missing! Install with: pip3 install -r requirements.txt'
-         )
-     )
 
 #
 # GLOBALS

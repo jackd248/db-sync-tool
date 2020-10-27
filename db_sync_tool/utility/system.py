@@ -2,20 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import json
+import os
+import getpass
 from db_sync_tool.utility import log, parser, mode, helper, output
-
-# Check requirements
-try:
-    import json
-    import os
-    import getpass
-except ImportError:
-     sys.exit(
-         output.message(
-             output.Subject.ERROR,
-             'Python requirements missing! Install with: pip3 install -r requirements.txt'
-         )
-     )
 
 #
 # GLOBALS
@@ -91,12 +81,13 @@ def get_configuration(host_config):
         config['host'] = host_config
 
     log.get_logger().info('Starting db_sync_tool')
-    output.message(
-        output.Subject.INFO,
-        'Configuration: ' + option['config_file_path'],
-        True,
-        True
-    )
+    if option['config_file_path']:
+        output.message(
+            output.Subject.INFO,
+            'Configuration: ' + option['config_file_path'],
+            True,
+            True
+        )
 
 
 def check_options():
@@ -148,15 +139,14 @@ def check_authorization(client):
                         False
                     )
                 )
-        # plain password authorization
         elif 'password' in config['host'][client]:
-            option['ssh_password'][client] = config['host'][client]['password']
+            config['host'][client]['password'] = config['host'][client]['password']
         # user input authorization
         else:
-            option['ssh_password'][client] = get_password_by_user(client)
+            config['host'][client]['password'] = get_password_by_user(client)
 
         if mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and client == mode.Client.ORIGIN:
-            option['ssh_password'][mode.Client.TARGET] = option['ssh_password'][mode.Client.ORIGIN]
+            config['host'][mode.Client.TARGET]['password'] = config['host'][mode.Client.ORIGIN]['password']
 
 
 def get_password_by_user(client):
@@ -203,9 +193,11 @@ def check_args_options(args):
     if not args.file is None:
         option['config_file_path'] = args.file
 
-    option['verbose'] = args.verbose
+    if not args.verbose is None:
+        option['verbose'] = args.verbose
 
-    option['mute'] = args.mute
+    if not args.mute is None:
+        option['mute'] = args.mute
 
     if not args.importfile is None:
         option['import'] = args.importfile

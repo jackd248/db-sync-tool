@@ -2,14 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import paramiko
+import os
 from db_sync_tool.utility import mode, system, helper, output, database
-
-# Check requirements
-try:
-    import paramiko
-    import os
-except ImportError:
-     sys.exit(output.message(output.Subject.ERROR, 'Python requirements missing! Install with: pip3 install -r requirements.txt'))
 
 
 #
@@ -100,7 +95,7 @@ def load_ssh_client(ssh):
             _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
                                 username=system.config['host'][ssh]['user'],
                                 port=_ssh_port,
-                                password=system.option['ssh_password'][ssh],
+                                password=system.config['host'][ssh]['password'],
                                 compress=True)
 
         except paramiko.ssh_exception.AuthenticationException:

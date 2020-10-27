@@ -24,6 +24,7 @@ if [ "$#" -eq "0" ]; then
   sh scenario/link/test.sh
   sh scenario/download/test.sh
   sh scenario/cleanup/test.sh
+  sh scenario/module/test.sh
 else
   sh scenario/$1/test.sh
 fi

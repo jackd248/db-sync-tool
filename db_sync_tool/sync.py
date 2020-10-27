@@ -10,18 +10,13 @@ __email__ = "support@konradmichalik.eu"
 
 import sys
 import os
+import argparse
 # Workaround for ModuleNotFoundError
 sys.path.append(os.getcwd())
 from db_sync_tool.utility import connect, system, helper, output, info, database
 
 # Check Python version
 assert sys.version_info >= (3, 7), sys.exit(output.message(output.Subject.ERROR, 'Python 3.7 or higher required'))
-
-# Check requirements
-try:
-    import argparse
-except ImportError:
-     sys.exit(output.message(output.Subject.ERROR, 'Python requirements missing! Install with: pip3 install -r requirements.txt'))
 
 
 class Sync:
@@ -31,15 +26,20 @@ class Sync:
 
     _args = []
 
-    def main(self, config={}):
+    def __init__(self, args={}, config={}):
         """
         Initialization
+        :param self:
+        :param args: Dictionary
+        :param config: Dictionary
         :return:
         """
+        self.args = args
+        self.config = config
         self.get_arguments()
         info.print_header(self._args)
         system.check_args_options(self._args)
-        system.get_configuration(config)
+        system.get_configuration(self.config)
         database.create_origin_database_dump()
         connect.transfer_origin_database_dump()
         database.import_database_dump()
@@ -67,12 +67,12 @@ class Sync:
         parser.add_argument('-o', '--hosts',
                             help='Using an additional hosts file for merging hosts information with the configuration file',
                             required=False, type=str)
-        self._args = parser.parse_args()
+
+        self._args = parser.parse_args(helper.dict_to_args(self.args))
 
 
 #
 # MAIN
 #
 if __name__ == "__main__":
-    sync = Sync()
-    sync.main()
+    Sync()

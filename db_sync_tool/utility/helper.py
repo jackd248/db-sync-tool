@@ -2,21 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import getpass
+import shutil
+import os
 from db_sync_tool.utility import mode, connect, system, output
-
-# Check requirements
-try:
-    import getpass
-    import shutil
-    import os
-except ImportError:
-    sys.exit(
-        output.message(
-            output.Subject.ERROR,
-            'Python requirements missing! Install with: pip3 install -r requirements.txt'
-        )
-    )
-
 
 #
 # FUNCTIONS
@@ -164,3 +153,22 @@ def create_local_temporary_data_dir():
     # @ToDo: Combine with check_and_create_dump_dir()
     if not os.path.exists(system.default_local_sync_path):
         os.mkdir(system.default_local_sync_path)
+
+
+def dict_to_args(dict):
+    """
+    Convert an dictionary to a args list
+    :param dict: Dictionary
+    :return: List
+    """
+    _args = []
+    for key, val in dict.items():
+        if isinstance(val, bool):
+            if val:
+                _args.append(f'--{key}')
+        else:
+            _args.append(f'--{key}')
+            _args.append(str(val))
+    if len(_args) == 0:
+        return None
+    return _args

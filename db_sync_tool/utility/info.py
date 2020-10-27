@@ -2,19 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import json
+import os
 from db_sync_tool.utility import mode, system, output
-
-# Check requirements
-try:
-    import json
-    import os
-except ImportError:
-     sys.exit(
-         output.message(
-             output.Subject.ERROR,
-             'Python requirements missing! Install with: pip3 install -r requirements.txt'
-         )
-     )
 
 #
 # FUNCTIONS
@@ -28,15 +18,16 @@ def print_header(args):
     """
     _information = get_composer_information()
 
-    if args.mute is False:
-        print(output.CliFormat.BLACK + '############################################' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '#                                          #' + output.CliFormat.ENDC)
-        print(
-            output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '           DATABASE SYNC TOOL             ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '#                  v' + _information['version'] + '                  #' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '# ' + _information['homepage'] + ' #' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '#                                          #' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '############################################' + output.CliFormat.ENDC)
+    if not args is None:
+        if args.mute is False:
+            print(output.CliFormat.BLACK + '############################################' + output.CliFormat.ENDC)
+            print(output.CliFormat.BLACK + '#                                          #' + output.CliFormat.ENDC)
+            print(
+                output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '           DATABASE SYNC TOOL             ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
+            print(output.CliFormat.BLACK + '#                  v' + _information['version'] + '                  #' + output.CliFormat.ENDC)
+            print(output.CliFormat.BLACK + '# ' + _information['homepage'] + ' #' + output.CliFormat.ENDC)
+            print(output.CliFormat.BLACK + '#                                          #' + output.CliFormat.ENDC)
+            print(output.CliFormat.BLACK + '############################################' + output.CliFormat.ENDC)
 
 
 def get_composer_information():
