@@ -13,6 +13,7 @@ class Framework:
     TYPO3 = 'TYPO3'
     SYMFONY = 'Symfony'
     DRUPAL = 'Drupal'
+    WORDPRESS = 'Wordpress'
 
 #
 # FUNCTIONS
@@ -42,6 +43,9 @@ def get_database_configuration(client):
         elif _type == 'drupal':
             # Symfony sync base
             _base = Framework.DRUPAL
+        elif _type == 'wordpress':
+            # Symfony sync base
+            _base = Framework.WORDPRESS
         else:
             sys.exit(
                 output.message(
@@ -69,6 +73,11 @@ def get_database_configuration(client):
         # Import Symfony parser
         from ..extension import drupal
         _parser = drupal
+
+    elif _base == Framework.WORDPRESS:
+        # Import Symfony parser
+        from ..extension import wordpress
+        _parser = wordpress
 
     if client == mode.Client.ORIGIN:
         output.message(

@@ -20,6 +20,7 @@ if [ "$#" -eq "0" ]; then
   sh scenario/import_remote/test.sh
   sh scenario/symfony/test.sh
   sh scenario/drupal/test.sh
+  sh scenario/wordpress/test.sh
   sh scenario/logging/test.sh
   sh scenario/link/test.sh
   sh scenario/download/test.sh
