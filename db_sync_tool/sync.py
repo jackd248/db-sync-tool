@@ -1,13 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-__author__ = "Konrad Michalik"
-__copyright__ = "Copyright 2020"
-__license__ = "MIT"
-__version__ = "1.8.0"
-__maintainer__ = "Konrad Michalik"
-__email__ = "support@konradmichalik.eu"
-
 import sys
 import os
 import argparse

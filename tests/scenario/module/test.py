@@ -1,7 +1,7 @@
-import db_sync_tool.sync
+import db_sync_tool
 
 if __name__ == "__main__":
-    db_sync_tool.sync.Sync({
+    db_sync_tool.Sync({
         'verbose': False,
         'mute': True
     }, {

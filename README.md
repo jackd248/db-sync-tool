@@ -4,9 +4,10 @@ Python script to synchronize a database from an origin to a target system.
 
 Supported framework types:
 
-- TYPO3 (>= v7.6)
-- Symfony (>= v3.4)
-- Drupal (>= v8.0)
+- [TYPO3](https://typo3.org/) (>= v7.6)
+- [Symfony](https://symfony.com/) (>= v3.4)
+- [Drupal](https://www.drupal.org/) (>= v8.0)
+- [Wordpress](https://wordpress.org) (>= v5.0)
 
 ## Prerequisite
 
@@ -80,6 +81,8 @@ The script provides seven different kinds of [synchronisation modes](docs/MODE.m
 
 ## Usage
 
+### Command line
+
 Run the python script:
 
 ```bash
@@ -98,6 +101,17 @@ $ python3 db_sync_tool/sync.py
 ```
 
 If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 
+
+### Import
+
+You can import the python package and use them inside your project:
+
+```python
+import db_sync_tool
+
+if __name__ == "__main__":
+    db_sync_tool.Sync(args, config)
+```
 
 ## Build
 
