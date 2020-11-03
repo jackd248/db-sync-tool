@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #
-# Framework Symfony
+# Framework Drupal
 #
 
 echo "\033[94m[INFO]\033[m Testing application drupal"

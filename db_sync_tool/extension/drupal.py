@@ -11,29 +11,11 @@ from db_sync_tool.utility import mode, system, helper, output
 
 def check_local_configuration(client):
     """
-    Checking local TYPO3 database configuration
+    Checking local Drupal database configuration
     :param client: String
     :return:
     """
-    if not os.path.isfile(system.config['host'][client]['path']):
-        sys.exit(
-            output.message(
-                output.Subject.ERROR,
-                'Local database configuration not found',
-                False
-            )
-        )
-
-    _os = helper.check_os(client).strip()
-    _db_config = {
-        'dbname': get_database_setting(client, 'database', system.config['host'][client]['path'], os),
-        'host': get_database_setting(client, 'host', system.config['host'][client]['path'], os),
-        'password': get_database_setting(client, 'password', system.config['host'][client]['path'], os),
-        'port': get_database_setting(client, 'port', system.config['host'][client]['path'], os),
-        'user': get_database_setting(client, 'username', system.config['host'][client]['path'], os),
-    }
-
-    system.config['db'][client] = _db_config
+    check_configuration(client)
 
 
 def check_remote_configuration(client):
@@ -42,13 +24,22 @@ def check_remote_configuration(client):
     :param client: String
     :return:
     """
+    check_configuration(client)
+
+
+def check_configuration(client):
+    """
+    Checking Drupal database configuration
+    :param client: String
+    :return:
+    """
     _os = helper.check_os(client).strip()
     _db_config = {
-        'dbname': get_database_setting(client, 'database', system.config['host'][client]['path'], os),
-        'host': get_database_setting(client, 'host', system.config['host'][client]['path'], os),
-        'password': get_database_setting(client, 'password', system.config['host'][client]['path'], os),
-        'port': get_database_setting(client, 'port', system.config['host'][client]['path'], os),
-        'user': get_database_setting(client, 'username', system.config['host'][client]['path'], os),
+        'dbname': get_database_setting(client, 'database', system.config['host'][client]['path'], _os),
+        'host': get_database_setting(client, 'host', system.config['host'][client]['path'], _os),
+        'password': get_database_setting(client, 'password', system.config['host'][client]['path'], _os),
+        'port': get_database_setting(client, 'port', system.config['host'][client]['path'], _os),
+        'user': get_database_setting(client, 'username', system.config['host'][client]['path'], _os),
     }
 
     system.config['db'][client] = _db_config
