@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2020-11-03
+### Added
+- [Task] Support legacy script call from command line
+- [Task] Improved script handling
+- [Task] Support Wordpress
+- [Task] Extension Drupal improved
+- [Task] Run sync as module
+- [Task] Adding supported framework Drupal 8
+- [Task][!!!] Refactoring for export as python package
+- [Task] Connection output improved
+
 ## [1.8.0] - 2020-10-06
 ### Added
 - [Task] Error handling improved
