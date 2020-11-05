@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2020-11-05
+### Added
+- [Task] Test scenario symfony2.8 added
+- [Task] Support Symfony v2.8
+
 ## [2.0.1] - 2020-11-05
 ### Added
 - [Task] Validating database credentials
