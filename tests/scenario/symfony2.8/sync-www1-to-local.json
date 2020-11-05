@@ -1,0 +1,14 @@
+{
+  "name": "project",
+  "type": "Symfony",
+  "target": {
+    "path": "/var/www/html/tests/files/www2/parameters.yml"
+  },
+  "origin": {
+    "host": "www1",
+    "user": "user",
+    "password": "password",
+    "path": "/var/www/html/tests/files/www1/parameters.yml"
+  },
+  "ignore_table": []
+}

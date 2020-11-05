@@ -20,16 +20,27 @@ def check_local_configuration(client):
         sys.exit(output.message(output.Subject.ERROR, 'Local database configuration not found', False))
 
     system.config['db'] = {}
+    # Check for symfony 2.8
+    if 'parameters.yml' in system.config['host'][client]['path']:
+        _db_config = {
+            'dbname': get_database_parameter(client, 'database_name', system.config['host'][client]['path']),
+            'host': get_database_parameter(client, 'database_host', system.config['host'][client]['path']),
+            'password': get_database_parameter(client, 'database_password', system.config['host'][client]['path']),
+            'port': get_database_parameter(client, 'database_port', system.config['host'][client]['path']),
+            'user': get_database_parameter(client, 'database_user', system.config['host'][client]['path']),
+        }
+    # Using for symfony >=3.4
+    else:
+        _db_credentials = check_output(
+            helper.get_command(client, 'grep') + ' -v "^#" ' + system.config['host'][client][
+                'path'] + ' | ' + helper.get_command(client, 'grep') + ' DATABASE_URL',
+            stderr=subprocess.STDOUT,
+            shell=True
+        ).decode()
 
-    _db_credentials = check_output(
-        helper.get_command(client, 'grep') + ' -v "^#" ' + system.config['host'][client][
-            'path'] + ' | ' + helper.get_command(client, 'grep') + ' DATABASE_URL',
-        stderr=subprocess.STDOUT,
-        shell=True
-    ).decode()
+        _db_config = parse_database_credentials(_db_credentials)
 
-    _db_config = parse_database_credentials(_db_credentials)
-
+    # ToDo: Clean this up
     if system.option['verbose']:
         if client == mode.Client.TARGET:
             _subject = output.Subject.TARGET
@@ -53,13 +64,25 @@ def check_remote_configuration(client):
     :param client: String
     :return:
     """
-    stdout = mode.run_command(
-        helper.get_command(client, 'grep') + ' -v "^#" ' + system.config['host'][client][
-            'path'] + ' | ' + helper.get_command(client, 'grep') + ' DATABASE_URL',
-        client
-    )
-    _db_credentials = stdout.readlines()[0]
-    _db_config = parse_database_credentials(_db_credentials)
+    # Check for symfony 2.8
+    if 'parameters.yml' in system.config['host'][client]['path']:
+        _db_config = {
+            'dbname': get_database_parameter(client, 'database_name', system.config['host'][client]['path']),
+            'host': get_database_parameter(client, 'database_host', system.config['host'][client]['path']),
+            'password': get_database_parameter(client, 'database_password', system.config['host'][client]['path']),
+            'port': get_database_parameter(client, 'database_port', system.config['host'][client]['path']),
+            'user': get_database_parameter(client, 'database_user', system.config['host'][client]['path']),
+        }
+    # Using for symfony >=3.4
+    else:
+        stdout = mode.run_command(
+            helper.get_command(client, 'grep') + ' -v "^#" ' + system.config['host'][client][
+                'path'] + ' | ' + helper.get_command(client, 'grep') + ' DATABASE_URL',
+            client
+        )
+        _db_credentials = stdout.readlines()[0]
+        _db_config = parse_database_credentials(_db_credentials)
+
     system.config['db'][client] = _db_config
 
 
@@ -91,3 +114,19 @@ def parse_database_credentials(db_credentials):
     }
 
     return _db_config
+
+
+def get_database_parameter(client, name, file):
+    """
+    Parsing a single database variable from the parameters.yml file
+    hhttps://unix.stackexchange.com/questions/84922/extract-a-part-of-one-line-from-a-file-with-sed
+    :param client: String
+    :param name: String
+    :param file: String
+    :return:
+    """
+    return mode.run_command(
+        helper.get_command(client, 'sed') + f' -n -e \'/{name}/ s/.*\\: *//p\' {file}',
+        client,
+        True
+    ).replace('\n', '')

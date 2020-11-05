@@ -5,7 +5,7 @@ Python script to synchronize a database from an origin to a target system.
 Supported framework types:
 
 - [TYPO3](https://typo3.org/) (>= v7.6)
-- [Symfony](https://symfony.com/) (>= v3.4)
+- [Symfony](https://symfony.com/) (>= v2.8)
 - [Drupal](https://www.drupal.org/) (>= v8.0)
 - [Wordpress](https://wordpress.org) (>= v5.0)
 

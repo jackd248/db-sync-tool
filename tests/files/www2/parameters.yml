@@ -1,0 +1,6 @@
+parameters:
+    database_host: db2
+    database_port: 3306
+    database_name: db
+    database_user: db
+    database_password: db

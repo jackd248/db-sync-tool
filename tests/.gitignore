@@ -7,3 +7,5 @@ files/
 !files/www2/settings.php
 !files/www1/wp-config.php
 !files/www2/wp-config.php
+!files/www1/parameters.yml
+!files/www2/parameters.yml
