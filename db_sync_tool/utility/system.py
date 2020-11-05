@@ -75,7 +75,7 @@ def get_configuration(host_config):
                     f'Local host configuration not found: {option["config_file_path"]}',
                     False
                 )
-        )
+            )
 
     if host_config:
         config['host'] = host_config
@@ -141,11 +141,11 @@ def check_authorization(client):
                 )
         elif 'password' in config['host'][client]:
             config['host'][client]['password'] = config['host'][client]['password']
-        # user input authorization
         else:
+            # user input authorization
             config['host'][client]['password'] = get_password_by_user(client)
 
-        if mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and client == mode.Client.ORIGIN:
+        if mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and client == mode.Client.ORIGIN and 'password' in config['host'][mode.Client.ORIGIN]:
             config['host'][mode.Client.TARGET]['password'] = config['host'][mode.Client.ORIGIN]['password']
 
 
