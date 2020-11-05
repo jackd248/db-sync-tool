@@ -90,6 +90,8 @@ def get_database_configuration(client):
     else:
         load_parser_target(_parser)
 
+    validate_database_credentials(client)
+
 
 def load_parser_origin(parser):
     """
@@ -129,3 +131,27 @@ def load_parser_target(parser):
     else:
         connect.run_before_script(mode.Client.TARGET)
         parser.check_local_configuration(mode.Client.TARGET)
+
+
+def validate_database_credentials(client):
+    """
+    Validate the parsed database credentials
+    :param client: String
+    :return:
+    """
+    output.message(
+        output.host_to_subject(client),
+        'Validating database credentials',
+        True
+    )
+    _db_credential_keys = ['dbname', 'host', 'password', 'port', 'user']
+
+    for _key in _db_credential_keys:
+        if system.config['db'][client][_key] is None or system.config['db'][client][_key] == '':
+            sys.exit(
+                output.message(
+                    output.Subject.ERROR,
+                    f'Missing database credential "{_key}" for {client} client',
+                    False
+                )
+            )
