@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2020-11-05
+### Added
+- [Task] Validating database credentials
+
+### Fixed
+- [Bugfix] SSH key authorization for dump-remote
+
 ## [2.0.0] - 2020-11-03
 ### Added
 - [Task] Support legacy script call from command line

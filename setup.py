@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="db_sync_tool-kmi",
-    version="2.0.0",
+    version="2.0.1",
     author="Konrad Michalik",
     author_email="support@konradmichalik.eu",
     description="Synchronize a database from and to client systems.",
