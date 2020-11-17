@@ -59,11 +59,11 @@ def get_database_setting(client, name, file, os):
             helper.get_command(client, 'perl') + ' -nle "print $& while m{(?<=\'' + name + '\' => ).*(?=,)}g" ' + file + '| head -n 1',
             client,
             True
-        ).replace('"', '').replace('\n', '')
+        ).replace('"', '').replace('\'', '').replace('\n', '')
     else:
         return mode.run_command(
             helper.get_command(client, 'grep') + f' -Po "(?<=\'{name}\' => ).*(?=,)" {file}',
             client,
             True
-        ).replace('"', '').replace('\n', '')
+        ).replace('"', '').replace('\'', '').replace('\n', '')
 

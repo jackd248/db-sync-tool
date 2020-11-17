@@ -1,8 +1,8 @@
 <?php
 
 $databases['default']['default'] = array(
-    'database' => "db",
-    'username' => "db",
+    'database' => 'db',
+    'username' => 'db',
     'password' => "db",
     'host' => "db2",
     'driver' => "mysql",
