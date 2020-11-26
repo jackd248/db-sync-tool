@@ -2,10 +2,34 @@
 
 Here you can find an overview over the possible configuration adjustments.
 
-### Ignore tables
+- [Ignore tables](#ignore_tables)
+- [Authentication](#authentication)
+- [Linking hosts](#linking)
+- [SSH Port](#port)
+- [Console commands](#console)
+- [(Temporary) dump directory](#directory)
+- [Before and after script](#script)
+- [Logging](#logging)
+- [Cleaning up / keeping dumps count](#clean_up)
+- [Naming hosts](#naming)
+- [Check dump](#check)
+
+<a name="ignore_tables"></a>
+### Ignore tables 
 
 Often it is better to exclude some tables from the sql dump for performance reasons, e.g. caching tables. Specify them as comma separated list in the `ignore_table` array.
 
+You can use wildcards to define several tables:
+
+```json
+{
+  "ignore_table": [ 
+    "cache_*"
+  ]  
+}
+```
+
+<a name="authentication"></a>
 ### Authentication
 
 If you want to authenticate with a private ssh key instead of a user entered password to the server (useful for CI/CD), you can add the file path to the private key file in your `config.json`:
@@ -28,6 +52,7 @@ It's not recommended, but you can also specify the plain password inside the hos
 }
 ```
 
+<a name="linking"></a>
 ### Linking hosts
 
 For larger project setups with multiple configuration files, it's better to reuse the host configuration in every sync scenario. So you can link to predefined host in your `config.json`:
@@ -61,6 +86,7 @@ You specify the path to the `hosts.json` file with the `-o` option within the sc
 ```
 
 
+<a name="port"></a>
 ### SSH Port
 
 You can also specify a different SSH port to the client in your `config.json` (the default port is `22`):
@@ -73,6 +99,7 @@ You can also specify a different SSH port to the client in your `config.json` (t
 }
 ```
 
+<a name="console"></a>
 ### Console commands
 
 The script using among other things the `php`, `mysql`, `mysqldump`, `grep` commands to synchronize the databases. Sometimes these commands are not available via the path variable, so you have to specify the full path to the source in the `config.json` depending on the system:
@@ -89,6 +116,7 @@ The script using among other things the `php`, `mysql`, `mysqldump`, `grep` comm
 }
 ```
 
+<a name="directory"></a>
 ### (Temporary) dump directory
 
 Normally is the script creating the sql dump in the `home` directory of the given ssh user. If this directory is not writable or you want to export the database automatically in another directory, you can specify an alternative directory in the `config.json`, where the temporary sql dump will be saved:
@@ -103,6 +131,7 @@ Normally is the script creating the sql dump in the `home` directory of the give
 
 **Note:** It is recommended to use for every application another directory to avoid side effects (e.g. cleaning up feature).
 
+<a name="script"></a>
 ### Before and after script
 
 Sometimes it is necessary to run a specific command before or after the dump creation on the origin or target system to ensure the correct synchronisation process. Therefore you can specify these commands in the `config.json`:
@@ -120,6 +149,7 @@ Sometimes it is necessary to run a specific command before or after the dump cre
 }
 ```
 
+<a name="logging"></a>
 ### Logging
 
 You can enable the logging to a separate log file via the `log_file` entry in the `config.json`:
@@ -132,6 +162,7 @@ You can enable the logging to a separate log file via the `log_file` entry in th
 
 **Note**: By default only a summary of the sync actions will be logged. If you enable the verbose option (`-v`) all console output will also be logged in the given log file.
 
+<a name="clean_up"></a>
 ### Cleaning up / keeping dumps count
 
 With the concept of the *DUMP_REMOTE* or *DUMP_LOCAL* mode can you implement an automatic backup system. However it's a good option to clean up old dump files and only keep the newest ones. Therefore you can use the `keep_dumps` entry in the `config.json`:
@@ -147,7 +178,8 @@ With the concept of the *DUMP_REMOTE* or *DUMP_LOCAL* mode can you implement an 
 
 **Note**: Be aware of this feature. It will only keep the latest (e.g. 5) files in the `dump_dir` directory and delete all other `.sql` and `.tar.gz` files.
 
-### Naming
+<a name="naming"></a>
+### Naming hosts
 
 For a better differentiation of the different host systems you can optionally provide a specific name in the `config.json`:
 
@@ -162,6 +194,7 @@ For a better differentiation of the different host systems you can optionally pr
 }
 ```
 
+<a name="check"></a>
 ### Check dump
 
 The script is checking the target dump if the file is being downloaded completely. If you want to prevent this check, you can disable them in the `config.json`:

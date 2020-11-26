@@ -44,6 +44,15 @@ def create_origin_database_dump():
         prepare_origin_database_dump()
 
 
+def run_database_command(client, command):
+    """
+    Run a database command using the "mysql -e" command
+    :param command: String database command
+    :return:
+    """
+    return mode.run_command(helper.get_command(client, 'mysql') + ' ' + generate_mysql_credentials(client) + ' -e "' + command + '"', client, True)
+
+
 def generate_database_dump_filename():
     """
     Generate a database dump filename like "_[dbname]_[date].sql" or using the give filename
@@ -67,8 +76,37 @@ def generate_ignore_database_tables():
     _ignore_tables = []
     if 'ignore_table' in system.config['host']:
         for table in system.config['host']['ignore_table']:
-            _ignore_tables.append('--ignore-table=' + system.config['db']['origin']['dbname'] + '.' + table)
+            if '*' in table:
+                _wildcard_tables = get_database_tables_like('origin', table.replace('*', ''))
+                if _wildcard_tables:
+                    for wildcard_table in _wildcard_tables:
+                        _ignore_tables = generate_ignore_database_table(_ignore_tables, wildcard_table)
+            else:
+                _ignore_tables = generate_ignore_database_table(_ignore_tables, table)
         return ' '.join(_ignore_tables)
+
+
+def generate_ignore_database_table(ignore_tables, table):
+    """
+    :param ignore_tables: Dictionary
+    :param table: String
+    :return:
+    """
+    ignore_tables.append('--ignore-table=' + system.config['db']['origin']['dbname'] + '.' + table)
+    return ignore_tables
+
+
+def get_database_tables_like(client, name):
+    """
+    Get database table names like the given name
+    :param client: String
+    :param name: String
+    :return: Dictionary
+    """
+    _dbname = system.config['db'][client]['dbname']
+    _tables = run_database_command(client, f'SHOW TABLES FROM {_dbname} LIKE \'%{name}%\';').strip()
+    if _tables != '':
+        return _tables.split('\n', 1)[1:]
 
 
 def generate_mysql_credentials(client):

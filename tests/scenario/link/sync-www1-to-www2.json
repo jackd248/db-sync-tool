@@ -7,5 +7,7 @@
   "origin": {
     "link": "@www1"
   },
-  "ignore_table": []
+  "ignore_table": [
+    "cache_*"
+  ]
 }
