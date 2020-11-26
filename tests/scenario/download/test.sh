@@ -6,7 +6,7 @@
 
 echo "\033[94m[INFO]\033[m Testing dump download"
 echo "\033[94m[INFO]\033[m \033[90mSync: WWW1 -> WWW2 (dump.sql), Initiator: WWW2\033[m"
-docker-compose exec www2 python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/download/sync-www1-to-local.json -m -kd /var/www/html/tests/files/www2/download/ -dn dump
+docker-compose exec www2 python3 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/download/sync-www1-to-local.json -m -kd /var/www/html/tests/files/www2/download/ -dn dump
 
 FILE=./files/www2/download/dump.sql
 if [ -f "$FILE" ]; then

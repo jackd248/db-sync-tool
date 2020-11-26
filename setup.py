@@ -1,17 +1,18 @@
 import setuptools
+from db_sync_tool import info
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="db_sync_tool-kmi",
-    version="2.1.0",
+    version=info.__version__,
     author="Konrad Michalik",
     author_email="support@konradmichalik.eu",
     description="Synchronize a database from and to client systems.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/jackd248/db-sync-tool",
+    url=info.__homepage__,
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

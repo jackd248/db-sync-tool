@@ -4,7 +4,8 @@
 import subprocess
 import sys
 
-from db_sync_tool.utility import connect, system, output
+from db_sync_tool.utility import system, output
+from db_sync_tool.remote import system as remote_system
 
 
 #
@@ -140,9 +141,9 @@ def run_command(command, client, force_output=False):
 
     if is_remote(client):
         if force_output:
-            return ''.join(connect.run_ssh_command_by_client(client, command).readlines()).strip()
+            return ''.join(remote_system.run_ssh_command_by_client(client, command).readlines()).strip()
         else:
-            return connect.run_ssh_command_by_client(client, command)
+            return remote_system.run_ssh_command_by_client(client, command)
     else:
         res = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         # Wait for the process end and print error in case of failure

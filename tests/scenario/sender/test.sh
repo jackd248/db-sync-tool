@@ -6,7 +6,7 @@
 
 echo "\033[94m[INFO]\033[m Testing sync mode: SENDER"
 echo "\033[94m[INFO]\033[m \033[90mSync: WWW2 -> WWW1, Initiator: WWW2\033[m"
-docker-compose exec www2 python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/sender/sync-local-to-www1.json -m
+docker-compose exec www2 python3 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/sender/sync-local-to-www1.json -m
 
 # Expecting 3 results in the database
 count=$(docker-compose exec db1 mysql -udb -pdb db -e 'SELECT COUNT(*) FROM person' | grep 3 | tr -d '[:space:]')

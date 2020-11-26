@@ -5,48 +5,29 @@ import sys
 import json
 import os
 from db_sync_tool.utility import mode, system, output
+from db_sync_tool import info
 
 #
 # FUNCTIONS
 #
 
-def print_header(args):
+
+def print_header(mute):
     """
     Printing console header
-    :param args:
+    :param mute: Boolean
     :return:
     """
-    _information = get_composer_information()
 
-    if not args is None:
-        if args.mute is False:
-            print(output.CliFormat.BLACK + '############################################' + output.CliFormat.ENDC)
-            print(output.CliFormat.BLACK + '#                                          #' + output.CliFormat.ENDC)
-            print(
-                output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '           DATABASE SYNC TOOL             ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
-            print(output.CliFormat.BLACK + '#                  v' + _information['version'] + '                  #' + output.CliFormat.ENDC)
-            print(output.CliFormat.BLACK + '# ' + _information['homepage'] + ' #' + output.CliFormat.ENDC)
-            print(output.CliFormat.BLACK + '#                                          #' + output.CliFormat.ENDC)
-            print(output.CliFormat.BLACK + '############################################' + output.CliFormat.ENDC)
-
-
-def get_composer_information():
-    """
-    Reading local composer information
-    :return: Dictionary
-    """
-    if os.path.isfile(os.path.dirname(os.path.realpath(__file__)) + '/../../composer.json'):
-        with open(os.path.dirname(os.path.realpath(__file__)) + '/../../composer.json', 'r') as read_file:
-            return json.load(read_file)
-    else:
-        sys.exit(
-            output.message(
-                output.Subject.ERROR,
-                'Local composer information not found',
-                False,
-                True
-            )
-        )
+    if mute is False:
+        print(output.CliFormat.BLACK + '############################################' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '#                                          #' + output.CliFormat.ENDC)
+        print(
+            output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '              DB SYNC TOOL                ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '#                  v' + info.__version__ + '                  #' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '# ' + info.__homepage__ + ' #' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '#                                          #' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '############################################' + output.CliFormat.ENDC)
 
 
 def print_footer():

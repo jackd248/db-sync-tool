@@ -17,7 +17,7 @@ touch ./files/www1/database_backup/3.sql
 touch ./files/www1/database_backup/4.sql
 touch ./files/www1/database_backup/5.sql
 
-docker-compose exec www2 python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/cleanup/dump-www1-from-local.json -m -dn test
+docker-compose exec www2 python3 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/cleanup/dump-www1-from-local.json -m -dn test
 FILE=./files/www1/database_backup/1.sql
 if [ ! -f "$FILE" ]; then
     echo "\033[92m[SUCCESS]\033[m Remote clean up successful"

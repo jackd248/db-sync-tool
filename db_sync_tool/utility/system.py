@@ -179,35 +179,47 @@ def get_password_by_user(client):
     return _password
 
 
-def check_args_options(args):
+def check_args_options(config_file=None,
+                       verbose=False,
+                       mute=False,
+                       import_file=None,
+                       dump_name=None,
+                       keep_dump=None,
+                       host_file=None):
     """
     Checking arguments and fill options array
-    :param args:
+    :param config_file:
+    :param verbose:
+    :param mute:
+    :param import_file:
+    :param dump_name:
+    :param keep_dump:
+    :param host_file:
     :return:
     """
     global option
     global default_local_sync_path
 
-    if not args.file is None:
-        option['config_file_path'] = args.file
+    if not config_file is None:
+        option['config_file_path'] = config_file
 
-    if not args.verbose is None:
-        option['verbose'] = args.verbose
+    if not verbose is None:
+        option['verbose'] = verbose
 
-    if not args.mute is None:
-        option['mute'] = args.mute
+    if not mute is None:
+        option['mute'] = mute
 
-    if not args.importfile is None:
-        option['import'] = args.importfile
+    if not import_file is None:
+        option['import'] = import_file
 
-    if not args.dumpname is None:
-        option['dump_name'] = args.dumpname
+    if not dump_name is None:
+        option['dump_name'] = dump_name
 
-    if not args.hosts is None:
-        option['link_hosts'] = args.hosts
+    if not host_file is None:
+        option['link_hosts'] = host_file
 
-    if not args.keepdump is None:
-        default_local_sync_path = args.keepdump
+    if not keep_dump is None:
+        default_local_sync_path = keep_dump
 
         # Adding trailing slash if necessary
         if default_local_sync_path[-1] != '/':

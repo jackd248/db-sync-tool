@@ -6,7 +6,7 @@
 
 echo "\033[94m[INFO]\033[m Testing option logging"
 echo "\033[94m[INFO]\033[m \033[90mSync: WWW1 -> WWW2, Initiator: WWW2\033[m"
-docker-compose exec www2 python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/logging/sync-www1-to-local.json -m
+docker-compose exec www2 python3 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/logging/sync-www1-to-local.json -m
 FILE=./files/test.log
 if [ -f "$FILE" ]; then
     echo "\033[92m[SUCCESS]\033[m Log file created"

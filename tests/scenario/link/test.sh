@@ -6,7 +6,7 @@
 
 echo "\033[94m[INFO]\033[m Testing option link"
 echo "\033[94m[INFO]\033[m \033[90mSync: WWW1 -> PROXY -> WWW2, Initiator: PROXY\033[m"
-docker-compose exec proxy python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/link/sync-www1-to-www2.json -o /var/www/html/tests/scenario/link/hosts.json -m
+docker-compose exec proxy python3 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/link/sync-www1-to-www2.json -o /var/www/html/tests/scenario/link/hosts.json -m
 # Expecting 3 results in the database
 count=$(docker-compose exec db2 mysql -udb -pdb db -e 'SELECT COUNT(*) FROM person' | grep 3 | tr -d '[:space:]')
 if [[ $count == '|3|' ]]; then

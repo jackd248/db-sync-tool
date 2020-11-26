@@ -6,7 +6,7 @@
 
 echo "\033[94m[INFO]\033[m Testing application symfony"
 echo "\033[94m[INFO]\033[m \033[90mSync: WWW1 -> WWW2, Initiator: WWW2\033[m"
-docker-compose exec www2 python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/symfony/sync-www1-to-local.json -m
+docker-compose exec www2 python3 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/symfony/sync-www1-to-local.json -m
 # Expecting 3 results in the database
 count=$(docker-compose exec db2 mysql -udb -pdb db -e 'SELECT COUNT(*) FROM person' | grep 3 | tr -d '[:space:]')
 if [[ $count == '|3|' ]]; then

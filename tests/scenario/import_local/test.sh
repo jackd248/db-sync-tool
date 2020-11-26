@@ -8,7 +8,7 @@ echo "\033[94m[INFO]\033[m Testing sync mode: IMPORT_LOCAL"
 echo "\033[94m[INFO]\033[m \033[90mSync: test.sql -> WWW2, Initiator: WWW2\033[m"
 mkdir -p ./files/www2/database_backup/
 cp ./docker/dump/test.sql ./files/www2/database_backup/
-docker-compose exec www2 python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/import_local/import-local.json -m -i /var/www/html/tests/files/www2/database_backup/test.sql
+docker-compose exec www2 python3 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/import_local/import-local.json -m -i /var/www/html/tests/files/www2/database_backup/test.sql
 # Expecting 3 results in the database
 count=$(docker-compose exec db2 mysql -udb -pdb db -e 'SELECT COUNT(*) FROM person' | grep 3 | tr -d '[:space:]')
 if [[ $count == '|3|' ]]; then

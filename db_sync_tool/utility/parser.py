@@ -2,22 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from db_sync_tool.utility import mode, connect, system, output
+from db_sync_tool.utility import mode, system, output
+from db_sync_tool.remote import client as remote_client, utility as remote_utility
 
-
-#
-# GLOBALS
-#
 
 class Framework:
     TYPO3 = 'TYPO3'
     SYMFONY = 'Symfony'
     DRUPAL = 'Drupal'
     WORDPRESS = 'Wordpress'
-
-#
-# FUNCTIONS
-#
 
 
 def get_database_configuration(client):
@@ -102,14 +95,14 @@ def load_parser(client, parser):
     )
     if client == mode.Client.ORIGIN:
         if mode.is_origin_remote():
-            connect.load_ssh_client_origin()
+            remote_client.load_ssh_client_origin()
         else:
-            connect.run_before_script(client)
+            remote_utility.run_before_script(client)
     else:
         if mode.is_target_remote():
-            connect.load_ssh_client_target()
+            remote_client.load_ssh_client_target()
         else:
-            connect.run_before_script(client)
+            remote_utility.run_before_script(client)
 
     parser.check_configuration(client)
 

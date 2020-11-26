@@ -5,7 +5,8 @@ import sys
 import getpass
 import shutil
 import os
-from db_sync_tool.utility import mode, connect, system, output
+from db_sync_tool.utility import mode, system, output
+from db_sync_tool.remote import utility as remote_utility
 
 #
 # FUNCTIONS
@@ -18,7 +19,7 @@ def clean_up():
     :return:
     """
     if not mode.is_import():
-        connect.remove_target_database_dump()
+        remote_utility.remove_target_database_dump()
         if mode.get_sync_mode() == mode.SyncMode.PROXY:
             remove_temporary_data_dir()
 

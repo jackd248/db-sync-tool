@@ -78,18 +78,18 @@ The script provides seven different kinds of [synchronisation modes](docs/MODE.m
 Run the python script:
 
 ```bash
-$ python3 db_sync_tool/sync.py
+$ python3 db_sync_tool
 ```
 
 ```bash
 # Options
 -h, --help              Show help
 -v, --verbose           Enable extended console output
--f, --file              Path to host file
--i, --importfile        Import database from a specific file dump
--dn, --dumpname         Set a specific dump file name (default is "_[dbname]_[date]")
--kd, --keepdump         Skipping target import of the database dump and saving the available dump file in the given directory
--o, --hosts             Using an additional hosts file for merging hosts information with the configuration file
+-f, --config-file       Path to config file
+-i, --import-file       Import database from a specific file dump
+-dn, --dump-name        Set a specific dump file name (default is "_[dbname]_[date]")
+-kd, --keep-dump        Skipping target import of the database dump and saving the available dump file in the given directory
+-o, --host-file         Using an additional hosts file for merging hosts information with the configuration file
 ```
 
 If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 
@@ -99,10 +99,10 @@ If you haven't declare a path to a SSH key, during the script execution you are 
 You can import the python package and use them inside your project:
 
 ```python
-import db_sync_tool
+from db_sync_tool import sync
 
 if __name__ == "__main__":
-    db_sync_tool.Sync(args, config)
+    sync.Sync(args*, config)
 ```
 
 ## Build

@@ -5,7 +5,7 @@
 
 echo "\033[94m[INFO]\033[m Testing sync mode: DUMP_LOCAL"
 echo "\033[94m[INFO]\033[m \033[90mSync: WWW2 -> test.sql, Initiator: WWW2\033[m"
-docker-compose exec www2 python3 /var/www/html/db_sync_tool/sync.py -f /var/www/html/tests/scenario/dump_local/dump-local.json -m -dn test
+docker-compose exec www2 python3 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/dump_local/dump-local.json -m -dn test
 
 FILE=./files/www2/database_backup/test.sql.tar.gz
 if [ -f "$FILE" ]; then
