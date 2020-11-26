@@ -119,7 +119,7 @@ The script using among other things the `php`, `mysql`, `mysqldump`, `grep` comm
 <a name="directory"></a>
 ### (Temporary) dump directory
 
-Normally is the script creating the sql dump in the `home` directory of the given ssh user. If this directory is not writable or you want to export the database automatically in another directory, you can specify an alternative directory in the `config.json`, where the temporary sql dump will be saved:
+Normally is the script creating the sql dump in the `/tmp/` directory. If this directory is not writable or you want to export the database automatically in another directory, you can specify an alternative directory in the `config.json`, where the temporary sql dump will be saved:
 
 ```json
 {

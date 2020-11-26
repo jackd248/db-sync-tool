@@ -76,4 +76,7 @@ def parse_database_credentials(db_credentials):
         _db_config['user'] = _db_config['username']
         _db_config['dbname'] = _db_config['database']
 
+    if 'port' not in _db_config:
+        _db_config['port'] = 3306
+
     return _db_config

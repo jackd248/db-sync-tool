@@ -1,6 +1,6 @@
 # Database Sync Tool
 
-Python script to synchronize a database from an origin to a target system.
+Python script to synchronize a database from an origin to a target system with automatic database credential extraction depending on the selected framework.
 
 Supported framework types:
 
@@ -37,14 +37,6 @@ $ pip3 install -r vendor/kmi/db-sync-tool/requirements.txt
 ## Configuration
 
 The `config.json` contains important information about the origin and the target system. In dependence on the given configuration the synchronisation mode is implicitly selected.
-
-```bash
-# Copy/edit host.json for TYPO3
-$ cp docs/dist/t3-db-sync.json.dist config.json
-
-# Copy/edit host.json for Symfony
-$ cp docs/dist/sf-db-sync.json.dist config.json
-```
 
 Example structure of `config.json` for a Symfony system in receiver mode:
 ```json

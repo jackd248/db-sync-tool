@@ -1,6 +1,8 @@
 files/
 !files/www1/LocalConfiguration.php
 !files/www2/LocalConfiguration.php
+!files/www1/LocalConfiguration.typo3v7.php
+!files/www2/LocalConfiguration.typo3v7.php
 !files/www1/.env
 !files/www2/.env
 !files/www1/settings.php

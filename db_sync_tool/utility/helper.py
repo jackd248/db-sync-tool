@@ -105,10 +105,7 @@ def get_dump_dir(client):
     :return: String path
     """
     if system.option[f'default_{client}_dump_dir']:
-        if not mode.is_remote(client):
-            return '/home/' + getpass.getuser() + '/'
-        else:
-            return '/home/' + system.config['host'][client]['user'] + '/'
+        return '/tmp/'
     else:
         return system.config['host'][client]['dump_dir']
 

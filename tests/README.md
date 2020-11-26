@@ -33,4 +33,7 @@ and select one of the following scenarios:
 - receiver
 - sender
 - symfony
+- symfony2.8
 - drupal
+- typo3v7
+- wordpress

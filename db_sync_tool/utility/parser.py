@@ -147,6 +147,14 @@ def validate_database_credentials(client):
     _db_credential_keys = ['dbname', 'host', 'password', 'port', 'user']
 
     for _key in _db_credential_keys:
+        if _key not in system.config['db'][client]:
+            sys.exit(
+                output.message(
+                    output.Subject.ERROR,
+                    f'Missing database credential "{_key}" for {client} client',
+                    False
+                )
+            )
         if system.config['db'][client][_key] is None or system.config['db'][client][_key] == '':
             sys.exit(
                 output.message(

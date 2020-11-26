@@ -36,7 +36,7 @@ option = {
 # DEFAULTS
 #
 
-default_local_sync_path = os.path.abspath(os.getcwd()) + '/.sync/'
+default_local_sync_path = '/tmp/'
 
 
 #
@@ -72,7 +72,7 @@ def get_configuration(host_config):
             sys.exit(
                 output.message(
                     output.Subject.ERROR,
-                    f'Local host configuration not found: {option["config_file_path"]}',
+                    f'Local configuration not found: {option["config_file_path"]}',
                     False
                 )
             )
@@ -104,9 +104,7 @@ def check_options():
     if 'check_dump' in config['host']:
         option['check_dump'] = config['host']['check_dump']
 
-    if option['link_hosts'] != '':
-        link_configuration_with_hosts()
-
+    link_configuration_with_hosts()
     mode.check_sync_mode()
     check_authorization(mode.Client.ORIGIN)
     check_authorization(mode.Client.TARGET)
@@ -228,17 +226,43 @@ def link_configuration_with_hosts():
     Merging the hosts definition with the given configuration file
     :return:
     """
-    if os.path.isfile(option['link_hosts']):
-        with open(option['link_hosts'], 'r') as read_file:
-            _hosts = json.load(read_file)
-            if 'link' in config['host']['origin']:
-                _host_name = str(config['host']['origin']['link']).replace('@','')
-                if _host_name in _hosts:
-                    config['host']['origin'] = {**config['host']['origin'], **_hosts[_host_name]}
+    if ('link' in config['host']['origin'] or 'link' in config['host']['target']) and option['link_hosts'] == '':
+        # Try to find default hosts.json file in same directory
+        sys.exit(
+            output.message(
+                output.Subject.ERROR,
+                f'Missing hosts file for linking hosts with configuration. '
+                f'Use the "-o" / "--hosts" argument to define the filepath for the hosts file, when using a link parameter within the configuration.',
+                False
+            )
+        )
 
-            if 'link' in config['host']['target']:
-                _host_name = str(config['host']['target']['link']).replace('@','')
-                if _host_name in _hosts:
-                    config['host']['target'] = {**config['host']['target'], **_hosts[_host_name]}
+    if option['link_hosts'] != '':
+        if os.path.isfile(option['link_hosts']):
+            with open(option['link_hosts'], 'r') as read_file:
+                _hosts = json.load(read_file)
+                output.message(
+                    output.Subject.INFO,
+                    'Linking configuration with hosts',
+                    True
+                )
+                if 'link' in config['host']['origin']:
+                    _host_name = str(config['host']['origin']['link']).replace('@','')
+                    if _host_name in _hosts:
+                        config['host']['origin'] = {**config['host']['origin'], **_hosts[_host_name]}
+
+                if 'link' in config['host']['target']:
+                    _host_name = str(config['host']['target']['link']).replace('@','')
+                    if _host_name in _hosts:
+                        config['host']['target'] = {**config['host']['target'], **_hosts[_host_name]}
+        else:
+            sys.exit(
+                output.message(
+                    output.Subject.ERROR,
+                    f'Local host file not found: {option["link_hosts"]}',
+                    False
+                )
+            )
+
 
 
