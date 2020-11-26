@@ -18,8 +18,6 @@ class Framework:
 #
 # FUNCTIONS
 #
-def get_framework():
-    return Framework
 
 
 def get_database_configuration(client):
@@ -58,25 +56,25 @@ def get_database_configuration(client):
         # Default is TYPO3 sync base
         _base = Framework.TYPO3
 
-    sys.path.append('../extension')
+    sys.path.append('../recipes')
     if _base == Framework.TYPO3:
         # Import TYPO3 parser
-        from ..extension import typo3
+        from ..recipes import typo3
         _parser = typo3
 
     elif _base == Framework.SYMFONY:
         # Import Symfony parser
-        from ..extension import symfony
+        from ..recipes import symfony
         _parser = symfony
 
     elif _base == Framework.DRUPAL:
         # Import Symfony parser
-        from ..extension import drupal
+        from ..recipes import drupal
         _parser = drupal
 
     elif _base == Framework.WORDPRESS:
         # Import Symfony parser
-        from ..extension import wordpress
+        from ..recipes import wordpress
         _parser = wordpress
 
     if client == mode.Client.ORIGIN:
@@ -86,51 +84,34 @@ def get_database_configuration(client):
             True
         )
 
-        load_parser_origin(_parser)
-    else:
-        load_parser_target(_parser)
-
+    load_parser(client, _parser)
     validate_database_credentials(client)
 
 
-def load_parser_origin(parser):
+def load_parser(client, parser):
     """
-    Loading origin parser
+    Loading parser and checking database configuration
+    :param client:
     :param parser:
     :return:
     """
-    # @ToDo: Code duplication
     output.message(
-        output.Subject.ORIGIN,
+        output.host_to_subject(client),
         'Checking database configuration',
         True
     )
-    if mode.is_origin_remote():
-        connect.load_ssh_client_origin()
-        parser.check_remote_configuration(mode.Client.ORIGIN)
+    if client == mode.Client.ORIGIN:
+        if mode.is_origin_remote():
+            connect.load_ssh_client_origin()
+        else:
+            connect.run_before_script(client)
     else:
-        connect.run_before_script(mode.Client.ORIGIN)
-        parser.check_local_configuration(mode.Client.ORIGIN)
+        if mode.is_target_remote():
+            connect.load_ssh_client_target()
+        else:
+            connect.run_before_script(client)
 
-
-def load_parser_target(parser):
-    """
-    Loading target parser
-    :param parser:
-    :return:
-    """
-    # @ToDo: Code duplication
-    output.message(
-        output.Subject.TARGET,
-        'Checking database configuration',
-        True
-    )
-    if mode.is_target_remote():
-        connect.load_ssh_client_target()
-        parser.check_remote_configuration(mode.Client.TARGET)
-    else:
-        connect.run_before_script(mode.Client.TARGET)
-        parser.check_local_configuration(mode.Client.TARGET)
+    parser.check_configuration(client)
 
 
 def validate_database_credentials(client):
@@ -144,7 +125,7 @@ def validate_database_credentials(client):
         'Validating database credentials',
         True
     )
-    _db_credential_keys = ['dbname', 'host', 'password', 'port', 'user']
+    _db_credential_keys = ['name', 'host', 'password', 'port', 'user']
 
     for _key in _db_credential_keys:
         if _key not in system.config['db'][client]:

@@ -118,7 +118,7 @@ def check_authorization(client):
     """
     # only need authorization if client is remote
     if mode.is_remote(client):
-        # Workaround
+        # Workaround if no authorization is needed
         if (mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and client == mode.Client.TARGET) or (
                 mode.get_sync_mode() == mode.SyncMode.DUMP_LOCAL and client == mode.Client.ORIGIN) or (
                 mode.get_sync_mode() == mode.SyncMode.IMPORT_REMOTE and client == mode.Client.ORIGIN):

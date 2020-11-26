@@ -9,24 +9,6 @@ from subprocess import check_output
 from db_sync_tool.utility import mode, system, helper, output
 
 
-def check_local_configuration(client):
-    """
-    Checking local Drupal database configuration
-    :param client: String
-    :return:
-    """
-    check_configuration(client)
-
-
-def check_remote_configuration(client):
-    """
-    Checking remote Drupal database configuration
-    :param client: String
-    :return:
-    """
-    check_configuration(client)
-
-
 def check_configuration(client):
     """
     Checking Drupal database configuration
@@ -34,12 +16,22 @@ def check_configuration(client):
     :return:
     """
     _os = helper.check_os(client).strip()
+    _path = system.config['host'][client]['path']
+    if not helper.check_file_exists(client, _path):
+        sys.exit(
+            output.message(
+                output.Subject.ERROR,
+                f'Database configuration for {client} not found: {_path}',
+                False
+            )
+        )
+
     _db_config = {
-        'dbname': get_database_setting(client, 'database', system.config['host'][client]['path'], _os),
-        'host': get_database_setting(client, 'host', system.config['host'][client]['path'], _os),
-        'password': get_database_setting(client, 'password', system.config['host'][client]['path'], _os),
-        'port': get_database_setting(client, 'port', system.config['host'][client]['path'], _os),
-        'user': get_database_setting(client, 'username', system.config['host'][client]['path'], _os),
+        'name': get_database_setting(client, 'database', _path, _os),
+        'host': get_database_setting(client, 'host', _path, _os),
+        'password': get_database_setting(client, 'password', _path, _os),
+        'port': get_database_setting(client, 'port', _path, _os),
+        'user': get_database_setting(client, 'username', _path, _os),
     }
 
     system.config['db'][client] = _db_config

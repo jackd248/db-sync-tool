@@ -140,7 +140,7 @@ def run_command(command, client, force_output=False):
 
     if is_remote(client):
         if force_output:
-            return ''.join(connect.run_ssh_command_by_client(client, command).readlines())
+            return ''.join(connect.run_ssh_command_by_client(client, command).readlines()).strip()
         else:
             return connect.run_ssh_command_by_client(client, command)
     else:
@@ -152,5 +152,4 @@ def run_command(command, client, force_output=False):
             sys.exit(output.message(output.Subject.ERROR, err.decode(), False))
 
         if force_output:
-            return(out.decode())
-
+            return out.decode().strip()

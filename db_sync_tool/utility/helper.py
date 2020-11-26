@@ -11,6 +11,7 @@ from db_sync_tool.utility import mode, connect, system, output
 # FUNCTIONS
 #
 
+
 def clean_up():
     """
     Clean up
@@ -169,3 +170,13 @@ def dict_to_args(dict):
     if len(_args) == 0:
         return None
     return _args
+
+
+def check_file_exists(client, path):
+    """
+    Check if a file exists
+    :param client: String
+    :param path: String file path
+    :return: Boolean
+    """
+    return mode.run_command(f'[ -f {path} ] && echo "1"', client, True) == '1'

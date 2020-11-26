@@ -89,7 +89,7 @@ def extend_output_by_sync_mode(header, debug=False):
 def host_to_subject(host):
     """
     Converting the client to the according subject
-    :param client: String
+    :param host: String
     :return: String subject
     """
     if host == mode.Client.ORIGIN:

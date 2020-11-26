@@ -9,32 +9,24 @@ from subprocess import check_output
 from db_sync_tool.utility import mode, system, helper, output
 
 
-def check_local_configuration(client):
-    """
-    Checking local Drupal database configuration
-    :param client: String
-    :return:
-    """
-    check_configuration(client)
-
-
-def check_remote_configuration(client):
-    """
-    Checking remote Drupal database configuration
-    :param client: String
-    :return:
-    """
-    check_configuration(client)
-
-
 def check_configuration(client):
     """
     Checking Drupal database configuration
     :param client: String
     :return:
     """
+    _path = system.config['host'][client]['path']
+    if not helper.check_file_exists(client, _path):
+        sys.exit(
+            output.message(
+                output.Subject.ERROR,
+                f'Database configuration for {client} not found: {_path}',
+                False
+            )
+        )
+
     _db_config = {
-        'dbname': get_database_setting(client, 'DB_NAME', system.config['host'][client]['path']),
+        'name': get_database_setting(client, 'DB_NAME', system.config['host'][client]['path']),
         'host': get_database_setting(client, 'DB_HOST', system.config['host'][client]['path']),
         'password': get_database_setting(client, 'DB_PASSWORD', system.config['host'][client]['path']),
         'port': get_database_setting(client, 'DB_PORT', system.config['host'][client]['path']) if get_database_setting(client, 'DB_PORT', system.config['host'][client]['path']) != '' else 3306,

@@ -15,6 +15,7 @@ origin_database_dump_file_name = None
 # FUNCTIONS
 #
 
+
 def create_origin_database_dump():
     """
     Creating the origin database dump file
@@ -36,7 +37,7 @@ def create_origin_database_dump():
         mode.run_command(
             helper.get_command('origin', 'mysqldump') + ' --no-tablespaces ' + generate_mysql_credentials('origin') + ' ' +
             system.config['db']['origin'][
-                'dbname'] + ' ' + generate_ignore_database_tables() + ' > ' + _dump_file_path,
+                'name'] + ' ' + generate_ignore_database_tables() + ' > ' + _dump_file_path,
             mode.Client.ORIGIN
         )
 
@@ -55,7 +56,7 @@ def run_database_command(client, command):
 
 def generate_database_dump_filename():
     """
-    Generate a database dump filename like "_[dbname]_[date].sql" or using the give filename
+    Generate a database dump filename like "_[name]_[date].sql" or using the give filename
     :return:
     """
     global origin_database_dump_file_name
@@ -63,7 +64,7 @@ def generate_database_dump_filename():
     if system.option['dump_name'] == '':
         # _project-db_20-08-2020_12-37.sql
         _now = datetime.datetime.now()
-        origin_database_dump_file_name = '_' + system.config['db']['origin']['dbname'] + '_' + _now.strftime("%d-%m-%Y_%H-%M") + '.sql'
+        origin_database_dump_file_name = '_' + system.config['db']['origin']['name'] + '_' + _now.strftime("%d-%m-%Y_%H-%M") + '.sql'
     else:
         origin_database_dump_file_name = system.option['dump_name'] + '.sql'
 
@@ -92,7 +93,7 @@ def generate_ignore_database_table(ignore_tables, table):
     :param table: String
     :return:
     """
-    ignore_tables.append('--ignore-table=' + system.config['db']['origin']['dbname'] + '.' + table)
+    ignore_tables.append('--ignore-table=' + system.config['db']['origin']['name'] + '.' + table)
     return ignore_tables
 
 
@@ -103,7 +104,7 @@ def get_database_tables_like(client, name):
     :param name: String
     :return: Dictionary
     """
-    _dbname = system.config['db'][client]['dbname']
+    _dbname = system.config['db'][client]['name']
     _tables = run_database_command(client, f'SHOW TABLES FROM {_dbname} LIKE \'%{name}%\';').strip()
     if _tables != '':
         return _tables.split('\n', 1)[1:]
@@ -151,7 +152,7 @@ def import_database_dump():
         mode.run_command(
             helper.get_command('target', 'mysql') + ' ' + generate_mysql_credentials('target') + ' ' +
             system.config['db']['target'][
-                'dbname'] + ' < ' + _dump_path,
+                'name'] + ' < ' + _dump_path,
             mode.Client.TARGET
         )
 
