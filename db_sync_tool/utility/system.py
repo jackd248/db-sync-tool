@@ -57,10 +57,11 @@ def get_configuration(host_config):
     :param host_config: Dictionary
     :return:
     """
+    global config
     if not option['config_file_path'] is None:
         if os.path.isfile(option['config_file_path']):
             with open(option['config_file_path'], 'r') as read_file:
-                config['host'] = json.load(read_file)
+                config = json.load(read_file)
                 output.message(
                     output.Subject.LOCAL,
                     'Loading host configuration',
@@ -78,7 +79,7 @@ def get_configuration(host_config):
             )
 
     if host_config:
-        config['host'] = host_config
+        config = host_config
 
     log.get_logger().info('Starting db_sync_tool')
     if option['config_file_path']:
@@ -95,14 +96,14 @@ def check_options():
     Checking configuration provided file
     :return:
     """
-    if 'dump_dir' in config['host']['origin']:
+    if 'dump_dir' in config['origin']:
         option['default_origin_dump_dir'] = False
 
-    if 'dump_dir' in config['host']['target']:
+    if 'dump_dir' in config['target']:
         option['default_target_dump_dir'] = False
 
-    if 'check_dump' in config['host']:
-        option['check_dump'] = config['host']['check_dump']
+    if 'check_dump' in config:
+        option['check_dump'] = config['check_dump']
 
     link_configuration_with_hosts()
     mode.check_sync_mode()
@@ -125,8 +126,8 @@ def check_authorization(client):
             return
 
         # ssh key authorization
-        if 'ssh_key' in config['host'][client]:
-            _ssh_key = config['host'][client]['ssh_key']
+        if 'ssh_key' in config[client]:
+            _ssh_key = config[client]['ssh_key']
             if os.path.isfile(_ssh_key):
                 option[f'use_{client}_ssh_key'] = True
             else:
@@ -137,14 +138,14 @@ def check_authorization(client):
                         False
                     )
                 )
-        elif 'password' in config['host'][client]:
-            config['host'][client]['password'] = config['host'][client]['password']
+        elif 'password' in config[client]:
+            config[client]['password'] = config[client]['password']
         else:
             # user input authorization
-            config['host'][client]['password'] = get_password_by_user(client)
+            config[client]['password'] = get_password_by_user(client)
 
-        if mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and client == mode.Client.ORIGIN and 'password' in config['host'][mode.Client.ORIGIN]:
-            config['host'][mode.Client.TARGET]['password'] = config['host'][mode.Client.ORIGIN]['password']
+        if mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and client == mode.Client.ORIGIN and 'password' in config[mode.Client.ORIGIN]:
+            config[mode.Client.TARGET]['password'] = config[mode.Client.ORIGIN]['password']
 
 
 def get_password_by_user(client):
@@ -238,7 +239,7 @@ def link_configuration_with_hosts():
     Merging the hosts definition with the given configuration file
     :return:
     """
-    if ('link' in config['host']['origin'] or 'link' in config['host']['target']) and option['link_hosts'] == '':
+    if ('link' in config['origin'] or 'link' in config['target']) and option['link_hosts'] == '':
         # Try to find default hosts.json file in same directory
         sys.exit(
             output.message(
@@ -258,15 +259,15 @@ def link_configuration_with_hosts():
                     'Linking configuration with hosts',
                     True
                 )
-                if 'link' in config['host']['origin']:
-                    _host_name = str(config['host']['origin']['link']).replace('@','')
+                if 'link' in config['origin']:
+                    _host_name = str(config['origin']['link']).replace('@','')
                     if _host_name in _hosts:
-                        config['host']['origin'] = {**config['host']['origin'], **_hosts[_host_name]}
+                        config['origin'] = {**config['origin'], **_hosts[_host_name]}
 
-                if 'link' in config['host']['target']:
-                    _host_name = str(config['host']['target']['link']).replace('@','')
+                if 'link' in config['target']:
+                    _host_name = str(config['target']['link']).replace('@','')
                     if _host_name in _hosts:
-                        config['host']['target'] = {**config['host']['target'], **_hosts[_host_name]}
+                        config['target'] = {**config['target'], **_hosts[_host_name]}
         else:
             sys.exit(
                 output.message(

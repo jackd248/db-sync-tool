@@ -16,15 +16,7 @@ def check_configuration(client):
     :param client: String
     :return:
     """
-    _path = system.config['host'][client]['path']
-    if not helper.check_file_exists(client, _path):
-        sys.exit(
-            output.message(
-                output.Subject.ERROR,
-                f'Database configuration for {client} not found: {_path}',
-                False
-            )
-        )
+    _path = system.config[client]['path']
 
     # Check for symfony 2.8
     if 'parameters.yml' in _path:
@@ -38,14 +30,14 @@ def check_configuration(client):
     # Using for symfony >=3.4
     else:
         stdout = mode.run_command(
-            helper.get_command(client, 'grep') + ' -v "^#" ' + system.config['host'][client][
+            helper.get_command(client, 'grep') + ' -v "^#" ' + system.config[client][
                 'path'] + ' | ' + helper.get_command(client, 'grep') + ' DATABASE_URL',
             client,
             True
         )
         _db_config = parse_database_credentials(stdout)
 
-    system.config['db'][client] = _db_config
+    system.config[client]['db'] = _db_config
 
 
 def parse_database_credentials(db_credentials):

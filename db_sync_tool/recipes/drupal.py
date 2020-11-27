@@ -16,15 +16,7 @@ def check_configuration(client):
     :return:
     """
     _os = helper.check_os(client).strip()
-    _path = system.config['host'][client]['path']
-    if not helper.check_file_exists(client, _path):
-        sys.exit(
-            output.message(
-                output.Subject.ERROR,
-                f'Database configuration for {client} not found: {_path}',
-                False
-            )
-        )
+    _path = system.config[client]['path']
 
     _db_config = {
         'name': get_database_setting(client, 'database', _path, _os),
@@ -34,7 +26,7 @@ def check_configuration(client):
         'user': get_database_setting(client, 'username', _path, _os),
     }
 
-    system.config['db'][client] = _db_config
+    system.config[client]['db'] = _db_config
 
 
 def get_database_setting(client, name, file, os):

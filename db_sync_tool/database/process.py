@@ -25,7 +25,7 @@ def create_origin_database_dump():
         mode.run_command(
             helper.get_command('origin', 'mysqldump') + ' --no-tablespaces ' +
             utility. generate_mysql_credentials('origin') + ' ' +
-            system.config['db']['origin']['name'] + ' ' +
+            system.config['origin']['db']['name'] + ' ' +
             utility.generate_ignore_database_tables() +
             ' > ' + _dump_file_path,
             mode.Client.ORIGIN
@@ -58,8 +58,7 @@ def import_database_dump():
         utility.check_database_dump(mode.Client.TARGET, _dump_path)
         mode.run_command(
             helper.get_command('target', 'mysql') + ' ' + utility.generate_mysql_credentials('target') + ' ' +
-            system.config['db']['target'][
-                'name'] + ' < ' + _dump_path,
+            system.config['target']['db']['name'] + ' < ' + _dump_path,
             mode.Client.TARGET
         )
 

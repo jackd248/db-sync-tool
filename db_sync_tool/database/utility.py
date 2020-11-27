@@ -32,7 +32,7 @@ def generate_database_dump_filename():
     if system.option['dump_name'] == '':
         # _project-db_20-08-2020_12-37.sql
         _now = datetime.datetime.now()
-        database_dump_file_name = '_' + system.config['db']['origin']['name'] + '_' + _now.strftime(
+        database_dump_file_name = '_' + system.config['origin']['db']['name'] + '_' + _now.strftime(
             "%d-%m-%Y_%H-%M") + '.sql'
     else:
         database_dump_file_name = system.option['dump_name'] + '.sql'
@@ -45,8 +45,8 @@ def generate_ignore_database_tables():
     :return: String
     """
     _ignore_tables = []
-    if 'ignore_table' in system.config['host']:
-        for table in system.config['host']['ignore_table']:
+    if 'ignore_table' in system.config:
+        for table in system.config['ignore_table']:
             if '*' in table:
                 _wildcard_tables = get_database_tables_like('origin', table.replace('*', ''))
                 if _wildcard_tables:
@@ -63,7 +63,7 @@ def generate_ignore_database_table(ignore_tables, table):
     :param table: String
     :return:
     """
-    ignore_tables.append('--ignore-table=' + system.config['db']['origin']['name'] + '.' + table)
+    ignore_tables.append('--ignore-table=' + system.config['origin']['db']['name'] + '.' + table)
     return ignore_tables
 
 
@@ -74,7 +74,7 @@ def get_database_tables_like(client, name):
     :param name: String
     :return: Dictionary
     """
-    _dbname = system.config['db'][client]['name']
+    _dbname = system.config[client]['db']['name']
     _tables = run_database_command(client, f'SHOW TABLES FROM {_dbname} LIKE \'%{name}%\';').strip()
     if _tables != '':
         return _tables.split('\n', 1)[1:]
@@ -86,12 +86,12 @@ def generate_mysql_credentials(client):
     :param client: String
     :return:
     """
-    _credentials = '-u\'' + system.config['db'][client]['user'] + '\' -p\'' + system.config['db'][client][
+    _credentials = '-u\'' + system.config[client]['db']['user'] + '\' -p\'' + system.config[client]['db'][
         'password'] + '\''
-    if 'host' in system.config['db'][client]:
-        _credentials += ' -h\'' + system.config['db'][client]['host'] + '\''
-    if 'port' in system.config['db'][client]:
-        _credentials += ' -P\'' + str(system.config['db'][client]['port']) + '\''
+    if 'host' in system.config[client]['db']:
+        _credentials += ' -h\'' + system.config[client]['db']['host'] + '\''
+    if 'port' in system.config[client]['db']:
+        _credentials += ' -P\'' + str(system.config[client]['db']['port']) + '\''
     return _credentials
 
 

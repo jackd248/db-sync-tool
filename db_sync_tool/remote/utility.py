@@ -14,14 +14,14 @@ def run_before_script(client):
     :return:
     """
     # Run before_script after successful connection
-    if 'before_script' in system.config['host'][client]:
+    if 'before_script' in system.config[client]:
         output.message(
             output.host_to_subject(client),
             'Running before_script',
             True
         )
         mode.run_command(
-            system.config['host'][client]['before_script'],
+            system.config[client]['before_script'],
             client
         )
 
@@ -33,14 +33,14 @@ def run_after_script(client):
     :return:
     """
     # Run after_script after successful connection
-    if 'after_script' in system.config['host'][client]:
+    if 'after_script' in system.config[client]:
         output.message(
             output.host_to_subject(client),
             'Running after_script',
             True
         )
         mode.run_command(
-            system.config['host'][client]['after_script'],
+            system.config[client]['after_script'],
             client
         )
 
@@ -70,9 +70,9 @@ def remove_origin_database_dump(keep_compressed_file=False):
             os.remove(f'{_file_path}.tar.gz')
 
     if keep_compressed_file:
-        if 'keep_dumps' in system.config['host'][mode.Client.ORIGIN]:
+        if 'keep_dumps' in system.config[mode.Client.ORIGIN]:
             helper.clean_up_dump_dir(mode.Client.ORIGIN, helper.get_dump_dir(mode.Client.ORIGIN) + '*',
-                                     system.config['host'][mode.Client.ORIGIN]['keep_dumps'])
+                                     system.config[mode.Client.ORIGIN]['keep_dumps'])
 
         output.message(
             output.Subject.INFO,

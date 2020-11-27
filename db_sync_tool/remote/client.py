@@ -40,17 +40,17 @@ def load_ssh_client(ssh):
     _ssh_client = paramiko.SSHClient()
     _ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    _ssh_port = _ssh_port = system.config['host'][ssh]['port'] if 'port' in system.config['host'][ssh] else 22
+    _ssh_port = _ssh_port = system.config[ssh]['port'] if 'port' in system.config[ssh] else 22
     _ssh_key = None
     _ssh_password = None
 
     # Check authentication
-    if 'ssh_key' in system.config['host'][ssh]:
+    if 'ssh_key' in system.config[ssh]:
         _authentication_method = f'{output.CliFormat.BLACK} - (authentication: key){output.CliFormat.ENDC}'
-        _ssh_key = system.config['host'][ssh]['ssh_key']
-    elif 'password' in system.config['host'][ssh]:
+        _ssh_key = system.config[ssh]['ssh_key']
+    elif 'password' in system.config[ssh]:
         _authentication_method = f'{output.CliFormat.BLACK} - (authentication: password){output.CliFormat.ENDC}'
-        _ssh_password = system.config['host'][ssh]['password']
+        _ssh_password = system.config[ssh]['password']
     else:
         sys.exit(
             output.message(
@@ -62,8 +62,8 @@ def load_ssh_client(ssh):
 
     # Try to connect to remote client via paramiko
     try:
-        _ssh_client.connect(hostname=system.config['host'][ssh]['host'],
-                            username=system.config['host'][ssh]['user'],
+        _ssh_client.connect(hostname=system.config[ssh]['host'],
+                            username=system.config[ssh]['user'],
                             key_filename=_ssh_key,
                             password=_ssh_password,
                             port=_ssh_port,

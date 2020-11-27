@@ -13,6 +13,7 @@ Here you can find an overview over the possible configuration adjustments.
 - [Cleaning up / keeping dumps count](#clean_up)
 - [Naming hosts](#naming)
 - [Check dump](#check)
+- [Manual database credentials](#manual)
 
 <a name="ignore_tables"></a>
 ### Ignore tables 
@@ -202,5 +203,38 @@ The script is checking the target dump if the file is being downloaded completel
 ```json
 {
   "check_dump": false
+}
+```
+
+<a name="manual"></a>
+### Manual database credentials
+
+It is also possible to skip the automatic database credential detection depending on the framework and provide the database credentials by your own in the `config.json` (example for RECEIVER mode):
+
+```json
+{
+  "name": "project",
+  "target": {
+    "db": {
+      "name": "db",
+      "host": "db2",
+      "password": "db",
+      "user": "db",
+      "port": 3306
+    }
+  },
+  "origin": {
+    "host": "www1",
+    "user": "user",
+    "password": "password",
+    "db": {
+      "name": "db",
+      "host": "db1",
+      "password": "db",
+      "user": "db",
+      "port": 3306
+    }
+  },
+  "ignore_table": []
 }
 ```

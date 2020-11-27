@@ -48,21 +48,21 @@ def check_sync_mode():
     """
     global sync_mode
 
-    if 'host' in system.config['host']['origin']:
+    if 'host' in system.config['origin']:
         sync_mode = SyncMode.RECEIVER
         _description = output.CliFormat.BLACK + '(REMOTE --> LOCAL)' + output.CliFormat.ENDC
-    if 'host' in system.config['host']['target']:
+    if 'host' in system.config['target']:
         sync_mode = SyncMode.SENDER
         _description = output.CliFormat.BLACK + '(LOCAL --> REMOTE)' + output.CliFormat.ENDC
-    if 'host' in system.config['host']['origin'] and 'host' in system.config['host']['target']:
+    if 'host' in system.config['origin'] and 'host' in system.config['target']:
         sync_mode = SyncMode.PROXY
         _description = output.CliFormat.BLACK + '(REMOTE --> LOCAL --> REMOTE)' + output.CliFormat.ENDC
-    if not 'host' in system.config['host']['origin'] and not 'host' in system.config['host']['target']:
+    if not 'host' in system.config['origin'] and not 'host' in system.config['target']:
         sync_mode = SyncMode.DUMP_LOCAL
         _description = output.CliFormat.BLACK + '(LOCAL, NO TRANSFER/IMPORT)' + output.CliFormat.ENDC
         system.option['is_same_client'] = True
-    if 'host' in system.config['host']['origin'] and 'host' in system.config['host']['target'] and system.config['host']['origin']['host'] == system.config['host']['target']['host']:
-        if ('port' in system.config['host']['origin'] and 'port' in system.config['host']['target'] and system.config['host']['origin']['port'] == system.config['host']['target']['port']) or ('port' not in system.config['host']['origin'] and 'port' not in system.config['host']['target']):
+    if 'host' in system.config['origin'] and 'host' in system.config['target'] and system.config['origin']['host'] == system.config['target']['host']:
+        if ('port' in system.config['origin'] and 'port' in system.config['target'] and system.config['origin']['port'] == system.config['target']['port']) or ('port' not in system.config['origin'] and 'port' not in system.config['target']):
             sync_mode = SyncMode.DUMP_REMOTE
             _description = output.CliFormat.BLACK + '(REMOTE, NO TRANSFER/IMPORT)' + output.CliFormat.ENDC
             system.option['is_same_client'] = True
@@ -72,7 +72,7 @@ def check_sync_mode():
             'Import file: ' + system.option['import'],
             True
         )
-        if 'host' in system.config['host']['target']:
+        if 'host' in system.config['target']:
             sync_mode = SyncMode.IMPORT_REMOTE
             _description = output.CliFormat.BLACK + '(REMOTE, NO TRANSFER)' + output.CliFormat.ENDC
         else:

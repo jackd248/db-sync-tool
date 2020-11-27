@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from db_sync_tool.utility import mode, system, output
+from db_sync_tool.utility import mode, system, output, helper
 from db_sync_tool.remote import client as remote_client, utility as remote_utility
 
 
@@ -11,6 +11,7 @@ class Framework:
     SYMFONY = 'Symfony'
     DRUPAL = 'Drupal'
     WORDPRESS = 'Wordpress'
+    MANUAL = 'Manual'
 
 
 def get_database_configuration(client):
@@ -23,8 +24,8 @@ def get_database_configuration(client):
 
     # check framework type
     _base = ''
-    if 'type' in system.config['host']:
-        _type = system.config['host']['type'].lower()
+    if 'type' in system.config:
+        _type = system.config['type'].lower()
         if _type == 'typo3':
             # TYPO3 sync base
             _base = Framework.TYPO3
@@ -45,6 +46,8 @@ def get_database_configuration(client):
                     False
                 )
             )
+    elif 'db' in system.config['origin'] or 'db' in system.config['target']:
+        _base = Framework.MANUAL
     else:
         # Default is TYPO3 sync base
         _base = Framework.TYPO3
@@ -77,7 +80,14 @@ def get_database_configuration(client):
             True
         )
 
-    load_parser(client, _parser)
+    if _base != Framework.MANUAL:
+        load_parser(client, _parser)
+    else:
+        if client == mode.Client.ORIGIN and mode.is_origin_remote():
+            remote_client.load_ssh_client_origin()
+        elif client == mode.Client.TARGET and mode.is_target_remote():
+            remote_client.load_ssh_client_target()
+
     validate_database_credentials(client)
 
 
@@ -104,6 +114,15 @@ def load_parser(client, parser):
         else:
             remote_utility.run_before_script(client)
 
+    _path = system.config[client]['path']
+    if not helper.check_file_exists(client, _path):
+        sys.exit(
+            output.message(
+                output.Subject.ERROR,
+                f'Database configuration for {client} not found: {_path}',
+                False
+            )
+        )
     parser.check_configuration(client)
 
 
@@ -121,7 +140,7 @@ def validate_database_credentials(client):
     _db_credential_keys = ['name', 'host', 'password', 'port', 'user']
 
     for _key in _db_credential_keys:
-        if _key not in system.config['db'][client]:
+        if _key not in system.config[client]['db']:
             sys.exit(
                 output.message(
                     output.Subject.ERROR,
@@ -129,7 +148,7 @@ def validate_database_credentials(client):
                     False
                 )
             )
-        if system.config['db'][client][_key] is None or system.config['db'][client][_key] == '':
+        if system.config[client]['db'][_key] is None or system.config[client]['db'][_key] == '':
             sys.exit(
                 output.message(
                     output.Subject.ERROR,

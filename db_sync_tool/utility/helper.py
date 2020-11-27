@@ -94,9 +94,9 @@ def get_command(client, command):
     :param command:
     :return: String command
     """
-    if 'console' in system.config['host'][client]:
-        if command in system.config['host'][client]['console']:
-            return system.config['host'][client]['console'][command]
+    if 'console' in system.config[client]:
+        if command in system.config[client]['console']:
+            return system.config[client]['console'][command]
     return command
 
 
@@ -109,7 +109,7 @@ def get_dump_dir(client):
     if system.option[f'default_{client}_dump_dir']:
         return '/tmp/'
     else:
-        return system.config['host'][client]['dump_dir']
+        return system.config[client]['dump_dir']
 
 
 def check_and_create_dump_dir(client, path):
@@ -133,12 +133,12 @@ def get_ssh_host_name(client, with_user=False):
     :return:
     """
     if with_user:
-        _host = system.config['host'][client]['user'] + '@' + system.config['host'][client]['host']
+        _host = system.config[client]['user'] + '@' + system.config[client]['host']
     else:
-        _host = system.config['host'][client]['host']
+        _host = system.config[client]['host']
 
-    if 'name' in system.config['host'][client]:
-        return output.CliFormat.BOLD + system.config['host'][client][
+    if 'name' in system.config[client]:
+        return output.CliFormat.BOLD + system.config[client][
             'name'] + output.CliFormat.ENDC + output.CliFormat.BLACK + ' (' + _host + ')' + output.CliFormat.ENDC
     else:
         return _host
