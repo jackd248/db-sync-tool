@@ -1,23 +1,40 @@
 import setuptools
+import sys
 from db_sync_tool import info
 
-with open("README.md", "r") as fh:
+if sys.version_info < (3, 6):
+    sys.exit('db_sync_tool requires Python 3.6+ to run')
+
+with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="db_sync_tool-kmi",
+    name='db_sync_tool-kmi',
     version=info.__version__,
-    author="Konrad Michalik",
-    author_email="support@konradmichalik.eu",
-    description="Synchronize a database from and to client systems.",
+    author='Konrad Michalik',
+    author_email='support@konradmichalik.eu',
+    description='Synchronize a database from and to host systems.',
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type='text/markdown',
     url=info.__homepage__,
+    license='MIT',
     packages=setuptools.find_packages(),
     classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Development Status :: 5 - Production/Stable',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: POSIX',
+        'Topic :: Database',
+        'Intended Audience :: Developers'
     ],
     python_requires='>=3.6',
+    entry_points={
+        'console_scripts': [
+            'db_sync_tool = db_sync_tool.__main__:main'
+        ]
+    },
 )

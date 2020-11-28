@@ -87,14 +87,25 @@ $ python3 db_sync_tool
 ```
 
 ```bash
-# Options
--h, --help              Show help
--v, --verbose           Enable extended console output
--f, --config-file       Path to config file
--i, --import-file       Import database from a specific file dump
--dn, --dump-name        Set a specific dump file name (default is "_[dbname]_[date]")
--kd, --keep-dump        Skipping target import of the database dump and saving the available dump file in the given directory
--o, --host-file         Using an additional hosts file for merging hosts information with the configuration file
+usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-m] [-i IMPORT_FILE] [-dn DUMP_NAME] [-kd KEEP_DUMP] [-o HOST_FILE]
+
+A tool for automatic database synchronization from and to host systems.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f CONFIG_FILE, --config-file CONFIG_FILE
+                        Path to configuration file
+  -v, --verbose         Enable extended console output
+  -m, --mute            Mute console output
+  -i IMPORT_FILE, --import-file IMPORT_FILE
+                        Import database from a specific file dump
+  -dn DUMP_NAME, --dump-name DUMP_NAME
+                        Set a specific dump file name (default is "_[dbname]_[date]")
+  -kd KEEP_DUMP, --keep-dump KEEP_DUMP
+                        Skipping target import of the database dump and saving the available dump file in the given directory
+  -o HOST_FILE, --host-file HOST_FILE
+                        Using an additional hosts file for merging hosts information with the configuration file
+
 ```
 
 If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the `host.json` to enable a SSH connection to the remote system. 

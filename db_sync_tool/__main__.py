@@ -30,7 +30,7 @@ def get_arguments(args):
     :param args:
     :return:
     """
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(prog='db_sync_tool', description='A tool for automatic database synchronization from and to host systems.')
     parser.add_argument('-f', '--config-file',
                         help='Path to configuration file',
                         required=False,
