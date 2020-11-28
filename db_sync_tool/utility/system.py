@@ -58,6 +58,16 @@ def get_configuration(host_config):
     :return:
     """
     global config
+
+    if option['config_file_path'] is None and host_config == {}:
+        sys.exit(
+            output.message(
+                output.Subject.ERROR,
+                f'Configuration is missing',
+                False
+            )
+        )
+
     if not option['config_file_path'] is None:
         if os.path.isfile(option['config_file_path']):
             with open(option['config_file_path'], 'r') as read_file:
