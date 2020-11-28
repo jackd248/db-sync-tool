@@ -7,7 +7,7 @@ from db_sync_tool.database import process
 from db_sync_tool.remote import transfer, client as remote_client
 
 # Check Python version
-assert sys.version_info >= (3, 7), sys.exit(output.message(output.Subject.ERROR, 'Python 3.7 or higher required'))
+assert sys.version_info >= (3, 6), sys.exit(output.message(output.Subject.ERROR, 'Python 3.6 or higher required'))
 
 
 class Sync:

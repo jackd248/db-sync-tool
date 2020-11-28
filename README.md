@@ -1,4 +1,9 @@
-# Database Sync Tool
+# db sync tool
+
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/db_sync_tool-kmi)
+![PyPI](https://img.shields.io/pypi/v/db_sync_tool-kmi)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jackd248/db-sync-tool/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jackd248/db-sync-tool/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/jackd248/db-sync-tool/badges/build.png?b=master)](https://scrutinizer-ci.com/g/jackd248/db-sync-tool/build-status/master)
 
 Python script to synchronize a database from an origin to a target system with automatic database credential extraction depending on the selected framework.
 
@@ -11,7 +16,7 @@ Supported framework types:
 
 ## Prerequisite
 
-The script needs python 3.7 or higher. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
+The script needs python 3.6 or higher. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
 
 ## Installation
 
