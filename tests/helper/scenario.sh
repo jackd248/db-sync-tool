@@ -10,23 +10,33 @@ parent_path=$(
 cd "$parent_path"
 cd ..
 
+VERBOSE="-m"
+
 if [ "$#" -eq "0" ]; then
-  sh scenario/receiver/test.sh
-  sh scenario/sender/test.sh
-  sh scenario/proxy/test.sh
-  sh scenario/dump_local/test.sh
-  sh scenario/dump_remote/test.sh
-  sh scenario/import_local/test.sh
-  sh scenario/import_remote/test.sh
-  sh scenario/symfony/test.sh
-  sh scenario/symfony2.8/test.sh
-  sh scenario/drupal/test.sh
-  sh scenario/wordpress/test.sh
-  sh scenario/logging/test.sh
-  sh scenario/link/test.sh
-  sh scenario/download/test.sh
-  sh scenario/cleanup/test.sh
-  sh scenario/module/test.sh
+  sh scenario/receiver/test.sh $VERBOSE
+  sh scenario/sender/test.sh $VERBOSE
+  sh scenario/proxy/test.sh $VERBOSE
+  sh scenario/dump_local/test.sh $VERBOSE
+  sh scenario/dump_remote/test.sh $VERBOSE
+  sh scenario/import_local/test.sh $VERBOSE
+  sh scenario/import_remote/test.sh $VERBOSE
+  sh scenario/symfony/test.sh $VERBOSE
+  sh scenario/symfony2.8/test.sh $VERBOSE
+  sh scenario/drupal/test.sh $VERBOSE
+  sh scenario/wordpress/test.sh $VERBOSE
+  sh scenario/typo3v7/test.sh $VERBOSE
+  sh scenario/logging/test.sh $VERBOSE
+  sh scenario/link/test.sh $VERBOSE
+  sh scenario/download/test.sh $VERBOSE
+  sh scenario/cleanup/test.sh $VERBOSE
+  sh scenario/module/test.sh $VERBOSE
+  sh scenario/manual/test.sh $VERBOSE
 else
-  sh scenario/$1/test.sh
+  # Default is mute mode
+  if [ -z "$2" ]; then
+    VERBOSE="-m"
+  else
+    VERBOSE=$2
+  fi
+  sh scenario/$1/test.sh $VERBOSE
 fi

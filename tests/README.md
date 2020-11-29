@@ -20,8 +20,15 @@ You can also run one specific test case by using the command:
  $ sh helper/scenario.sh [scenario]
 ```
 
-and select one of the following scenarios:
+Use the verbose argument to enable extended console output:
 
+```bash
+ $ sh helper/scenario.sh [scenario] -v
+```
+
+Select one of the following scenarios:
+
+- cleanup
 - download
 - dump_local
 - dump_remote
@@ -29,6 +36,8 @@ and select one of the following scenarios:
 - import_remote
 - link
 - logging
+- manual
+- module
 - proxy
 - receiver
 - sender
