@@ -2,8 +2,8 @@ import setuptools
 import sys
 from db_sync_tool import info
 
-if sys.version_info < (3, 6):
-    sys.exit('db_sync_tool requires Python 3.6+ to run')
+if sys.version_info < (3, 5):
+    sys.exit('db_sync_tool requires Python 3.5+ to run')
 
 with open('README.md', 'r') as fh:
     long_description = fh.read()
