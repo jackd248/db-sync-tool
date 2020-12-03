@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: future_fstrings -*-
 
 import sys
 import getpass
@@ -106,7 +106,7 @@ def get_dump_dir(client):
     :param client:
     :return: String path
     """
-    if system.option[f'default_{client}_dump_dir']:
+    if system.config[f'default_{client}_dump_dir']:
         return '/tmp/'
     else:
         return system.config[client]['dump_dir']

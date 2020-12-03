@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: future_fstrings -*-
 
 from db_sync_tool.utility import parser, mode, system, helper, output
 from db_sync_tool.database import utility
@@ -40,10 +40,10 @@ def import_database_dump():
     Importing the selected database dump file
     :return:
     """
-    if (not system.option['is_same_client'] and not mode.is_import()):
+    if (not system.config['is_same_client'] and not mode.is_import()):
         prepare_target_database_dump()
 
-    if not system.option['keep_dump'] and not system.option['is_same_client']:
+    if not system.config['keep_dump'] and not system.config['is_same_client']:
         output.message(
             output.Subject.TARGET,
             'Importing database dump',
@@ -53,7 +53,7 @@ def import_database_dump():
         if not mode.is_import():
            _dump_path = helper.get_dump_dir(mode.Client.TARGET) + utility.database_dump_file_name
         else:
-           _dump_path = system.option['import']
+           _dump_path = system.config['import']
 
         utility.check_database_dump(mode.Client.TARGET, _dump_path)
         mode.run_command(

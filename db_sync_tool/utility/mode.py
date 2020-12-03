@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: future_fstrings -*-
 
 import subprocess
 import sys
@@ -34,12 +34,14 @@ sync_mode = SyncMode.RECEIVER
 # FUNCTIONS
 #
 
+
 def get_sync_mode():
     """
     Returning the sync mode
     :return: String sync_mode
     """
     return sync_mode
+
 
 def check_sync_mode():
     """
@@ -60,16 +62,16 @@ def check_sync_mode():
     if not 'host' in system.config['origin'] and not 'host' in system.config['target']:
         sync_mode = SyncMode.DUMP_LOCAL
         _description = output.CliFormat.BLACK + '(LOCAL, NO TRANSFER/IMPORT)' + output.CliFormat.ENDC
-        system.option['is_same_client'] = True
+        system.config['is_same_client'] = True
     if 'host' in system.config['origin'] and 'host' in system.config['target'] and system.config['origin']['host'] == system.config['target']['host']:
         if ('port' in system.config['origin'] and 'port' in system.config['target'] and system.config['origin']['port'] == system.config['target']['port']) or ('port' not in system.config['origin'] and 'port' not in system.config['target']):
             sync_mode = SyncMode.DUMP_REMOTE
             _description = output.CliFormat.BLACK + '(REMOTE, NO TRANSFER/IMPORT)' + output.CliFormat.ENDC
-            system.option['is_same_client'] = True
-    if system.option['import'] != '':
+            system.config['is_same_client'] = True
+    if system.config['import'] != '':
         output.message(
             output.Subject.INFO,
-            'Import file: ' + system.option['import'],
+            'Import file: ' + system.config['import'],
             True
         )
         if 'host' in system.config['target']:
@@ -77,7 +79,7 @@ def check_sync_mode():
             _description = output.CliFormat.BLACK + '(REMOTE, NO TRANSFER)' + output.CliFormat.ENDC
         else:
             sync_mode = SyncMode.IMPORT_LOCAL
-            system.option['is_same_client'] = False
+            system.config['is_same_client'] = False
             _description = output.CliFormat.BLACK + '(LOCAL, NO TRANSFER)' + output.CliFormat.ENDC
 
     output.message(
@@ -106,6 +108,7 @@ def is_target_remote():
     """
     return sync_mode == SyncMode.SENDER or sync_mode == SyncMode.PROXY or sync_mode == SyncMode.DUMP_REMOTE or sync_mode == SyncMode.IMPORT_REMOTE
 
+
 def is_origin_remote():
     """
     Check if origin is remote client
@@ -130,7 +133,7 @@ def run_command(command, client, force_output=False):
     :param force_output: Boolean
     :return:
     """
-    if system.option['verbose']:
+    if system.config['verbose']:
         output.message(
             output.host_to_subject(client),
             output.CliFormat.BLACK + command + output.CliFormat.ENDC,

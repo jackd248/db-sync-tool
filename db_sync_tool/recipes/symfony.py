@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: future_fstrings -*-
 
-import os
 import re
-import subprocess
 import sys
-from subprocess import check_output
 
 from db_sync_tool.utility import mode, system, helper, output
 

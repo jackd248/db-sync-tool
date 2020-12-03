@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: future_fstrings -*-
 
 
 import sys
@@ -29,13 +29,13 @@ def generate_database_dump_filename():
     """
     global database_dump_file_name
 
-    if system.option['dump_name'] == '':
+    if system.config['dump_name'] == '':
         # _project-db_20-08-2020_12-37.sql
         _now = datetime.datetime.now()
         database_dump_file_name = '_' + system.config['origin']['db']['name'] + '_' + _now.strftime(
             "%d-%m-%Y_%H-%M") + '.sql'
     else:
-        database_dump_file_name = system.option['dump_name'] + '.sql'
+        database_dump_file_name = system.config['dump_name'] + '.sql'
 
 
 def generate_ignore_database_tables():
@@ -55,6 +55,7 @@ def generate_ignore_database_tables():
             else:
                 _ignore_tables = generate_ignore_database_table(_ignore_tables, table)
         return ' '.join(_ignore_tables)
+    return ''
 
 
 def generate_ignore_database_table(ignore_tables, table):
@@ -102,7 +103,7 @@ def check_database_dump(client, filepath):
     :param filepath: String
     :return:
     """
-    if system.option['check_dump']:
+    if system.config['check_dump']:
         _line = mode.run_command(
             helper.get_command(client, 'tail') + ' -n 1 ' + filepath,
             client,

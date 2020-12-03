@@ -1,5 +1,4 @@
 {
-  "name": "project",
   "type": "TYPO3",
   "target": {
     "host": "www2",
@@ -12,6 +11,5 @@
     "user": "user",
     "password": "password",
     "path": "/var/www/html/tests/files/www1/LocalConfiguration.php"
-  },
-  "ignore_table": []
+  }
 }

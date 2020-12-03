@@ -1,5 +1,4 @@
 {
-  "name": "project",
   "type": "TYPO3",
   "target": {
     "host": "www1",
@@ -11,6 +10,5 @@
     "password": "password",
     "path": "/var/www/html/tests/files/www1/LocalConfiguration.php",
     "dump_dir": "/var/www/html/tests/files/www1/database_backup/"
-  },
-  "ignore_table": []
+  }
 }

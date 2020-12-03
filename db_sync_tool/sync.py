@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: future_fstrings -*-
 
 from db_sync_tool.utility import system, helper, info
 from db_sync_tool.database import process

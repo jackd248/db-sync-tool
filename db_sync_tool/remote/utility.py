@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: future_fstrings -*-
 
 import os
 from db_sync_tool.utility import mode, system, helper, output
@@ -92,7 +92,7 @@ def remove_target_database_dump():
     #
     # Move dump to specified directory
     #
-    if system.option['keep_dump']:
+    if system.config['keep_dump']:
         helper.create_local_temporary_data_dir()
         _keep_dump_path = system.default_local_sync_path + database_utility.database_dump_file_name
         mode.run_command(
@@ -110,7 +110,7 @@ def remove_target_database_dump():
     #
     # Clean up
     #
-    if (not system.option['is_same_client'] and not mode.is_import()):
+    if (not system.config['is_same_client'] and not mode.is_import()):
         output.message(
             output.Subject.TARGET,
             'Cleaning up',

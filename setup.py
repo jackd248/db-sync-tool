@@ -20,6 +20,7 @@ setuptools.setup(
     license='MIT',
     packages=setuptools.find_packages(),
     classifiers=[
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
@@ -31,7 +32,7 @@ setuptools.setup(
         'Topic :: Database',
         'Intended Audience :: Developers'
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.5',
     entry_points={
         'console_scripts': [
             'db_sync_tool = db_sync_tool.__main__:main'

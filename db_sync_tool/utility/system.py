@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: future_fstrings -*-
 
 import sys
 import json
@@ -11,8 +11,7 @@ from db_sync_tool.utility import log, parser, mode, helper, output
 # GLOBALS
 #
 
-config = {}
-option = {
+config = {
     'verbose': False,
     'mute': False,
     'use_origin_ssh_key': False,
@@ -59,7 +58,7 @@ def get_configuration(host_config):
     """
     global config
 
-    if option['config_file_path'] is None and host_config == {}:
+    if config['config_file_path'] is None and host_config == {}:
         sys.exit(
             output.message(
                 output.Subject.ERROR,
@@ -68,37 +67,30 @@ def get_configuration(host_config):
             )
         )
 
-    if not option['config_file_path'] is None:
-        if os.path.isfile(option['config_file_path']):
-            with open(option['config_file_path'], 'r') as read_file:
-                config = json.load(read_file)
+    if host_config:
+        config.update(host_config)
+
+    _config_file_path = config['config_file_path']
+    if not _config_file_path is None:
+        if os.path.isfile(_config_file_path):
+            with open(_config_file_path, 'r') as read_file:
+                config.update(json.load(read_file))
                 output.message(
                     output.Subject.LOCAL,
-                    'Loading host configuration',
+                    f'Loading host configuration {output.CliFormat.BLACK}{_config_file_path}{output.CliFormat.ENDC}',
                     True
                 )
-
-                check_options()
         else:
             sys.exit(
                 output.message(
                     output.Subject.ERROR,
-                    f'Local configuration not found: {option["config_file_path"]}',
+                    f'Local configuration not found: {config["config_file_path"]}',
                     False
                 )
             )
 
-    if host_config:
-        config = host_config
-
+    check_options()
     log.get_logger().info('Starting db_sync_tool')
-    if option['config_file_path']:
-        output.message(
-            output.Subject.INFO,
-            'Configuration: ' + option['config_file_path'],
-            True,
-            True
-        )
 
 
 def check_options():
@@ -106,14 +98,15 @@ def check_options():
     Checking configuration provided file
     :return:
     """
+    global config
     if 'dump_dir' in config['origin']:
-        option['default_origin_dump_dir'] = False
+        config['default_origin_dump_dir'] = False
 
     if 'dump_dir' in config['target']:
-        option['default_target_dump_dir'] = False
+        config['default_target_dump_dir'] = False
 
     if 'check_dump' in config:
-        option['check_dump'] = config['check_dump']
+        config['check_dump'] = config['check_dump']
 
     link_configuration_with_hosts()
     mode.check_sync_mode()
@@ -139,7 +132,7 @@ def check_authorization(client):
         if 'ssh_key' in config[client]:
             _ssh_key = config[client]['ssh_key']
             if os.path.isfile(_ssh_key):
-                option[f'use_{client}_ssh_key'] = True
+                config[f'use_{client}_ssh_key'] = True
             else:
                 sys.exit(
                     output.message(
@@ -208,26 +201,26 @@ def check_args_options(config_file=None,
     :param host_file:
     :return:
     """
-    global option
+    global config
     global default_local_sync_path
 
     if not config_file is None:
-        option['config_file_path'] = config_file
+        config['config_file_path'] = config_file
 
     if not verbose is None:
-        option['verbose'] = verbose
+        config['verbose'] = verbose
 
     if not mute is None:
-        option['mute'] = mute
+        config['mute'] = mute
 
     if not import_file is None:
-        option['import'] = import_file
+        config['import'] = import_file
 
     if not dump_name is None:
-        option['dump_name'] = dump_name
+        config['dump_name'] = dump_name
 
     if not host_file is None:
-        option['link_hosts'] = host_file
+        config['link_hosts'] = host_file
 
     if not keep_dump is None:
         default_local_sync_path = keep_dump
@@ -236,7 +229,7 @@ def check_args_options(config_file=None,
         if default_local_sync_path[-1] != '/':
             default_local_sync_path += '/'
 
-        option['keep_dump'] = True
+        config['keep_dump'] = True
         output.message(
             output.Subject.INFO,
             '"Keep dump" option chosen',
@@ -249,7 +242,7 @@ def link_configuration_with_hosts():
     Merging the hosts definition with the given configuration file
     :return:
     """
-    if ('link' in config['origin'] or 'link' in config['target']) and option['link_hosts'] == '':
+    if ('link' in config['origin'] or 'link' in config['target']) and config['link_hosts'] == '':
         # Try to find default hosts.json file in same directory
         sys.exit(
             output.message(
@@ -260,9 +253,9 @@ def link_configuration_with_hosts():
             )
         )
 
-    if option['link_hosts'] != '':
-        if os.path.isfile(option['link_hosts']):
-            with open(option['link_hosts'], 'r') as read_file:
+    if config['link_hosts'] != '':
+        if os.path.isfile(config['link_hosts']):
+            with open(config['link_hosts'], 'r') as read_file:
                 _hosts = json.load(read_file)
                 output.message(
                     output.Subject.INFO,
@@ -282,7 +275,7 @@ def link_configuration_with_hosts():
             sys.exit(
                 output.message(
                     output.Subject.ERROR,
-                    f'Local host file not found: {option["link_hosts"]}',
+                    f'Local host file not found: {config["link_hosts"]}',
                     False
                 )
             )

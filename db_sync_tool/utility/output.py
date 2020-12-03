@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: future_fstrings -*-
 
 from db_sync_tool.utility import log, mode, system
 
@@ -45,7 +45,7 @@ def message(header, message, do_print=True, do_log=False, debug=False):
     :return: String message
     """
     # Logging if explicitly forced or verbose option is active
-    if do_log or system.option['verbose']:
+    if do_log or system.config['verbose']:
         _message = remove_multiple_elements_from_string([CliFormat.BEIGE, CliFormat.PURPLE, CliFormat.BLUE, CliFormat.YELLOW, CliFormat.GREEN, CliFormat.RED, CliFormat.BLACK, CliFormat.ENDC, CliFormat.BOLD, CliFormat.UNDERLINE], message)
         # @ToDo: Can this be done better? Dynamic functions?
         if debug:
@@ -58,7 +58,7 @@ def message(header, message, do_print=True, do_log=False, debug=False):
             log.get_logger().info(_message)
 
     # Formatting message if mute option is inactive
-    if (system.option['mute'] and header == Subject.ERROR) or (not system.option['mute']):
+    if (system.config['mute'] and header == Subject.ERROR) or (not system.config['mute']):
         if do_print:
             print(header + extend_output_by_sync_mode(header, debug) + ' ' + message)
         else:

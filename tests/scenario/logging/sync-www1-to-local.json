@@ -1,5 +1,4 @@
 {
-  "name": "project",
   "type": "Symfony",
   "target": {
     "path": "/var/www/html/tests/files/www2/.env"
@@ -10,6 +9,5 @@
     "password": "password",
     "path": "/var/www/html/tests/files/www1/.env"
   },
-  "log_file": "/var/www/html/tests/files/test.log",
-  "ignore_table": []
+  "log_file": "/var/www/html/tests/files/test.log"
 }

@@ -1,5 +1,4 @@
 {
-  "name": "project",
   "type": "TYPO3",
   "target": {
     "link": "@www2"

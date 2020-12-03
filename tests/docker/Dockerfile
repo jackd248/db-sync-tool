@@ -53,6 +53,7 @@ RUN docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
 #
 #
 RUN pip3 install paramiko
+RUN pip3 install future-fstrings
 
 #
 # https://forums.docker.com/t/ssh-from-one-containe-to-another-container/65906/9

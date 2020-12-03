@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: future_fstrings -*-
 
 import sys
 from db_sync_tool.utility import mode, system, helper, output
@@ -25,7 +25,7 @@ def transfer_origin_database_dump():
             get_origin_database_dump(system.default_local_sync_path)
             system.check_target_configuration()
             put_origin_database_dump(system.default_local_sync_path)
-        elif system.option['is_same_client']:
+        elif system.config['is_same_client']:
             utility.remove_origin_database_dump(True)
     else:
         system.check_target_configuration()
@@ -53,7 +53,7 @@ def get_origin_database_dump(target_path):
     sftp.get(helper.get_dump_dir(mode.Client.ORIGIN) + database_utility.database_dump_file_name + '.tar.gz',
              target_path + database_utility.database_dump_file_name + '.tar.gz', download_status)
     sftp.close()
-    if not system.option['mute']:
+    if not system.config['mute']:
         print('')
 
     utility.remove_origin_database_dump()
@@ -66,7 +66,7 @@ def download_status(sent, size):
     :param size: Float
     :return:
     """
-    if not system.option['mute']:
+    if not system.config['mute']:
         sent_mb = round(float(sent) / 1024 / 1024, 1)
         size = round(float(size) / 1024 / 1024, 1)
         sys.stdout.write(
@@ -103,7 +103,7 @@ def put_origin_database_dump(origin_path):
              helper.get_dump_dir(mode.Client.TARGET) + database_utility.database_dump_file_name + '.tar.gz',
              upload_status)
     sftp.close()
-    if not system.option['mute']:
+    if not system.config['mute']:
         print('')
 
 
@@ -114,7 +114,7 @@ def upload_status(sent, size):
     :param size: Float
     :return:
     """
-    if not system.option['mute']:
+    if not system.config['mute']:
         sent_mb = round(float(sent) / 1024 / 1024, 1)
         size = round(float(size) / 1024 / 1024, 1)
 

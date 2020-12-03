@@ -2,10 +2,8 @@ from db_sync_tool import sync
 
 if __name__ == "__main__":
     sync.Sync(
-        verbose=False,
         mute=True,
         config={
-            "name": "project",
             "type": "TYPO3",
             "target": {
                 "path": "/var/www/html/tests/files/www2/LocalConfiguration.php"
@@ -15,6 +13,5 @@ if __name__ == "__main__":
                 "user": "user",
                 "password": "password",
                 "path": "/var/www/html/tests/files/www1/LocalConfiguration.php"
-            },
-            "ignore_table": []
+            }
     })

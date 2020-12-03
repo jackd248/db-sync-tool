@@ -1,5 +1,4 @@
 {
-  "name": "project",
   "type": "TYPO3",
   "target": {
     "path": "/var/www/html/tests/files/www2/LocalConfiguration.typo3v7.php"
@@ -9,6 +8,5 @@
     "user": "user",
     "password": "password",
     "path": "/var/www/html/tests/files/www1/LocalConfiguration.typo3v7.php"
-  },
-  "ignore_table": []
+  }
 }

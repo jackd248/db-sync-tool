@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: future_fstrings -*-
 
 import sys
 import json
@@ -35,7 +35,7 @@ def print_footer():
     Printing console footer
     :return:
     """
-    if not system.option['keep_dump'] and not system.option['is_same_client'] and not mode.is_import():
+    if not system.config['keep_dump'] and not system.config['is_same_client'] and not mode.is_import():
         _message = 'Successfully synchronized databases'
     elif mode.is_import():
         _message = 'Successfully imported database dump'

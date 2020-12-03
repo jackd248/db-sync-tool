@@ -1,5 +1,4 @@
 {
-  "name": "project",
   "type": "TYPO3",
   "target": {
   "host": "www1",
@@ -9,6 +8,5 @@
   },
   "origin": {
     "path": "/var/www/html/tests/files/www2/LocalConfiguration.php"
-  },
-  "ignore_table": []
+  }
 }
