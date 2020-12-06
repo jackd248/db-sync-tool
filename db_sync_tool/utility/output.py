@@ -34,7 +34,7 @@ class Subject:
 # FUNCTIONS
 #
 
-def message(header, message, do_print=True, do_log=False, debug=False):
+def message(header, message, do_print=True, do_log=False, debug=False, verbose_only=False):
     """
     Formatting a message for print or log
     :param header: String
@@ -42,6 +42,7 @@ def message(header, message, do_print=True, do_log=False, debug=False):
     :param do_print: Boolean
     :param do_log: Boolean
     :param debug: Boolean
+    :param verbose_only: Boolean
     :return: String message
     """
     # Logging if explicitly forced or verbose option is active
@@ -60,7 +61,8 @@ def message(header, message, do_print=True, do_log=False, debug=False):
     # Formatting message if mute option is inactive
     if (system.config['mute'] and header == Subject.ERROR) or (not system.config['mute']):
         if do_print:
-            print(header + extend_output_by_sync_mode(header, debug) + ' ' + message)
+            if not verbose_only or (verbose_only and system.config['verbose']):
+                print(header + extend_output_by_sync_mode(header, debug) + ' ' + message)
         else:
             return header + extend_output_by_sync_mode(header, debug) + ' ' + message
 

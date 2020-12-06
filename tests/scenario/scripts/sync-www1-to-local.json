@@ -1,0 +1,17 @@
+{
+  "type": "TYPO3",
+  "target": {
+    "before_script": "cd /var/www/html/tests/files/www2 && touch before_script.txt",
+    "path": "/var/www/html/tests/files/www2/LocalConfiguration.php",
+    "after_dump": "/var/www/html/tests/files/www1/after_dump.sql",
+    "after_script": "cd /var/www/html/tests/files/www2 && touch after_script.txt"
+  },
+  "origin": {
+    "before_script": "cd /var/www/html/tests/files/www1 && touch before_script.txt",
+    "host": "www1",
+    "user": "user",
+    "password": "password",
+    "path": "/var/www/html/tests/files/www1/LocalConfiguration.php",
+    "after_script": "cd /var/www/html/tests/files/www1 && touch after_script.txt"
+  }
+}

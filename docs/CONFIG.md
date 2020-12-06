@@ -9,6 +9,7 @@ Here you can find an overview over the possible configuration adjustments.
 - [Console commands](#console)
 - [(Temporary) dump directory](#directory)
 - [Before and after script](#script)
+- [After dump](#after-dump)
 - [Logging](#logging)
 - [Cleaning up / keeping dumps count](#clean_up)
 - [Naming hosts](#naming)
@@ -146,6 +147,19 @@ Sometimes it is necessary to run a specific command before or after the dump cre
   "target": {
     "before_script": "",
     "after_script": ""
+  }
+}
+```
+
+<a name="after-dump"></a>
+### After dump
+
+It is possible to provide an additional dump file, which will be imported after the regular database import is finished. You can specify the path to the `after_dump` file of the target host in the `config.json`:
+
+```json
+{
+  "target": {
+    "after_dump": "path/to/dump/file.sql"
   }
 }
 ```

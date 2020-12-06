@@ -11,3 +11,4 @@ files/
 !files/www2/wp-config.php
 !files/www1/parameters.yml
 !files/www2/parameters.yml
+!files/www1/after_dump.sql

@@ -111,4 +111,17 @@ def check_database_dump(client, filepath):
         )
 
         if "-- Dump completed on" not in _line:
-            sys.exit(output.message(output.Subject.ERROR, 'Dump file is corrupted', False))
+            sys.exit(
+                output.message(
+                    output.Subject.ERROR,
+                    'Dump file is corrupted',
+                    do_print=False
+                )
+            )
+        else:
+            output.message(
+                output.host_to_subject(client),
+                'Dump file is valid',
+                verbose_only=True
+            )
+

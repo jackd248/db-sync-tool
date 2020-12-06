@@ -19,7 +19,7 @@ def create_origin_database_dump():
 
         output.message(
             output.Subject.ORIGIN,
-            'Creating database dump',
+            f'Creating database dump {output.CliFormat.BLACK}{_dump_file_path}{output.CliFormat.ENDC}',
             True
         )
         mode.run_command(
@@ -40,7 +40,7 @@ def import_database_dump():
     Importing the selected database dump file
     :return:
     """
-    if (not system.config['is_same_client'] and not mode.is_import()):
+    if not system.config['is_same_client'] and not mode.is_import():
         prepare_target_database_dump()
 
     if not system.config['keep_dump'] and not system.config['is_same_client']:
@@ -56,10 +56,33 @@ def import_database_dump():
            _dump_path = system.config['import']
 
         utility.check_database_dump(mode.Client.TARGET, _dump_path)
+
+        import_database_dump_file(mode.Client.TARGET, _dump_path)
+
+    if 'after_dump' in system.config['target']:
+        _after_dump = system.config['target']['after_dump']
+        output.message(
+            output.Subject.TARGET,
+            f'Importing after_dump file {output.CliFormat.BLACK}{_after_dump}{output.CliFormat.ENDC}',
+            True
+        )
+
+        import_database_dump_file(mode.Client.TARGET, _after_dump)
+
+
+def import_database_dump_file(client, filepath):
+    """
+    Import a database dump file
+    :param client: String
+    :param filepath: String
+    :return:
+    """
+    if helper.check_file_exists(client, filepath):
         mode.run_command(
-            helper.get_command('target', 'mysql') + ' ' + utility.generate_mysql_credentials('target') + ' ' +
-            system.config['target']['db']['name'] + ' < ' + _dump_path,
-            mode.Client.TARGET
+            helper.get_command(client, 'mysql') + ' ' +
+            utility.generate_mysql_credentials(client) + ' ' +
+            system.config[client]['db']['name'] + ' < ' + filepath,
+            client
         )
 
 

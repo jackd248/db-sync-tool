@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
-import json
-import os
-import sys
-from subprocess import check_output
-
 from db_sync_tool.utility import mode, system, helper
 
 

@@ -2,12 +2,14 @@
 #
 parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$parent_path"
-#
-# Starting docker container
-#
+
 # Cleaning up files
 rm -rf ../files/www1/database_backup
 rm -rf ../files/www2/database_backup
+rm -rf ../files/www1/before_script.txt
+rm -rf ../files/www1/after_script.txt
+rm -rf ../files/www2/before_script.txt
+rm -rf ../files/www2/after_script.txt
 rm -rf ../files/test.log
 rm -rf ../files/www2/download
 

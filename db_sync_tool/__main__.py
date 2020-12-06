@@ -128,6 +128,10 @@ def get_arguments(args):
                         help='Database port for target system',
                         required=False,
                         type=int)
+    parser.add_argument('-tad', '--target-after-dump',
+                        help='Additional dump file to insert after the regular database import',
+                        required=False,
+                        type=int)
     parser.add_argument('-op', '--origin-path',
                         help='File path to origin database credential file depending on the framework type',
                         required=False,
@@ -237,6 +241,9 @@ def build_config(args):
 
     if not args.target_db_port is None:
         config['target']['db']['port'] = args.target_db_port
+
+    if not args.target_after_dump is None:
+        config['target']['after_dump'] = args.target_after_dump
 
     if not args.origin_path is None:
         config['origin']['path'] = args.origin_path

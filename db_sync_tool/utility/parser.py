@@ -98,9 +98,11 @@ def load_parser(client, parser):
     :param parser:
     :return:
     """
+    _path = system.config[client]['path']
+
     output.message(
         output.host_to_subject(client),
-        'Checking database configuration',
+        f'Checking database configuration {output.CliFormat.BLACK}{_path}{output.CliFormat.ENDC}',
         True
     )
     if client == mode.Client.ORIGIN:
@@ -114,7 +116,6 @@ def load_parser(client, parser):
         else:
             remote_utility.run_before_script(client)
 
-    _path = system.config[client]['path']
     if not helper.check_file_exists(client, _path):
         sys.exit(
             output.message(
@@ -155,4 +156,10 @@ def validate_database_credentials(client):
                     f'Missing database credential "{_key}" for {client} client',
                     False
                 )
+            )
+        else:
+            output.message(
+                output.host_to_subject(client),
+                f'Database credential "{_key}" valid',
+                verbose_only=True
             )

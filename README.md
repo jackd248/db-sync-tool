@@ -16,16 +16,18 @@ Supported framework types:
 
 ## Prerequisite
 
-The script needs python 3.6 or higher. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
+The script needs python 3.5 or higher. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
 
 ## Installation
 
+<a name="install-pip"></a>
 ### pip
 The library can be installed from [PyPI](https://pypi.org/):
 ```bash
 $ pip3 install db-sync-tool-kmi
 ```
 
+<a name="install-composer"></a>
 ### composer
 While using the script within the PHP framework context, the script is available via [packagist.org](https://packagist.org/packages/kmi/db-sync-tool) using composer:
 
@@ -41,7 +43,7 @@ $ pip3 install -r vendor/kmi/db-sync-tool/requirements.txt
 
 ## Configuration
 
-You can configure the script with shell arguments or using a separate configuration file.
+You can configure the script with [shell arguments](#shell-arguments) or using a separate configuration file.
 
 ### Configuration File
 
@@ -82,17 +84,37 @@ The script provides seven different kinds of [synchronisation modes](docs/MODE.m
 
 ### Command line
 
-Run the python script:
+Run the python script via command line.
 
+Installed via [pip](#install-pip):
 ```bash
 $ python3 db_sync_tool
 ```
 
+Installed via [composer](#install-composer):
 ```bash
-usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-m] [-i IMPORT_FILE] [-dn DUMP_NAME] [-kd KEEP_DUMP] [-o HOST_FILE] [-l LOG_FILE] [-t TYPE] [-tp TARGET_PATH] [-tn TARGET_NAME] [-th TARGET_HOST]
-                    [-tu TARGET_USER] [-tpw TARGET_PASSWORD] [-tk TARGET_KEY] [-tpo TARGET_PORT] [-tdd TARGET_DUMP_DIR] [-tkd TARGET_KEEP_DUMPS] [-tdn TARGET_DB_NAME] [-tdh TARGET_DB_HOST]
-                    [-tdu TARGET_DB_USER] [-tdpw TARGET_DB_PASSWORD] [-tdpo TARGET_DB_PORT] [-op ORIGIN_PATH] [-on ORIGIN_NAME] [-oh ORIGIN_HOST] [-ou ORIGIN_USER] [-opw ORIGIN_PASSWORD] [-ok ORIGIN_KEY]
-                    [-opo ORIGIN_PORT] [-odd ORIGIN_DUMP_DIR] [-okd ORIGIN_KEEP_DUMPS] [-odn ORIGIN_DB_NAME] [-odh ORIGIN_DB_HOST] [-odu ORIGIN_DB_USER] [-odpw ORIGIN_DB_PASSWORD] [-odpo ORIGIN_DB_PORT]
+$ python3 vendor/kmi/db-sync-tool/db_sync_tool
+```
+
+<a name="shell-arguments"></a>
+#### Shell arguments
+
+```bash
+usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-m] [-i IMPORT_FILE]
+                    [-dn DUMP_NAME] [-kd KEEP_DUMP] [-o HOST_FILE]
+                    [-l LOG_FILE] [-t TYPE] [-tp TARGET_PATH]
+                    [-tn TARGET_NAME] [-th TARGET_HOST] [-tu TARGET_USER]
+                    [-tpw TARGET_PASSWORD] [-tk TARGET_KEY] [-tpo TARGET_PORT]
+                    [-tdd TARGET_DUMP_DIR] [-tkd TARGET_KEEP_DUMPS]
+                    [-tdn TARGET_DB_NAME] [-tdh TARGET_DB_HOST]
+                    [-tdu TARGET_DB_USER] [-tdpw TARGET_DB_PASSWORD]
+                    [-tdpo TARGET_DB_PORT] [-tad TARGET_AFTER_DUMP]
+                    [-op ORIGIN_PATH] [-on ORIGIN_NAME] [-oh ORIGIN_HOST]
+                    [-ou ORIGIN_USER] [-opw ORIGIN_PASSWORD] [-ok ORIGIN_KEY]
+                    [-opo ORIGIN_PORT] [-odd ORIGIN_DUMP_DIR]
+                    [-okd ORIGIN_KEEP_DUMPS] [-odn ORIGIN_DB_NAME]
+                    [-odh ORIGIN_DB_HOST] [-odu ORIGIN_DB_USER]
+                    [-odpw ORIGIN_DB_PASSWORD] [-odpo ORIGIN_DB_PORT]
 
 A tool for automatic database synchronization from and to host systems.
 
@@ -105,16 +127,21 @@ optional arguments:
   -i IMPORT_FILE, --import-file IMPORT_FILE
                         Import database from a specific file dump
   -dn DUMP_NAME, --dump-name DUMP_NAME
-                        Set a specific dump file name (default is "_[dbname]_[date]")
+                        Set a specific dump file name (default is
+                        "_[dbname]_[date]")
   -kd KEEP_DUMP, --keep-dump KEEP_DUMP
-                        Skipping target import of the database dump and saving the available dump file in the given directory
+                        Skipping target import of the database dump and saving
+                        the available dump file in the given directory
   -o HOST_FILE, --host-file HOST_FILE
-                        Using an additional hosts file for merging hosts information with the configuration file
+                        Using an additional hosts file for merging hosts
+                        information with the configuration file
   -l LOG_FILE, --log-file LOG_FILE
                         File path for creating a additional log file
-  -t TYPE, --type TYPE  Defining the framework type [TYPO3, Symfony, Drupal, Wordpress]
+  -t TYPE, --type TYPE  Defining the framework type [TYPO3, Symfony, Drupal,
+                        Wordpress]
   -tp TARGET_PATH, --target-path TARGET_PATH
-                        File path to target database credential file depending on the framework type
+                        File path to target database credential file depending
+                        on the framework type
   -tn TARGET_NAME, --target-name TARGET_NAME
                         Providing a name for the target system
   -th TARGET_HOST, --target-host TARGET_HOST
@@ -141,8 +168,12 @@ optional arguments:
                         Database password for target system
   -tdpo TARGET_DB_PORT, --target-db-port TARGET_DB_PORT
                         Database port for target system
+  -tad TARGET_AFTER_DUMP, --target-after-dump TARGET_AFTER_DUMP
+                        Additional dump file to insert after the regular
+                        database import
   -op ORIGIN_PATH, --origin-path ORIGIN_PATH
-                        File path to origin database credential file depending on the framework type
+                        File path to origin database credential file depending
+                        on the framework type
   -on ORIGIN_NAME, --origin-name ORIGIN_NAME
                         Providing a name for the origin system
   -oh ORIGIN_HOST, --origin-host ORIGIN_HOST

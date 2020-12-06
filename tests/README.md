@@ -40,6 +40,7 @@ Select one of the following scenarios:
 - module
 - proxy
 - receiver
+- scripts
 - shell
 - sender
 - symfony

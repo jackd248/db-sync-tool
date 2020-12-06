@@ -62,7 +62,7 @@ def get_configuration(host_config):
         sys.exit(
             output.message(
                 output.Subject.ERROR,
-                f'Configuration is missing',
+                f'Configuration is missing, use a separate file or provide host parameter',
                 False
             )
         )
