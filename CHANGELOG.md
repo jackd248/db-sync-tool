@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.2] - 2020-12-09
+### Fixed
+- [Bugfix] Requirements in setup extended
+
 ## [2.2.1] - 2020-12-06
 ### Added
 - [Task] After_dump feature added
