@@ -33,6 +33,10 @@ setuptools.setup(
         'Intended Audience :: Developers'
     ],
     python_requires='>=3.5',
+    install_requires=[
+        "paramiko>=2.7.2",
+        "future-fstrings>=1.2"
+    ],
     entry_points={
         'console_scripts': [
             'db_sync_tool = db_sync_tool.__main__:main'
