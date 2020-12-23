@@ -198,7 +198,9 @@ def build_config(args):
     :param args:
     :return:
     """
-    config = defaultdict(dict)
+    config = defaultdict(lambda: defaultdict(dict))
+    config['target'] = defaultdict(dict)
+    config['origin'] = defaultdict(dict)
 
     if not args.type is None:
         config['type'] = args.type
