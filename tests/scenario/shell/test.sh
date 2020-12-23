@@ -12,7 +12,8 @@ docker-compose exec www2 python3 /var/www/html/db_sync_tool $1 \
   --origin-path /var/www/html/tests/files/www1/LocalConfiguration.php \
   --origin-host www1 \
   --origin-user user \
-  --origin-password password
+  --origin-password password \
+  -y
 
 # Expecting 3 results in the database
 count=$(docker-compose exec db2 mysql -udb -pdb db -e 'SELECT COUNT(*) FROM person' | grep 3 | tr -d '[:space:]')

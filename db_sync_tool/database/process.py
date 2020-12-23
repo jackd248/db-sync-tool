@@ -2,7 +2,7 @@
 # -*- coding: future_fstrings -*-
 
 from db_sync_tool.utility import parser, mode, system, helper, output
-from db_sync_tool.database import utility
+from db_sync_tool.database import utility as database_utility
 
 
 def create_origin_database_dump():
@@ -12,10 +12,10 @@ def create_origin_database_dump():
     """
     if not mode.is_import():
         parser.get_database_configuration(mode.Client.ORIGIN)
-        utility.generate_database_dump_filename()
+        database_utility.generate_database_dump_filename()
         helper.check_and_create_dump_dir(mode.Client.ORIGIN, helper.get_dump_dir(mode.Client.ORIGIN))
 
-        _dump_file_path = helper.get_dump_dir(mode.Client.ORIGIN) + utility.database_dump_file_name
+        _dump_file_path = helper.get_dump_dir(mode.Client.ORIGIN) + database_utility.database_dump_file_name
 
         output.message(
             output.Subject.ORIGIN,
@@ -24,14 +24,14 @@ def create_origin_database_dump():
         )
         mode.run_command(
             helper.get_command('origin', 'mysqldump') + ' --no-tablespaces ' +
-            utility. generate_mysql_credentials('origin') + ' ' +
+            database_utility. generate_mysql_credentials('origin') + ' ' +
             system.config['origin']['db']['name'] + ' ' +
-            utility.generate_ignore_database_tables() +
+            database_utility.generate_ignore_database_tables() +
             ' > ' + _dump_file_path,
             mode.Client.ORIGIN
         )
 
-        utility.check_database_dump(mode.Client.ORIGIN, _dump_file_path)
+        database_utility.check_database_dump(mode.Client.ORIGIN, _dump_file_path)
         prepare_origin_database_dump()
 
 
@@ -51,11 +51,23 @@ def import_database_dump():
         )
 
         if not mode.is_import():
-           _dump_path = helper.get_dump_dir(mode.Client.TARGET) + utility.database_dump_file_name
+           _dump_path = helper.get_dump_dir(mode.Client.TARGET) + database_utility.database_dump_file_name
         else:
            _dump_path = system.config['import']
 
-        utility.check_database_dump(mode.Client.TARGET, _dump_path)
+        if not system.config['yes']:
+            _host_name = helper.get_ssh_host_name(mode.Client.TARGET, True) if mode.is_remote(mode.Client.TARGET) else 'local'
+
+            helper.confirm(
+                output.message(
+                    output.Subject.TARGET,
+                    f'Are you sure, you want to import the dump file into {_host_name} database?',
+                    False
+                ),
+                True
+            )
+
+        database_utility.check_database_dump(mode.Client.TARGET, _dump_path)
 
         import_database_dump_file(mode.Client.TARGET, _dump_path)
 
@@ -80,7 +92,7 @@ def import_database_dump_file(client, filepath):
     if helper.check_file_exists(client, filepath):
         mode.run_command(
             helper.get_command(client, 'mysql') + ' ' +
-            utility.generate_mysql_credentials(client) + ' ' +
+            database_utility.generate_mysql_credentials(client) + ' ' +
             system.config[client]['db']['name'] + ' < ' + filepath,
             client
         )
@@ -98,8 +110,8 @@ def prepare_origin_database_dump():
     )
     mode.run_command(
         helper.get_command(mode.Client.ORIGIN, 'tar') + ' cfvz ' + helper.get_dump_dir(
-            mode.Client.ORIGIN) + utility.database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(
-            mode.Client.ORIGIN) + ' ' + utility.database_dump_file_name + ' > /dev/null',
+            mode.Client.ORIGIN) + database_utility.database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(
+            mode.Client.ORIGIN) + ' ' + database_utility.database_dump_file_name + ' > /dev/null',
         mode.Client.ORIGIN
     )
 
@@ -112,7 +124,7 @@ def prepare_target_database_dump():
     output.message(output.Subject.TARGET, 'Extracting database dump', True)
     mode.run_command(
         helper.get_command('target', 'tar') + ' xzf ' + helper.get_dump_dir(
-            mode.Client.TARGET) + utility.database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(
+            mode.Client.TARGET) + database_utility.database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(
             mode.Client.TARGET) + ' > /dev/null',
         mode.Client.TARGET
     )

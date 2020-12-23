@@ -185,6 +185,7 @@ def get_password_by_user(client):
 
 def check_args_options(config_file=None,
                        verbose=False,
+                       yes=False,
                        mute=False,
                        import_file=None,
                        dump_name=None,
@@ -194,6 +195,7 @@ def check_args_options(config_file=None,
     Checking arguments and fill options array
     :param config_file:
     :param verbose:
+    :param yes:
     :param mute:
     :param import_file:
     :param dump_name:
@@ -209,6 +211,9 @@ def check_args_options(config_file=None,
 
     if not verbose is None:
         config['verbose'] = verbose
+
+    if not yes is None:
+        config['yes'] = yes
 
     if not mute is None:
         config['mute'] = mute

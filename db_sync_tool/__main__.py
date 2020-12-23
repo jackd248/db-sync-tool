@@ -20,6 +20,7 @@ def main(args={}):
     sync.Sync(
         config_file=args.config_file,
         verbose=args.verbose,
+        yes=args.yes,
         mute=args.mute,
         import_file=args.import_file,
         dump_name=args.dump_name,
@@ -42,6 +43,10 @@ def get_arguments(args):
                         type=str)
     parser.add_argument('-v', '--verbose',
                         help='Enable extended console output',
+                        required=False,
+                        action='store_true')
+    parser.add_argument('-y', '--yes',
+                        help='Skipping user confirmation for database import',
                         required=False,
                         action='store_true')
     parser.add_argument('-m', '--mute',

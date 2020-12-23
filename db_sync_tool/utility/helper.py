@@ -181,3 +181,44 @@ def check_file_exists(client, path):
     :return: Boolean
     """
     return mode.run_command(f'[ -f {path} ] && echo "1"', client, True) == '1'
+
+
+def confirm(prompt=None, resp=False):
+    """
+    https://code.activestate.com/recipes/541096-prompt-the-user-for-confirmation/
+
+    prompts for yes or no response from the user. Returns True for yes and
+    False for no.
+
+    'resp' should be set to the default value assumed by the caller when
+    user simply types ENTER.
+
+    >>> confirm(prompt='Create Directory?', resp=True)
+    Create Directory? [Y|n]:
+    True
+    >>> confirm(prompt='Create Directory?', resp=False)
+    Create Directory? [y|N]:
+    False
+
+    """
+
+    if prompt is None:
+        prompt = 'Confirm'
+
+    if resp:
+        prompt = '%s [%s|%s]: ' % (prompt, 'Y', 'n')
+    else:
+        prompt = '%s [%s|%s]: ' % (prompt, 'y', 'N')
+
+    while True:
+        ans = input(prompt)
+        if not ans:
+            return resp
+        if ans not in ['y', 'Y', 'n', 'N']:
+            print
+            'please enter y or n.'
+            continue
+        if ans == 'y' or ans == 'Y':
+            return True
+        if ans == 'n' or ans == 'N':
+            return False

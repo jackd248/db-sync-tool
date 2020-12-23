@@ -14,6 +14,7 @@ class Sync:
     def __init__(self,
                  config_file=None,
                  verbose=False,
+                 yes=False,
                  mute=False,
                  import_file=None,
                  dump_name=None,
@@ -24,6 +25,7 @@ class Sync:
         Initialization
         :param config_file:
         :param verbose:
+        :param yes:
         :param mute:
         :param import_file:
         :param dump_name:
@@ -35,6 +37,7 @@ class Sync:
         system.check_args_options(
             config_file,
             verbose,
+            yes,
             mute,
             import_file,
             dump_name,

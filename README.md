@@ -100,7 +100,7 @@ $ python3 vendor/kmi/db-sync-tool/db_sync_tool
 #### Shell arguments
 
 ```bash
-usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-m] [-i IMPORT_FILE]
+usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-y] [-m] [-i IMPORT_FILE]
                     [-dn DUMP_NAME] [-kd KEEP_DUMP] [-o HOST_FILE]
                     [-l LOG_FILE] [-t TYPE] [-tp TARGET_PATH]
                     [-tn TARGET_NAME] [-th TARGET_HOST] [-tu TARGET_USER]
@@ -123,6 +123,7 @@ optional arguments:
   -f CONFIG_FILE, --config-file CONFIG_FILE
                         Path to configuration file
   -v, --verbose         Enable extended console output
+  -y, --yes             Skipping user confirmation for database import
   -m, --mute            Mute console output
   -i IMPORT_FILE, --import-file IMPORT_FILE
                         Import database from a specific file dump
@@ -200,7 +201,6 @@ optional arguments:
                         Database password for origin system
   -odpo ORIGIN_DB_PORT, --origin-db-port ORIGIN_DB_PORT
                         Database port for origin system
-
 ```
 
 If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the shell argument or the `config.json` to enable a SSH connection for the remote system. 
