@@ -138,7 +138,7 @@ def validate_database_credentials(client):
         'Validating database credentials',
         True
     )
-    _db_credential_keys = ['name', 'host', 'password', 'port', 'user']
+    _db_credential_keys = ['name', 'host', 'password', 'user']
 
     for _key in _db_credential_keys:
         if _key not in system.config[client]['db']:
