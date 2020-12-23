@@ -221,7 +221,7 @@ def build_config(args):
         config['target']['password'] = args.target_password
 
     if not args.target_key is None:
-        config['target']['key'] = args.target_key
+        config['target']['ssh_key'] = args.target_key
 
     if not args.target_port is None:
         config['target']['port'] = args.target_port
@@ -263,7 +263,7 @@ def build_config(args):
         config['origin']['password'] = args.origin_password
 
     if not args.origin_key is None:
-        config['origin']['key'] = args.origin_key
+        config['origin']['ssh_key'] = args.origin_key
 
     if not args.origin_port is None:
         config['origin']['port'] = args.origin_port
