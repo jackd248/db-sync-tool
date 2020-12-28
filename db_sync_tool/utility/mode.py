@@ -129,12 +129,13 @@ def is_import():
     return sync_mode == SyncMode.IMPORT_LOCAL or sync_mode == SyncMode.IMPORT_REMOTE
 
 
-def run_command(command, client, force_output=False):
+def run_command(command, client, force_output=False, allow_fail=False):
     """
     Run command depending on the given client
     :param command: String
     :param client: String
     :param force_output: Boolean
+    :param allow_fail: Boolean
     :return:
     """
     if system.config['verbose']:
@@ -156,7 +157,7 @@ def run_command(command, client, force_output=False):
         # Wait for the process end and print error in case of failure
         out, err = res.communicate()
 
-        if res.wait() != 0 and err.decode() != '':
+        if res.wait() != 0 and err.decode() != '' and not allow_fail:
             sys.exit(output.message(output.Subject.ERROR, err.decode(), False))
 
         if force_output:
