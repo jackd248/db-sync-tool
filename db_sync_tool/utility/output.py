@@ -4,10 +4,6 @@
 from db_sync_tool.utility import log, mode, system
 
 
-#
-# GLOBALS
-#
-
 class CliFormat:
     BEIGE = '\033[96m'
     PURPLE = '\033[95m'
@@ -28,11 +24,8 @@ class Subject:
     ORIGIN = CliFormat.PURPLE + '[ORIGIN]' + CliFormat.ENDC
     ERROR = CliFormat.RED + '[ERROR]' + CliFormat.ENDC
     WARNING = CliFormat.YELLOW + '[WARNING]' + CliFormat.ENDC
+    DEBUG = CliFormat.BLACK + '[DEBUG]' + CliFormat.ENDC
 
-
-#
-# FUNCTIONS
-#
 
 def message(header, message, do_print=True, do_log=False, debug=False, verbose_only=False):
     """
@@ -77,7 +70,7 @@ def extend_output_by_sync_mode(header, debug=False):
     _debug = ''
 
     if debug:
-        _debug = CliFormat.BLACK + '[DEBUG]' + CliFormat.ENDC
+        _debug = Subject.DEBUG
 
     if header == Subject.INFO or header == Subject.LOCAL or header == Subject.WARNING or header == Subject.ERROR:
         return ''
@@ -85,7 +78,10 @@ def extend_output_by_sync_mode(header, debug=False):
         if mode.is_remote(subject_to_host(header)):
             return CliFormat.BLACK + '[REMOTE]' + CliFormat.ENDC + _debug
         else:
-            return CliFormat.BLACK + '[LOCAL]' + CliFormat.ENDC + _debug
+            if subject_to_host(header) == mode.Client.LOCAL:
+                return _debug
+            else:
+                return CliFormat.BLACK + '[LOCAL]' + CliFormat.ENDC + _debug
 
 
 def host_to_subject(host):
@@ -98,6 +94,8 @@ def host_to_subject(host):
         return Subject.ORIGIN
     elif host == mode.Client.TARGET:
         return Subject.TARGET
+    elif host == mode.Client.LOCAL:
+        return Subject.LOCAL
 
 
 def subject_to_host(subject):
@@ -110,6 +108,8 @@ def subject_to_host(subject):
         return mode.Client.ORIGIN
     elif subject == Subject.TARGET:
         return mode.Client.TARGET
+    elif subject == Subject.LOCAL:
+        return mode.Client.LOCAL
 
 
 def remove_multiple_elements_from_string(elements, string):
