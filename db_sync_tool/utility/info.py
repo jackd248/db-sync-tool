@@ -16,14 +16,14 @@ def print_header(mute):
     """
 
     if mute is False:
-        print(output.CliFormat.BLACK + '############################################' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '#                                          #' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '##############################################' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '#                                            #' + output.CliFormat.ENDC)
         print(
-            output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '              DB SYNC TOOL                ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '#                  v' + info.__version__ + '                  #' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '# ' + info.__homepage__ + ' #' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '#                                          #' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '############################################' + output.CliFormat.ENDC)
+            output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '                DB SYNC TOOL                ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '#                   v' + info.__version__ + '                   #' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '#  ' + info.__homepage__ + '  #' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '#                                            #' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '##############################################' + output.CliFormat.ENDC)
 
 
 def print_footer():
