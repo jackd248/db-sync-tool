@@ -14,8 +14,6 @@ from db_sync_tool.utility import log, parser, mode, helper, output
 config = {
     'verbose': False,
     'mute': False,
-    'use_origin_ssh_key': False,
-    'use_target_ssh_key': False,
     'keep_dump': False,
     'dump_name': '',
     'import': '',
@@ -110,6 +108,13 @@ def check_options():
 
     link_configuration_with_hosts()
     mode.check_sync_mode()
+
+
+def check_authorizations():
+    """
+    Checking authorization for clients
+    :return:
+    """
     check_authorization(mode.Client.ORIGIN)
     check_authorization(mode.Client.TARGET)
 
@@ -131,9 +136,7 @@ def check_authorization(client):
         # ssh key authorization
         if 'ssh_key' in config[client]:
             _ssh_key = config[client]['ssh_key']
-            if os.path.isfile(_ssh_key):
-                config[f'use_{client}_ssh_key'] = True
-            else:
+            if not os.path.isfile(_ssh_key):
                 sys.exit(
                     output.message(
                         output.Subject.ERROR,

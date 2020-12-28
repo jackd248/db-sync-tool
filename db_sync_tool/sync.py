@@ -45,6 +45,7 @@ class Sync:
             host_file
         )
         system.get_configuration(config)
+        system.check_authorizations()
         process.create_origin_database_dump()
         transfer.transfer_origin_database_dump()
         process.import_database_dump()
