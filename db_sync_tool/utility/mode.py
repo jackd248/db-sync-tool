@@ -25,6 +25,7 @@ class SyncMode:
 class Client:
     ORIGIN = 'origin'
     TARGET = 'target'
+    LOCAL = 'local'
 
 
 # Default sync mode
@@ -49,16 +50,17 @@ def check_sync_mode():
     :return: String subject
     """
     global sync_mode
+    _description = ''
 
     if 'host' in system.config['origin']:
         sync_mode = SyncMode.RECEIVER
-        _description = output.CliFormat.BLACK + '(REMOTE --> LOCAL)' + output.CliFormat.ENDC
+        _description = output.CliFormat.BLACK + '(REMOTE ➔ LOCAL)' + output.CliFormat.ENDC
     if 'host' in system.config['target']:
         sync_mode = SyncMode.SENDER
-        _description = output.CliFormat.BLACK + '(LOCAL --> REMOTE)' + output.CliFormat.ENDC
+        _description = output.CliFormat.BLACK + '(LOCAL ➔ REMOTE)' + output.CliFormat.ENDC
     if 'host' in system.config['origin'] and 'host' in system.config['target']:
         sync_mode = SyncMode.PROXY
-        _description = output.CliFormat.BLACK + '(REMOTE --> LOCAL --> REMOTE)' + output.CliFormat.ENDC
+        _description = output.CliFormat.BLACK + '(REMOTE ➔ LOCAL ➔ REMOTE)' + output.CliFormat.ENDC
     if not 'host' in system.config['origin'] and not 'host' in system.config['target']:
         sync_mode = SyncMode.DUMP_LOCAL
         _description = output.CliFormat.BLACK + '(LOCAL, NO TRANSFER/IMPORT)' + output.CliFormat.ENDC
@@ -99,6 +101,8 @@ def is_remote(client):
         return is_origin_remote()
     elif client == Client.TARGET:
         return is_target_remote()
+    elif client == Client.LOCAL:
+        return False
 
 
 def is_target_remote():
