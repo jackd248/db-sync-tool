@@ -16,7 +16,7 @@ Supported framework types:
 
 ## Prerequisite
 
-The script needs python 3.5 or higher. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
+The script needs python __3.5__ or higher. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
 
 ## Installation
 
@@ -38,7 +38,7 @@ $ composer require kmi/db-sync-tool
 Additionally install the python requirements via the following pip command:
 
 ````bash
-$ pip3 install -r vendor/kmi/db-sync-tool/requirements.txt
+$ pip3 install -e vendor/kmi/db-sync-tool/
 ````
 
 ## Configuration
@@ -49,7 +49,7 @@ You can configure the script with [shell arguments](#shell-arguments) or using a
 
 The `config.json` contains important information about the origin and the target system. In dependence on the given configuration the synchronisation mode is implicitly selected.
 
-Example structure of `config.json` for a Symfony system in receiver mode:
+Example structure of `config.json` for a Symfony system in receiver mode (`path` defines the location of the Symfony database configuration file):
 ```json
 {
   "type": "Symfony",

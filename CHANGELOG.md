@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.5] - 2020-12-28
+### Added
+- [Task] Allow run command to fail
+- [Improvement] Adjust console header
+
 ## [2.2.4] - 2020-12-28
 ### Added
 - [Task] Refactoring
