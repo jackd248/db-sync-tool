@@ -7,10 +7,6 @@ import os
 from db_sync_tool.utility import mode, system, output
 from db_sync_tool import info
 
-#
-# FUNCTIONS
-#
-
 
 def print_header(mute):
     """

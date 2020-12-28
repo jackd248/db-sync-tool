@@ -1,16 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
-import sys
-import getpass
 import shutil
 import os
 from db_sync_tool.utility import mode, system, output
 from db_sync_tool.remote import utility as remote_utility
-
-#
-# FUNCTIONS
-#
 
 
 def clean_up():
@@ -132,6 +126,9 @@ def get_ssh_host_name(client, with_user=False):
     :param with_user:
     :return:
     """
+    if not 'user' in system.config[client] and not 'host' in system.config[client]:
+        return ''
+
     if with_user:
         _host = system.config[client]['user'] + '@' + system.config[client]['host']
     else:
@@ -215,8 +212,7 @@ def confirm(prompt=None, resp=False):
         if not ans:
             return resp
         if ans not in ['y', 'Y', 'n', 'N']:
-            print
-            'please enter y or n.'
+            print('Please enter y or n.')
             continue
         if ans == 'y' or ans == 'Y':
             return True
