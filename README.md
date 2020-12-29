@@ -14,11 +14,13 @@ Supported framework types:
 - [Drupal](https://www.drupal.org/) (>= v8.0)
 - [Wordpress](https://wordpress.org) (>= v5.0)
 
-## Prerequisite
-
-The script needs python __3.5__ or higher. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
+![Example receiver](docs/images/db-sync-tool-example-receiver.gif)
 
 ## Installation
+
+### Prerequisite
+
+The script needs [python](https://python.org/) __3.5__ or higher. It is necessary for some additional functionalities to have [pip](https://pypi.org/project/pip/) installed on your local machine. 
 
 <a name="install-pip"></a>
 ### pip
