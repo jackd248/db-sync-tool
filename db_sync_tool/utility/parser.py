@@ -116,7 +116,8 @@ def load_parser(client, parser):
         else:
             remote_utility.run_before_script(client)
 
-    if not helper.check_file_exists(client, _path):
+    # Check only if database configuration is a file
+    if not helper.check_file_exists(client, _path) and _path[-1] is not '/':
         sys.exit(
             output.message(
                 output.Subject.ERROR,

@@ -1,48 +1,55 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
-from db_sync_tool.utility import mode, system, helper
+import json
+from db_sync_tool.utility import mode, system, helper, output
 
 
 def check_configuration(client):
     """
-    Checking Drupal database configuration
+    Checking Drupal database configuration with Drush
     :param client: String
     :return:
     """
-    _os = helper.check_os(client).strip()
     _path = system.config[client]['path']
 
-    _db_config = {
-        'name': get_database_setting(client, 'database', _path, _os),
-        'host': get_database_setting(client, 'host', _path, _os),
-        'password': get_database_setting(client, 'password', _path, _os),
-        'port': get_database_setting(client, 'port', _path, _os),
-        'user': get_database_setting(client, 'username', _path, _os),
-    }
+    _raw_version = mode.run_command(
+        f'{helper.get_command(client, "drush")} status --fields=drush-version --format=string -r {_path}',
+        client,
+        True
+    )
+    print(_raw_version)
+    output.message(
+        output.host_to_subject(client),
+        f'Drush version: {_raw_version}',
+        True
+    )
+
+    stdout = mode.run_command(
+        f'{helper.get_command(client, "drush")} core-status --pipe '
+        f'--fields=db-hostname,db-username,db-password,db-name,db-port '
+        f'-r {_path}',
+        client,
+        True
+    )
+
+    _db_config = parse_database_credentials(json.loads(stdout))
 
     system.config[client]['db'] = _db_config
 
 
-def get_database_setting(client, name, file, os):
+def parse_database_credentials(db_credentials):
     """
-    Parsing a single database variable from the settings.php file
-    :param client: String
-    :param name: String
-    :param file: String
-    :param os: String
-    :return:
+    Parsing database credentials to needed format
+    :param db_credentials: Dictionary
+    :return: Dictionary
     """
-    if os == 'Darwin':
-        return mode.run_command(
-            helper.get_command(client, 'perl') + ' -nle "print $& while m{(?<=\'' + name + '\' => ).*(?=,)}g" ' + file + '| head -n 1',
-            client,
-            True
-        ).replace('"', '').replace('\'', '').replace('\n', '')
-    else:
-        return mode.run_command(
-            helper.get_command(client, 'grep') + f' -Po "(?<=\'{name}\' => ).*(?=,)" {file}',
-            client,
-            True
-        ).replace('"', '').replace('\'', '').replace('\n', '')
+    _db_config = {
+        'name': db_credentials['db-name'],
+        'host': db_credentials['db-hostname'],
+        'password': db_credentials['db-password'],
+        'port': db_credentials['db-port'],
+        'user': db_credentials['db-username'],
+    }
 
+    return _db_config
