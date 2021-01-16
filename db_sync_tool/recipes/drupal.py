@@ -13,12 +13,13 @@ def check_configuration(client):
     """
     _path = system.config[client]['path']
 
+    # Check Drush version
     _raw_version = mode.run_command(
         f'{helper.get_command(client, "drush")} status --fields=drush-version --format=string -r {_path}',
         client,
         True
     )
-    print(_raw_version)
+
     output.message(
         output.host_to_subject(client),
         f'Drush version: {_raw_version}',

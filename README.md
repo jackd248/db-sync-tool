@@ -7,14 +7,19 @@
 
 Python script to synchronize a database from an origin to a target system with automatic database credential extraction depending on the selected framework.
 
-Supported framework types:
+## Features
 
-- [TYPO3](https://typo3.org/) (>= v7.6)
-- [Symfony](https://symfony.com/) (>= v2.8)
-- [Drupal](https://www.drupal.org/) (>= v8.0)
-- [Wordpress](https://wordpress.org) (>= v5.0)
-
-![Example receiver](docs/images/db-sync-tool-example-receiver.gif)
+- __Database sync__ from and to a remote system
+- __Proxy mode__ between two remote systems
+- Automatic database __credential extraction__ using a supported framework
+    - [TYPO3](https://typo3.org/) (>= v7.6)
+    - [Symfony](https://symfony.com/) (>= v2.8)
+    - [Drupal](https://www.drupal.org/) (>= v8.0)
+    - [Wordpress](https://wordpress.org) (>= v5.0)
+- Easily dump creation (database __backup__)
+- __Cleanup__ feature for backups
+- Extended __logging__ capabilities
+- Many more possibilities for __customization__ 
 
 ## Installation
 
@@ -24,7 +29,7 @@ The script needs [python](https://python.org/) __3.5__ or higher. It is necessar
 
 <a name="install-pip"></a>
 ### pip
-The library can be installed from [PyPI](https://pypi.org/):
+The library can be installed from [PyPI](https://pypi.org/project/db-sync-tool-kmi/):
 ```bash
 $ pip3 install db-sync-tool-kmi
 ```
@@ -43,44 +48,15 @@ Additionally install the python requirements via the following pip command:
 $ pip3 install -e vendor/kmi/db-sync-tool/
 ````
 
-## Configuration
+## Quickstart
 
-You can configure the script with [shell arguments](#shell-arguments) or using a separate configuration file.
+Detailed instructions for:
 
-### Configuration File
-
-The `config.json` contains important information about the origin and the target system. In dependence on the given configuration the synchronisation mode is implicitly selected.
-
-Example structure of `config.json` for a Symfony system in receiver mode (`path` defines the location of the Symfony database configuration file):
-```json
-{
-  "type": "Symfony",
-  "target": {
-    "path": "/var/www/html/app/.env"
-  },
-  "origin": {
-    "host": "ssh_host",
-    "user": "ssh_user",
-    "path": "/var/www/html/project/shared/.env"
-  }
-}
-```
-
-### Adjustments
-
-It is possible to adjust the `config.json` [configuration](docs/CONFIG.md).
-
-### Sync modes
-
-The script provides seven different kinds of [synchronisation modes](docs/MODE.md).
-
-- Receiver
-- Sender
-- Proxy
-- Dump Local
-- Dump Remote
-- Import Local
-- Import Remote
+- [Manual database sync](docs/quickstart/START.md)
+- [TYPO3 database sync](docs/quickstart/TYPO3.md)
+- [Symfony database sync](docs/quickstart/SYMFONY.md)
+- [Drupal database sync](docs/quickstart/DRUPAL.md)
+- [Wordpress database sync](docs/quickstart/WORDPRESS.md)
 
 ## Usage
 
@@ -97,6 +73,8 @@ Installed via [composer](#install-composer):
 ```bash
 $ python3 vendor/kmi/db-sync-tool/db_sync_tool
 ```
+
+![Example receiver](docs/images/db-sync-tool-example-receiver.gif)
 
 <a name="shell-arguments"></a>
 #### Shell arguments
@@ -218,9 +196,38 @@ if __name__ == "__main__":
     sync.Sync(config={}, args*)
 ```
 
-## Build
+## Configuration
 
-The packaging process of the python module is described on [python.org](https://packaging.python.org/tutorials/packaging-projects/).
+You can configure the script with [shell arguments](#shell-arguments) or using a separate configuration file.
+
+### Configuration File
+
+The `config.json` contains important information about the origin and the target system. In dependence on the given configuration the [synchronisation mode](docs/MODE.md) is implicitly selected.
+
+Example structure of a `config.json` for a Symfony system in receiver mode (`path` defines the location of the Symfony database configuration file):
+```json
+{
+  "type": "Symfony",
+  "target": {
+    "path": "/var/www/html/app/.env"
+  },
+  "origin": {
+    "host": "ssh_host",
+    "user": "ssh_user",
+    "path": "/var/www/html/project/shared/.env"
+  }
+}
+```
+
+It is possible to adjust the `config.json` [configuration](docs/CONFIG.md).
+
+## File sync
+
+There is an addon script available to sync files to. Use the [file-sync-tool](https://github.com/jackd248/file-sync-tool) to easily transfer files between origin and target system. 
+
+## Release Guide
+
+A detailed guide is available to release a new version. See [here](docs/RELEASE.md).
 
 ## Tests
 
