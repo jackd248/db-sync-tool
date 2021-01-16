@@ -232,3 +232,9 @@ A detailed guide is available to release a new version. See [here](docs/RELEASE.
 ## Tests
 
 A docker container set up is available for testing purpose. See [here](tests/README.md).
+
+## Support
+
+If you like the project, feel free to support the development.
+
+<a href="https://www.buymeacoffee.com/konradmichalik" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-green.png" alt="Buy Me A Coffee" height="41" width="174"></a>
