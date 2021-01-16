@@ -267,7 +267,7 @@ def link_configuration_with_hosts():
                 _hosts = json.load(read_file)
                 output.message(
                     output.Subject.INFO,
-                    'Linking configuration with hosts',
+                    f'Linking configuration with hosts {output.CliFormat.BLACK}{config["link_hosts"]}{output.CliFormat.ENDC}',
                     True
                 )
                 if 'link' in config['origin']:
