@@ -88,6 +88,7 @@ def get_configuration(host_config):
             )
 
     check_options()
+    helper.run_script(script='before')
     log.get_logger().info('Starting db_sync_tool')
 
 

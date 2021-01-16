@@ -10,7 +10,7 @@ docker-compose exec www2 python3 /var/www/html/db_sync_tool -f /var/www/html/tes
 
 # Expecting 3 results in the database
 count=$(docker-compose exec db2 mysql -udb -pdb db -e 'SELECT COUNT(*) FROM person' | grep 4 | tr -d '[:space:]')
-if [ $count == '|4|' ] && [ -f "./files/www1/before_script.txt" ] && [ -f "./files/www1/after_script.txt" ] && [ -f "./files/www2/before_script.txt" ] && [ -f "./files/www2/after_script.txt" ]; then
+if [ $count == '|4|' ] && [ -f "./files/www1/before_script.txt" ] && [ -f "./files/www1/after_script.txt" ] && [ -f "./files/www2/before_script.txt" ] && [ -f "./files/www2/after_script.txt" ] && [ -f "./files/www1/before_script_global.txt" ] && [ -f "./files/www1/after_script_global.txt" ]; then
     echo " \033[92m✔\033[m"
 else
     echo " \033[91m✘\033[m"

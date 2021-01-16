@@ -109,12 +109,12 @@ def load_parser(client, parser):
         if mode.is_origin_remote():
             remote_client.load_ssh_client_origin()
         else:
-            remote_utility.run_before_script(client)
+            helper.run_script(client, 'before')
     else:
         if mode.is_target_remote():
             remote_client.load_ssh_client_target()
         else:
-            remote_utility.run_before_script(client)
+            helper.run_script(client, 'before')
 
     # Check only if database configuration is a file
     if not helper.check_file_exists(client, _path) and _path[-1] is not '/':

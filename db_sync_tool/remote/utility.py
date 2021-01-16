@@ -7,44 +7,6 @@ from db_sync_tool.database import utility as database_utility
 from db_sync_tool.remote import client as remote_client
 
 
-def run_before_script(client):
-    """
-    Executing before_script command
-    :param client: String
-    :return:
-    """
-    # Run before_script after successful connection
-    if 'before_script' in system.config[client]:
-        output.message(
-            output.host_to_subject(client),
-            'Running before_script',
-            True
-        )
-        mode.run_command(
-            system.config[client]['before_script'],
-            client
-        )
-
-
-def run_after_script(client):
-    """
-    Executing after_script command
-    :param client: String
-    :return:
-    """
-    # Run after_script after successful connection
-    if 'after_script' in system.config[client]:
-        output.message(
-            output.host_to_subject(client),
-            'Running after_script',
-            True
-        )
-        mode.run_command(
-            system.config[client]['after_script'],
-            client
-        )
-
-
 def remove_origin_database_dump(keep_compressed_file=False):
     """
     Removing the origin database dump files

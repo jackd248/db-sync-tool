@@ -17,7 +17,7 @@ def load_ssh_client_origin():
     """
     global ssh_client_origin
     ssh_client_origin = load_ssh_client(mode.Client.ORIGIN)
-    utility.run_before_script(mode.Client.ORIGIN)
+    helper.run_script(mode.Client.ORIGIN, 'before')
 
 
 def load_ssh_client_target():
@@ -27,7 +27,7 @@ def load_ssh_client_target():
     """
     global ssh_client_target
     ssh_client_target = load_ssh_client(mode.Client.TARGET)
-    utility.run_before_script(mode.Client.TARGET)
+    helper.run_script(mode.Client.TARGET, 'before')
 
 
 def load_ssh_client(ssh):
@@ -92,10 +92,12 @@ def close_ssh_clients():
     Closing ssh client sessions
     :return:
     """
-    utility.run_after_script(mode.Client.ORIGIN)
+    helper.run_script(mode.Client.ORIGIN, 'after')
     if not ssh_client_origin is None:
         ssh_client_origin.close()
 
-    utility.run_after_script(mode.Client.TARGET)
+    helper.run_script(mode.Client.TARGET, 'after')
     if not ssh_client_target is None:
         ssh_client_target.close()
+
+    helper.run_script(script='after')

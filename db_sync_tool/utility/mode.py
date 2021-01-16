@@ -4,7 +4,7 @@
 import subprocess
 import sys
 
-from db_sync_tool.utility import system, output
+from db_sync_tool.utility import system, output, helper
 from db_sync_tool.remote import system as remote_system
 
 
@@ -158,6 +158,7 @@ def run_command(command, client, force_output=False, allow_fail=False):
         out, err = res.communicate()
 
         if res.wait() != 0 and err.decode() != '' and not allow_fail:
+            helper.run_script(script='error')
             sys.exit(output.message(output.Subject.ERROR, err.decode(), False))
 
         if force_output:

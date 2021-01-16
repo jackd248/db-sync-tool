@@ -2,6 +2,7 @@
 
 Here you can find an overview over the possible configuration adjustments.
 
+- [Full configuration reference](#configuration_reference)
 - [Ignore tables](#ignore_tables)
 - [Authentication](#authentication)
 - [Linking hosts](#linking)
@@ -15,6 +16,72 @@ Here you can find an overview over the possible configuration adjustments.
 - [Naming hosts](#naming)
 - [Check dump](#check)
 - [Manual database credentials](#manual)
+
+<a name="configuration_reference"></a>
+### Full configuration reference
+
+```json
+{
+  "name": "project",
+  "type": "type",
+  "target": {
+    "name": "name",
+    "link": "@link",
+    "host": "www1",
+    "user": "user",
+    "port": 22,
+    "password": "password",
+    "ssh_key": "ssh_key",
+    "dump_dir": "/path/to/writable/dir/",
+    "db": {
+      "name": "db",
+      "host": "db2",
+      "password": "db",
+      "user": "db",
+      "port": 3306
+    },
+    "after_script": "",
+    "script": {
+      "before": "",
+      "after": "",
+      "error": ""
+    },
+    "console": {
+      "php": "/usr/bin/php"
+    },
+    "keep_dumps": 5,
+    "after_dump": "path/to/dump/file.sql"
+  },
+  "origin": {
+    "name": "name",
+    "link": "@link",
+    "host": "www1",
+    "user": "user",
+    "port": 22,
+    "password": "password",
+    "ssh_key": "ssh_key",
+    "dump_dir": "/path/to/writable/dir/",
+    "db": {
+      "name": "db",
+      "host": "db1",
+      "password": "db",
+      "user": "db",
+      "port": 3306
+    },
+    "script": {
+      "before": "",
+      "after": "",
+      "error": ""
+    },
+    "console": {
+      "php": "/usr/bin/php"
+    }
+  },
+  "log_file": "/path/to/file/info.log",
+  "ignore_table": [],
+  "check_dump": false
+}
+```
 
 <a name="ignore_tables"></a>
 ### Ignore tables 
@@ -140,13 +207,24 @@ Sometimes it is necessary to run a specific command before or after the dump cre
 
 ```json
 {
+  "script": {
+    "before": "",
+    "after": "",
+    "error": ""
+  },
   "origin": {
-    "before_script": "",
-    "after_script": ""
+    "script": {
+      "before": "",
+      "after": "",
+      "error": ""
+    },
   },
   "target": {
-    "before_script": "",
-    "after_script": ""
+    "script": {
+      "before": "",
+      "after": "",
+      "error": ""
+    },
   }
 }
 ```

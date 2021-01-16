@@ -180,6 +180,36 @@ def check_file_exists(client, path):
     return mode.run_command(f'[ -f {path} ] && echo "1"', client, True) == '1'
 
 
+def run_script(client=None, script='before'):
+    """
+    Executing script command
+    :param client: String
+    :param script: String
+    :return:
+    """
+    if client is None:
+        _config = system.config
+        _subject = output.Subject.LOCAL
+        client = mode.Client.LOCAL
+    else:
+        _config = system.config[client]
+        _subject = output.host_to_subject(client)
+
+    if not 'scripts' in _config:
+        return
+
+    if f'{script}' in _config['scripts']:
+        output.message(
+            _subject,
+            f'Running script {client}',
+            True
+        )
+        mode.run_command(
+            _config['scripts'][script],
+            client
+        )
+
+
 def confirm(prompt=None, resp=False):
     """
     https://code.activestate.com/recipes/541096-prompt-the-user-for-confirmation/
