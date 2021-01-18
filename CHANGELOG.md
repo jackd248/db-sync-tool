@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.6] - 2021-01-18
+### Added
+- [Task] Extend scripts feature
+- [Doc] Support section
+- [Doc] Quickstart documentation
+- [Task] Improved console output
+- [Task] Drupal recipe uses Drush
+- [Doc] Release Guide added
+- [Doc] Advanced documentation
+
 ## [2.2.5] - 2020-12-28
 ### Added
 - [Task] Allow run command to fail
