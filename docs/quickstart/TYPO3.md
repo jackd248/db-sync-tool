@@ -43,3 +43,33 @@ Example configuration file:
 ```
 
 It is possible to extend the [configuration](docs/CONFIG.md).
+
+## Example
+
+Here is an extended example:
+```json
+{
+  "type": "TYPO3",
+  "target": {
+    "path": "/var/www/html/htdocs/typo3/web/typo3conf/LocalConfiguration.php"
+  },
+  "origin": {
+    "host": "123.456.789.123",
+    "user": "ssh_user",
+    "path": "/var/www/html/shared/typo3conf/LocalConfiguration.php",
+    "name": "Demo Prod"
+  },
+  "ignore_table": [
+    "be_users",
+    "sys_domain",
+    "cf_cache_*",
+    "cf_extbase_datamapfactory_datamap",
+    "cf_extbase_datamapfactory_datamap_tags",
+    "cf_extbase_object",
+    "cf_extbase_object_tags",
+    "cf_extbase_reflection",
+    "cf_extbase_reflection_tags",
+    "tx_realurl_*"
+  ]
+}
+```

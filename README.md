@@ -19,7 +19,7 @@ Python script to synchronize a database from an origin to a target system with a
 - Easily dump creation (database __backup__)
 - __Cleanup__ feature for backups
 - Extended __logging__ capabilities
-- Many more possibilities for __customization__ 
+- Many more possibilities for __customization__
 
 ## Installation
 
@@ -58,6 +58,8 @@ Detailed instructions for:
 - [Drupal database sync](docs/quickstart/DRUPAL.md)
 - [Wordpress database sync](docs/quickstart/WORDPRESS.md)
 
+If you want to have an inside in more configuration examples, see the [test scenarios](tests/scenario). 
+
 ## Usage
 
 ### Command line
@@ -66,7 +68,7 @@ Run the python script via command line.
 
 Installed via [pip](#install-pip):
 ```bash
-$ python3 db_sync_tool
+$ db_sync_tool
 ```
 
 Installed via [composer](#install-composer):
