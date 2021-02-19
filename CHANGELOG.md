@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2021-02-19
+### Added
+- [Task] Clear Database Feature
+- [Doc] Further documentation
+
 ## [2.2.6] - 2021-01-18
 ### Added
 - [Task] Extend scripts feature
