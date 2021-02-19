@@ -16,6 +16,7 @@ Here you can find an overview over the possible configuration adjustments.
 - [Naming hosts](#naming)
 - [Check dump](#check)
 - [Manual database credentials](#manual)
+- [Clearing database](#clear)
 
 <a name="configuration_reference"></a>
 ### Full configuration reference
@@ -330,3 +331,8 @@ It is also possible to skip the automatic database credential detection dependin
   "ignore_table": []
 }
 ```
+
+<a name="clear"></a>
+### Clearing database
+
+If you want a clean database sync, it is necessary to drop all existing tables of the target database. Use the `--clear-database` option (`-cd`) for this.

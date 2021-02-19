@@ -20,6 +20,7 @@ class Sync:
                  dump_name=None,
                  keep_dump=None,
                  host_file=None,
+                 clear=False,
                  config={}):
         """
         Initialization
@@ -31,6 +32,7 @@ class Sync:
         :param dump_name:
         :param keep_dump:
         :param host_file:
+        :param clear:
         :param config:
         """
         info.print_header(mute)
@@ -42,7 +44,8 @@ class Sync:
             import_file,
             dump_name,
             keep_dump,
-            host_file
+            host_file,
+            clear
         )
         system.get_configuration(config)
         system.check_authorizations()

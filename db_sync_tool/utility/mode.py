@@ -31,6 +31,7 @@ class Client:
 # Default sync mode
 sync_mode = SyncMode.RECEIVER
 
+
 #
 # FUNCTIONS
 #
@@ -65,8 +66,11 @@ def check_sync_mode():
         sync_mode = SyncMode.DUMP_LOCAL
         _description = output.CliFormat.BLACK + '(LOCAL, NO TRANSFER/IMPORT)' + output.CliFormat.ENDC
         system.config['is_same_client'] = True
-    if 'host' in system.config['origin'] and 'host' in system.config['target'] and system.config['origin']['host'] == system.config['target']['host']:
-        if ('port' in system.config['origin'] and 'port' in system.config['target'] and system.config['origin']['port'] == system.config['target']['port']) or ('port' not in system.config['origin'] and 'port' not in system.config['target']):
+    if 'host' in system.config['origin'] and 'host' in system.config['target'] and \
+            system.config['origin']['host'] == system.config['target']['host']:
+        if ('port' in system.config['origin'] and 'port' in system.config['target'] and
+            system.config['origin']['port'] == system.config['target']['port']) or \
+                ('port' not in system.config['origin'] and 'port' not in system.config['target']):
             sync_mode = SyncMode.DUMP_REMOTE
             _description = output.CliFormat.BLACK + '(REMOTE, NO TRANSFER/IMPORT)' + output.CliFormat.ENDC
             system.config['is_same_client'] = True
@@ -110,7 +114,8 @@ def is_target_remote():
     Check if target is remote client
     :return: Boolean
     """
-    return sync_mode == SyncMode.SENDER or sync_mode == SyncMode.PROXY or sync_mode == SyncMode.DUMP_REMOTE or sync_mode == SyncMode.IMPORT_REMOTE
+    return sync_mode == SyncMode.SENDER or sync_mode == SyncMode.PROXY or sync_mode == SyncMode.DUMP_REMOTE or \
+           sync_mode == SyncMode.IMPORT_REMOTE
 
 
 def is_origin_remote():
@@ -118,7 +123,8 @@ def is_origin_remote():
     Check if origin is remote client
     :return: Boolean
     """
-    return sync_mode == SyncMode.RECEIVER or sync_mode == SyncMode.PROXY or sync_mode == SyncMode.DUMP_REMOTE or sync_mode == SyncMode.IMPORT_REMOTE
+    return sync_mode == SyncMode.RECEIVER or sync_mode == SyncMode.PROXY or sync_mode == SyncMode.DUMP_REMOTE or \
+           sync_mode == SyncMode.IMPORT_REMOTE
 
 
 def is_import():

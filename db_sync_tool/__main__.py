@@ -1,20 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
-import argparse, sys, os
+import argparse
+import os
+import sys
 from collections import defaultdict
+
 # Workaround for ModuleNotFoundError
 sys.path.append(os.getcwd())
 from db_sync_tool import sync
 from db_sync_tool.utility import helper
 
 
-def main(args={}):
+def main(args=None):
     """
     Main entry point for the command line. Parse the arguments and call to the main process.
     :param args:
     :return:
     """
+    if args is None:
+        args = {}
+
     args = get_arguments(args)
     config = build_config(args)
     sync.Sync(
@@ -26,6 +32,7 @@ def main(args={}):
         dump_name=args.dump_name,
         keep_dump=args.keep_dump,
         host_file=args.host_file,
+        clear=args.clear_database,
         config=config
     )
 
@@ -36,7 +43,9 @@ def get_arguments(args):
     :param args:
     :return:
     """
-    parser = argparse.ArgumentParser(prog='db_sync_tool', description='A tool for automatic database synchronization from and to host systems.')
+    parser = argparse.ArgumentParser(prog='db_sync_tool',
+                                     description=f'A tool for automatic database synchronization from '
+                                                 f'and to host systems.')
     parser.add_argument('-f', '--config-file',
                         help='Path to configuration file',
                         required=False,
@@ -62,7 +71,8 @@ def get_arguments(args):
                         required=False,
                         type=str)
     parser.add_argument('-kd', '--keep-dump',
-                        help='Skipping target import of the database dump and saving the available dump file in the given directory',
+                        help='Skipping target import of the database dump and saving the available dump file in the '
+                             'given directory',
                         required=False,
                         type=str)
     parser.add_argument('-o', '--host-file',
@@ -73,6 +83,10 @@ def get_arguments(args):
                         help='File path for creating a additional log file',
                         required=False,
                         type=str)
+    parser.add_argument('-cd', '--clear-database',
+                        help='Dropping all tables before importing a new sync to get a clean database.',
+                        required=False,
+                        action='store_true')
     parser.add_argument('-t', '--type',
                         help='Defining the framework type [TYPO3, Symfony, Drupal, Wordpress]',
                         required=False,

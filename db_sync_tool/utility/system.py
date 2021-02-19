@@ -23,6 +23,7 @@ config = {
     'check_dump': True,
     'is_same_client': False,
     'config_file_path': None,
+    'clear_database': False,
     'ssh_password': {
         'origin': None,
         'target': None
@@ -194,7 +195,8 @@ def check_args_options(config_file=None,
                        import_file=None,
                        dump_name=None,
                        keep_dump=None,
-                       host_file=None):
+                       host_file=None,
+                       clear=False):
     """
     Checking arguments and fill options array
     :param config_file:
@@ -205,6 +207,7 @@ def check_args_options(config_file=None,
     :param dump_name:
     :param keep_dump:
     :param host_file:
+    :param clear:
     :return:
     """
     global config
@@ -230,6 +233,9 @@ def check_args_options(config_file=None,
 
     if not host_file is None:
         config['link_hosts'] = host_file
+
+    if not clear is None:
+        config['clear_database'] = clear
 
     if not keep_dump is None:
         default_local_sync_path = keep_dump

@@ -82,7 +82,7 @@ $ python3 vendor/kmi/db-sync-tool/db_sync_tool
 ```bash
 usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-y] [-m] [-i IMPORT_FILE]
                     [-dn DUMP_NAME] [-kd KEEP_DUMP] [-o HOST_FILE]
-                    [-l LOG_FILE] [-t TYPE] [-tp TARGET_PATH]
+                    [-l LOG_FILE] [-cd] [-t TYPE] [-tp TARGET_PATH]
                     [-tn TARGET_NAME] [-th TARGET_HOST] [-tu TARGET_USER]
                     [-tpw TARGET_PASSWORD] [-tk TARGET_KEY] [-tpo TARGET_PORT]
                     [-tdd TARGET_DUMP_DIR] [-tkd TARGET_KEEP_DUMPS]
@@ -118,6 +118,9 @@ optional arguments:
                         information with the configuration file
   -l LOG_FILE, --log-file LOG_FILE
                         File path for creating a additional log file
+  -cd, --clear-database
+                        Dropping all tables before importing a new sync to get
+                        a clean database.
   -t TYPE, --type TYPE  Defining the framework type [TYPO3, Symfony, Drupal,
                         Wordpress]
   -tp TARGET_PATH, --target-path TARGET_PATH

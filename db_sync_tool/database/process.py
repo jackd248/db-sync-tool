@@ -43,6 +43,14 @@ def import_database_dump():
     if not system.config['is_same_client'] and not mode.is_import():
         prepare_target_database_dump()
 
+    if system.config['clear_database']:
+        output.message(
+            output.Subject.TARGET,
+            'Clearing database before import',
+            True
+        )
+        clear_database(mode.Client.TARGET)
+
     if not system.config['keep_dump'] and not system.config['is_same_client']:
         output.message(
             output.Subject.TARGET,
@@ -127,4 +135,30 @@ def prepare_target_database_dump():
             mode.Client.TARGET) + database_utility.database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(
             mode.Client.TARGET) + ' > /dev/null',
         mode.Client.TARGET
+    )
+
+
+def clear_database(client):
+    """
+    Clearing the database by dropping all tables
+    https://www.techawaken.com/drop-tables-mysql-database/
+
+    { mysql -hHOSTNAME -uUSERNAME -pPASSWORD -Nse 'show tables' DB_NAME; } | ( while read table; do if [ -z ${i+x} ];
+    then echo 'SET FOREIGN_KEY_CHECKS = 0;'; fi; i=1; echo "drop table \`$table\`;"; done;
+    echo 'SET FOREIGN_KEY_CHECKS = 1;' ) | awk '{print}' ORS=' ' | mysql -hHOSTNAME -uUSERNAME -pPASSWORD DB_NAME;
+
+    :param client: String
+    :return:
+    """
+    mode.run_command(
+        '{ ' + helper.get_command(client, 'mysql') + ' ' +
+        database_utility.generate_mysql_credentials(client) +
+        ' -Nse \'show tables\' ' +
+        system.config[client]['db']['name'] + '; }' +
+        ' | ( while read table; do if [ -z ${i+x} ]; then echo \'SET FOREIGN_KEY_CHECKS = 0;\'; fi; i=1; ' +
+        'echo "drop table \\`$table\\`;"; done; echo \'SET FOREIGN_KEY_CHECKS = 1;\' ) | awk \'{print}\' ORS=' ' | ' +
+        helper.get_command(client, 'mysql') + ' ' +
+        database_utility.generate_mysql_credentials(client) + ' ' +
+        system.config[client]['db']['name'],
+        client
     )
