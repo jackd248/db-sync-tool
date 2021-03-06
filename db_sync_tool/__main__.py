@@ -28,6 +28,7 @@ def main(args=None):
         verbose=args.verbose,
         yes=args.yes,
         mute=args.mute,
+        dry_run=args.dry_run,
         import_file=args.import_file,
         dump_name=args.dump_name,
         keep_dump=args.keep_dump,
@@ -60,6 +61,10 @@ def get_arguments(args):
                         action='store_true')
     parser.add_argument('-m', '--mute',
                         help='Mute console output',
+                        required=False,
+                        action='store_true')
+    parser.add_argument('-dr', '--dry-run',
+                        help='Testing process without running database export, transfer or import.',
                         required=False,
                         action='store_true')
     parser.add_argument('-i', '--import-file',

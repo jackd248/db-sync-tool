@@ -107,8 +107,12 @@ def check_database_dump(client, filepath):
         _line = mode.run_command(
             helper.get_command(client, 'tail') + ' -n 1 ' + filepath,
             client,
-            True
+            True,
+            skip_dry_run=True
         )
+
+        if not _line:
+            return
 
         if "-- Dump completed on" not in _line:
             sys.exit(

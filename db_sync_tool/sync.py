@@ -16,6 +16,7 @@ class Sync:
                  verbose=False,
                  yes=False,
                  mute=False,
+                 dry_run=False,
                  import_file=None,
                  dump_name=None,
                  keep_dump=None,
@@ -28,6 +29,7 @@ class Sync:
         :param verbose:
         :param yes:
         :param mute:
+        :param dry_run:
         :param import_file:
         :param dump_name:
         :param keep_dump:
@@ -41,6 +43,7 @@ class Sync:
             verbose,
             yes,
             mute,
+            dry_run,
             import_file,
             dump_name,
             keep_dump,

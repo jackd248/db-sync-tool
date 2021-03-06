@@ -19,6 +19,9 @@ def remove_origin_database_dump(keep_compressed_file=False):
         True
     )
 
+    if system.config['dry_run']:
+        return
+
     _file_path = helper.get_dump_dir(mode.Client.ORIGIN) + database_utility.database_dump_file_name
     if mode.is_origin_remote():
         sftp = remote_client.ssh_client_origin.open_sftp()
@@ -78,6 +81,9 @@ def remove_target_database_dump():
             'Cleaning up',
             True
         )
+
+        if system.config['dry_run']:
+            return
 
         if mode.is_target_remote():
             sftp = remote_client.ssh_client_target.open_sftp()

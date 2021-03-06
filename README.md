@@ -82,21 +82,22 @@ $ python3 vendor/kmi/db-sync-tool/db_sync_tool
 #### Shell arguments
 
 ```bash
-usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-y] [-m] [-i IMPORT_FILE]
-                    [-dn DUMP_NAME] [-kd KEEP_DUMP] [-o HOST_FILE]
-                    [-l LOG_FILE] [-cd] [-t TYPE] [-tp TARGET_PATH]
-                    [-tn TARGET_NAME] [-th TARGET_HOST] [-tu TARGET_USER]
-                    [-tpw TARGET_PASSWORD] [-tk TARGET_KEY] [-tpo TARGET_PORT]
-                    [-tdd TARGET_DUMP_DIR] [-tkd TARGET_KEEP_DUMPS]
-                    [-tdn TARGET_DB_NAME] [-tdh TARGET_DB_HOST]
-                    [-tdu TARGET_DB_USER] [-tdpw TARGET_DB_PASSWORD]
-                    [-tdpo TARGET_DB_PORT] [-tad TARGET_AFTER_DUMP]
-                    [-op ORIGIN_PATH] [-on ORIGIN_NAME] [-oh ORIGIN_HOST]
-                    [-ou ORIGIN_USER] [-opw ORIGIN_PASSWORD] [-ok ORIGIN_KEY]
-                    [-opo ORIGIN_PORT] [-odd ORIGIN_DUMP_DIR]
-                    [-okd ORIGIN_KEEP_DUMPS] [-odn ORIGIN_DB_NAME]
-                    [-odh ORIGIN_DB_HOST] [-odu ORIGIN_DB_USER]
-                    [-odpw ORIGIN_DB_PASSWORD] [-odpo ORIGIN_DB_PORT]
+usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-y] [-m] [-dr]
+                    [-i IMPORT_FILE] [-dn DUMP_NAME] [-kd KEEP_DUMP]
+                    [-o HOST_FILE] [-l LOG_FILE] [-cd] [-t TYPE]
+                    [-tp TARGET_PATH] [-tn TARGET_NAME] [-th TARGET_HOST]
+                    [-tu TARGET_USER] [-tpw TARGET_PASSWORD] [-tk TARGET_KEY]
+                    [-tpo TARGET_PORT] [-tdd TARGET_DUMP_DIR]
+                    [-tkd TARGET_KEEP_DUMPS] [-tdn TARGET_DB_NAME]
+                    [-tdh TARGET_DB_HOST] [-tdu TARGET_DB_USER]
+                    [-tdpw TARGET_DB_PASSWORD] [-tdpo TARGET_DB_PORT]
+                    [-tad TARGET_AFTER_DUMP] [-op ORIGIN_PATH]
+                    [-on ORIGIN_NAME] [-oh ORIGIN_HOST] [-ou ORIGIN_USER]
+                    [-opw ORIGIN_PASSWORD] [-ok ORIGIN_KEY] [-opo ORIGIN_PORT]
+                    [-odd ORIGIN_DUMP_DIR] [-okd ORIGIN_KEEP_DUMPS]
+                    [-odn ORIGIN_DB_NAME] [-odh ORIGIN_DB_HOST]
+                    [-odu ORIGIN_DB_USER] [-odpw ORIGIN_DB_PASSWORD]
+                    [-odpo ORIGIN_DB_PORT]
 
 A tool for automatic database synchronization from and to host systems.
 
@@ -107,6 +108,8 @@ optional arguments:
   -v, --verbose         Enable extended console output
   -y, --yes             Skipping user confirmation for database import
   -m, --mute            Mute console output
+  -dr, --dry-run        Testing process without running database export,
+                        transfer or import.
   -i IMPORT_FILE, --import-file IMPORT_FILE
                         Import database from a specific file dump
   -dn DUMP_NAME, --dump-name DUMP_NAME

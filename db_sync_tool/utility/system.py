@@ -14,6 +14,7 @@ from db_sync_tool.utility import log, parser, mode, helper, output
 config = {
     'verbose': False,
     'mute': False,
+    'dry_run': False,
     'keep_dump': False,
     'dump_name': '',
     'import': '',
@@ -192,6 +193,7 @@ def check_args_options(config_file=None,
                        verbose=False,
                        yes=False,
                        mute=False,
+                       dry_run=False,
                        import_file=None,
                        dump_name=None,
                        keep_dump=None,
@@ -203,6 +205,7 @@ def check_args_options(config_file=None,
     :param verbose:
     :param yes:
     :param mute:
+    :param dry_run:
     :param import_file:
     :param dump_name:
     :param keep_dump:
@@ -224,6 +227,16 @@ def check_args_options(config_file=None,
 
     if not mute is None:
         config['mute'] = mute
+
+    if not dry_run is None:
+        config['dry_run'] = dry_run
+
+        if dry_run:
+            output.message(
+                output.Subject.INFO,
+                'Test mode: DRY RUN',
+                True
+            )
 
     if not import_file is None:
         config['import'] = import_file

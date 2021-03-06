@@ -28,7 +28,8 @@ def create_origin_database_dump():
             system.config['origin']['db']['name'] + ' ' +
             database_utility.generate_ignore_database_tables() +
             ' > ' + _dump_file_path,
-            mode.Client.ORIGIN
+            mode.Client.ORIGIN,
+            skip_dry_run=True
         )
 
         database_utility.check_database_dump(mode.Client.ORIGIN, _dump_file_path)
@@ -102,7 +103,8 @@ def import_database_dump_file(client, filepath):
             helper.get_command(client, 'mysql') + ' ' +
             database_utility.generate_mysql_credentials(client) + ' ' +
             system.config[client]['db']['name'] + ' < ' + filepath,
-            client
+            client,
+            skip_dry_run=True
         )
 
 
@@ -120,7 +122,8 @@ def prepare_origin_database_dump():
         helper.get_command(mode.Client.ORIGIN, 'tar') + ' cfvz ' + helper.get_dump_dir(
             mode.Client.ORIGIN) + database_utility.database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(
             mode.Client.ORIGIN) + ' ' + database_utility.database_dump_file_name + ' > /dev/null',
-        mode.Client.ORIGIN
+        mode.Client.ORIGIN,
+        skip_dry_run=True
     )
 
 
@@ -134,7 +137,8 @@ def prepare_target_database_dump():
         helper.get_command('target', 'tar') + ' xzf ' + helper.get_dump_dir(
             mode.Client.TARGET) + database_utility.database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(
             mode.Client.TARGET) + ' > /dev/null',
-        mode.Client.TARGET
+        mode.Client.TARGET,
+        skip_dry_run=True
     )
 
 
@@ -160,5 +164,6 @@ def clear_database(client):
         helper.get_command(client, 'mysql') + ' ' +
         database_utility.generate_mysql_credentials(client) + ' ' +
         system.config[client]['db']['name'],
-        client
+        client,
+        skip_dry_run=True
     )

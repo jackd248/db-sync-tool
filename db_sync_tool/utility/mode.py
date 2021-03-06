@@ -135,13 +135,14 @@ def is_import():
     return sync_mode == SyncMode.IMPORT_LOCAL or sync_mode == SyncMode.IMPORT_REMOTE
 
 
-def run_command(command, client, force_output=False, allow_fail=False):
+def run_command(command, client, force_output=False, allow_fail=False, skip_dry_run=False):
     """
     Run command depending on the given client
     :param command: String
     :param client: String
     :param force_output: Boolean
     :param allow_fail: Boolean
+    :param skip_dry_run: Boolean
     :return:
     """
     if system.config['verbose']:
@@ -152,6 +153,9 @@ def run_command(command, client, force_output=False, allow_fail=False):
             False,
             True
         )
+
+    if system.config['dry_run'] and skip_dry_run:
+        return
 
     if is_remote(client):
         if force_output:

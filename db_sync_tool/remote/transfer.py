@@ -50,12 +50,13 @@ def get_origin_database_dump(target_path):
     # ToDo: Download speed problems
     # https://github.com/paramiko/paramiko/issues/60
     #
-    sftp.get(helper.get_dump_dir(mode.Client.ORIGIN) + database_utility.database_dump_file_name + '.tar.gz',
-             target_path + database_utility.database_dump_file_name + '.tar.gz', download_status)
-    sftp.close()
-    if not system.config['mute']:
-        print('')
+    if not system.config['dry_run']:
+        sftp.get(helper.get_dump_dir(mode.Client.ORIGIN) + database_utility.database_dump_file_name + '.tar.gz',
+                 target_path + database_utility.database_dump_file_name + '.tar.gz', download_status)
+        if not system.config['mute']:
+            print('')
 
+    sftp.close()
     utility.remove_origin_database_dump()
 
 
@@ -99,12 +100,14 @@ def put_origin_database_dump(origin_path):
     # ToDo: Download speed problems
     # https://github.com/paramiko/paramiko/issues/60
     #
-    sftp.put(origin_path + database_utility.database_dump_file_name + '.tar.gz',
-             helper.get_dump_dir(mode.Client.TARGET) + database_utility.database_dump_file_name + '.tar.gz',
-             upload_status)
+    if not system.config['dry_run']:
+        sftp.put(origin_path + database_utility.database_dump_file_name + '.tar.gz',
+                 helper.get_dump_dir(mode.Client.TARGET) + database_utility.database_dump_file_name + '.tar.gz',
+                 upload_status)
+        if not system.config['mute']:
+            print('')
+
     sftp.close()
-    if not system.config['mute']:
-        print('')
 
 
 def upload_status(sent, size):
