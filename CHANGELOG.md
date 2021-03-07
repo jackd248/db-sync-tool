@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.1] - 2021-03-07
+### Fixed
+- [Bugfix] "Sync local" fix
+
 ## [2.4.0] - 2021-03-07
 ### Added
 - [Task] Exported tables info
