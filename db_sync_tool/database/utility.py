@@ -129,3 +129,24 @@ def check_database_dump(client, filepath):
                 verbose_only=True
             )
 
+
+def count_tables(client, filepath):
+    """
+    Count the reference string in the database dump file to get the count of all exported tables
+    :param client: String
+    :param filepath: String
+    :return:
+    """
+    _reference = 'CREATE TABLE'
+    _count = mode.run_command(
+        f'{helper.get_command(client, "grep")} -ao "{_reference}" {filepath} | wc -l | xargs',
+        client,
+        True,
+        skip_dry_run=True
+    )
+
+    if _count:
+        output.message(
+            output.host_to_subject(client),
+            f'{int(_count)} table(s) exported'
+        )

@@ -33,6 +33,7 @@ def create_origin_database_dump():
         )
 
         database_utility.check_database_dump(mode.Client.ORIGIN, _dump_file_path)
+        database_utility.count_tables(mode.Client.ORIGIN, _dump_file_path)
         prepare_origin_database_dump()
 
 
