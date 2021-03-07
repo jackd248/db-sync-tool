@@ -52,7 +52,7 @@ def import_database_dump():
         )
         clear_database(mode.Client.TARGET)
 
-    if not system.config['keep_dump'] and not system.config['is_same_client']:
+    if not system.config['keep_dump'] and not mode.is_dump():
         output.message(
             output.Subject.TARGET,
             'Importing database dump',

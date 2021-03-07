@@ -12,7 +12,17 @@ from db_sync_tool.remote import system as remote_system
 # GLOBALS
 #
 
+class Client:
+    ORIGIN = 'origin'
+    TARGET = 'target'
+    LOCAL = 'local'
+
+
 class SyncMode:
+    """
+    Sync Mode
+    """
+
     DUMP_LOCAL = 'DUMP_LOCAL'
     DUMP_REMOTE = 'DUMP_REMOTE'
     IMPORT_LOCAL = 'IMPORT_LOCAL'
@@ -20,12 +30,132 @@ class SyncMode:
     RECEIVER = 'RECEIVER'
     SENDER = 'SENDER'
     PROXY = 'PROXY'
+    SYNC_REMOTE = 'SYNC_REMOTE'
+    SYNC_LOCAL = 'SYNC_LOCAL'
 
+    @staticmethod
+    def is_dump_local():
+        """
 
-class Client:
-    ORIGIN = 'origin'
-    TARGET = 'target'
-    LOCAL = 'local'
+        :return: boolean
+        """
+        return SyncMode.is_full_local() and SyncMode.is_same_host() and not SyncMode.is_sync_local()
+
+    @staticmethod
+    def is_dump_remote():
+        """
+
+        :return: boolean
+        """
+        return SyncMode.is_full_remote() and SyncMode.is_same_host() and not SyncMode.is_sync_remote()
+
+    @staticmethod
+    def is_receiver():
+        """
+
+        :return: boolean
+        """
+        return 'host' in system.config[Client.ORIGIN] and not SyncMode.is_proxy() and not SyncMode.is_sync_remote()
+
+    @staticmethod
+    def is_sender():
+        """
+
+        :return: boolean
+        """
+        return 'host' in system.config[Client.TARGET] and not SyncMode.is_proxy() and not SyncMode.is_sync_remote()
+
+    @staticmethod
+    def is_proxy():
+        """
+
+        :return: boolean
+        """
+        return SyncMode.is_full_remote()
+
+    @staticmethod
+    def is_import_local():
+        """
+
+        :return: boolean
+        """
+        return system.config['import'] != '' and SyncMode.is_full_local()
+
+    @staticmethod
+    def is_import_remote():
+        """
+
+        :return: boolean
+        """
+        return system.config['import'] != '' and 'host' in system.config[Client.TARGET]
+
+    @staticmethod
+    def is_sync_local():
+        """
+
+        :return: boolean
+        """
+        return SyncMode.is_full_local() and SyncMode.is_same_host() and SyncMode.is_available_configuration('path') and \
+               not SyncMode.is_same_configuration('path')
+
+    @staticmethod
+    def is_sync_remote():
+        """
+
+        :return: boolean
+        """
+        return SyncMode.is_full_remote() and SyncMode.is_same_host() and SyncMode.is_available_configuration('path') and \
+               not SyncMode.is_same_configuration('path')
+
+    @staticmethod
+    def is_full_remote():
+        """
+
+        :return: boolean
+        """
+        return SyncMode.is_available_configuration('host')
+
+    @staticmethod
+    def is_full_local():
+        """
+
+        :return: boolean
+        """
+        return SyncMode.is_unavailable_configuration('host')
+
+    @staticmethod
+    def is_same_host():
+        """
+
+        :return: boolean
+        """
+        return SyncMode.is_same_configuration('host') and SyncMode.is_same_configuration('port')
+
+    @staticmethod
+    def is_available_configuration(key):
+        """
+
+        :return: boolean
+        """
+        return key in system.config[Client.ORIGIN] and key in system.config[Client.TARGET]
+
+    @staticmethod
+    def is_unavailable_configuration(key):
+        """
+
+        :return: boolean
+        """
+        return key not in system.config[Client.ORIGIN] and key not in system.config[Client.TARGET]
+
+    @staticmethod
+    def is_same_configuration(key):
+        """
+
+        :return: boolean
+        """
+        return (SyncMode.is_available_configuration(key) and
+               system.config[Client.ORIGIN][key] == system.config[Client.TARGET][key]) or \
+               SyncMode.is_unavailable_configuration(key)
 
 
 # Default sync mode
@@ -35,8 +165,6 @@ sync_mode = SyncMode.RECEIVER
 #
 # FUNCTIONS
 #
-
-
 def get_sync_mode():
     """
     Returning the sync mode
@@ -53,44 +181,35 @@ def check_sync_mode():
     global sync_mode
     _description = ''
 
-    if 'host' in system.config['origin']:
-        sync_mode = SyncMode.RECEIVER
-        _description = output.CliFormat.BLACK + '(REMOTE ➔ LOCAL)' + output.CliFormat.ENDC
-    if 'host' in system.config['target']:
-        sync_mode = SyncMode.SENDER
-        _description = output.CliFormat.BLACK + '(LOCAL ➔ REMOTE)' + output.CliFormat.ENDC
-    if 'host' in system.config['origin'] and 'host' in system.config['target']:
-        sync_mode = SyncMode.PROXY
-        _description = output.CliFormat.BLACK + '(REMOTE ➔ LOCAL ➔ REMOTE)' + output.CliFormat.ENDC
-    if not 'host' in system.config['origin'] and not 'host' in system.config['target']:
-        sync_mode = SyncMode.DUMP_LOCAL
-        _description = output.CliFormat.BLACK + '(LOCAL, NO TRANSFER/IMPORT)' + output.CliFormat.ENDC
-        system.config['is_same_client'] = True
-    if 'host' in system.config['origin'] and 'host' in system.config['target'] and \
-            system.config['origin']['host'] == system.config['target']['host']:
-        if ('port' in system.config['origin'] and 'port' in system.config['target'] and
-            system.config['origin']['port'] == system.config['target']['port']) or \
-                ('port' not in system.config['origin'] and 'port' not in system.config['target']):
-            sync_mode = SyncMode.DUMP_REMOTE
-            _description = output.CliFormat.BLACK + '(REMOTE, NO TRANSFER/IMPORT)' + output.CliFormat.ENDC
-            system.config['is_same_client'] = True
-    if system.config['import'] != '':
+    _modes = {
+        SyncMode.RECEIVER: '(REMOTE ➔ LOCAL)',
+        SyncMode.SENDER: '(LOCAL ➔ REMOTE)',
+        SyncMode.PROXY: '(REMOTE ➔ LOCAL ➔ REMOTE)',
+        SyncMode.DUMP_LOCAL: '(LOCAL, ONLY EXPORT)',
+        SyncMode.DUMP_REMOTE: '(REMOTE, ONLY EXPORT)',
+        SyncMode.IMPORT_LOCAL: '(REMOTE, ONLY IMPORT)',
+        SyncMode.IMPORT_REMOTE: '(LOCAL, ONLY IMPORT)',
+        SyncMode.SYNC_LOCAL: '(LOCAL ➔ LOCAL)',
+        SyncMode.SYNC_REMOTE: '(REMOTE ➔ REMOTE)'
+    }
+
+    for _mode, _desc in _modes.items():
+        if getattr(SyncMode, 'is_' + _mode.lower())():
+            sync_mode = _mode
+            _description = _desc
+
+    if is_import():
         output.message(
             output.Subject.INFO,
-            'Import file: ' + system.config['import'],
+            f'Import file {output.CliFormat.BLACK}{system.config["import"]}{output.CliFormat.ENDC}',
             True
         )
-        if 'host' in system.config['target']:
-            sync_mode = SyncMode.IMPORT_REMOTE
-            _description = output.CliFormat.BLACK + '(REMOTE, NO TRANSFER)' + output.CliFormat.ENDC
-        else:
-            sync_mode = SyncMode.IMPORT_LOCAL
-            system.config['is_same_client'] = False
-            _description = output.CliFormat.BLACK + '(LOCAL, NO TRANSFER)' + output.CliFormat.ENDC
+
+    system.config['is_same_client'] = SyncMode.is_same_host()
 
     output.message(
         output.Subject.INFO,
-        'Sync mode: ' + sync_mode + ' ' + _description,
+        f'Sync mode: {sync_mode} {output.CliFormat.BLACK}{_description}{output.CliFormat.ENDC}',
         True
     )
 
@@ -115,7 +234,7 @@ def is_target_remote():
     :return: Boolean
     """
     return sync_mode == SyncMode.SENDER or sync_mode == SyncMode.PROXY or sync_mode == SyncMode.DUMP_REMOTE or \
-           sync_mode == SyncMode.IMPORT_REMOTE
+           sync_mode == SyncMode.IMPORT_REMOTE or sync_mode == SyncMode.SYNC_REMOTE
 
 
 def is_origin_remote():
@@ -124,7 +243,7 @@ def is_origin_remote():
     :return: Boolean
     """
     return sync_mode == SyncMode.RECEIVER or sync_mode == SyncMode.PROXY or sync_mode == SyncMode.DUMP_REMOTE or \
-           sync_mode == SyncMode.IMPORT_REMOTE
+           sync_mode == SyncMode.IMPORT_REMOTE or sync_mode == SyncMode.SYNC_REMOTE
 
 
 def is_import():
@@ -133,6 +252,14 @@ def is_import():
     :return: Boolean
     """
     return sync_mode == SyncMode.IMPORT_LOCAL or sync_mode == SyncMode.IMPORT_REMOTE
+
+
+def is_dump():
+    """
+    Check if sync mode is import
+    :return: Boolean
+    """
+    return sync_mode == SyncMode.DUMP_LOCAL or sync_mode == SyncMode.DUMP_REMOTE
 
 
 def run_command(command, client, force_output=False, allow_fail=False, skip_dry_run=False):
@@ -149,9 +276,7 @@ def run_command(command, client, force_output=False, allow_fail=False, skip_dry_
         output.message(
             output.host_to_subject(client),
             output.CliFormat.BLACK + command + output.CliFormat.ENDC,
-            True,
-            False,
-            True
+            debug=True
         )
 
     if system.config['dry_run'] and skip_dry_run:
