@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2021-03-07
+### Added
+- [Task] Exported tables info
+- [Task] Sync modes "Sync local" and "Sync remote"
+- [Task] Adjust final message for dry run mode
+- [Task] Simplify mode detection
+- [Task] "Dry run" mode
+
 ## [2.3.0] - 2021-02-19
 ### Added
 - [Task] Clear Database Feature
