@@ -61,3 +61,19 @@ The _import remote_ mode offers the possibility to only import a database dump o
 ![Sync mode sender](images/sync-mode-dump-remote.png)
 
 This mode is enabled, if you add the `-i` or `--import-file` option, specify the location of the remote dump file and the `target` in your `config.json` is a remote system.
+
+## Sync Local
+
+The _sync local_ mode offers the possibility to sync a database within your local system (origin/target). 
+
+![Sync mode receiver](images/sync-mode-sync-local.png)
+
+This mode is enabled, if no `host` entry is stored and the `path` entries differ in the `config.json` configuration.
+
+## Sync Remote
+
+The _sync remote_ mode offers the possibility to sync a database within a remote system (origin/target). 
+
+![Sync mode receiver](images/sync-mode-sync-remote.png)
+
+This mode is enabled, if the `host` entries will be the same and the `path` entries differ in the `config.json` configuration.

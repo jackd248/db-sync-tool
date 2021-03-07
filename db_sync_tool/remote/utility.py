@@ -75,7 +75,7 @@ def remove_target_database_dump():
     #
     # Clean up
     #
-    if (not system.config['is_same_client'] and not mode.is_import()):
+    if (not mode.is_dump() and not mode.is_import()):
         output.message(
             output.Subject.TARGET,
             'Cleaning up',

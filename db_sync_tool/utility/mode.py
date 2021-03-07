@@ -95,8 +95,7 @@ class SyncMode:
 
         :return: boolean
         """
-        return SyncMode.is_full_local() and SyncMode.is_same_host() and SyncMode.is_available_configuration('path') and \
-               not SyncMode.is_same_configuration('path')
+        return SyncMode.is_full_local() and SyncMode.is_same_host()  and SyncMode.is_same_sync()
 
     @staticmethod
     def is_sync_remote():
@@ -104,8 +103,12 @@ class SyncMode:
 
         :return: boolean
         """
-        return SyncMode.is_full_remote() and SyncMode.is_same_host() and SyncMode.is_available_configuration('path') and \
-               not SyncMode.is_same_configuration('path')
+        return SyncMode.is_full_remote() and SyncMode.is_same_host() and SyncMode.is_same_sync()
+
+    @staticmethod
+    def is_same_sync():
+        return ((SyncMode.is_available_configuration('path') and not SyncMode.is_same_configuration('path')) or
+               (SyncMode.is_available_configuration('db') and not SyncMode.is_same_configuration('db')))
 
     @staticmethod
     def is_full_remote():

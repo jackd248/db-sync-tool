@@ -34,6 +34,9 @@ Select one of the following scenarios:
 - dump_remote
 - import_local
 - import_remote
+- sync_remote
+- sync_remote_manual
+- sync_local
 - link
 - logging
 - manual

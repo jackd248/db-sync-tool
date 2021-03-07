@@ -19,6 +19,7 @@ services:
             - db2
         networks:
             - db-sync-tool
+            - db1
             - db2
         ports:
             - "2212:22"

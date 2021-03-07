@@ -1,0 +1,26 @@
+{
+  "target": {
+    "host": "www2",
+    "user": "user",
+    "password": "password",
+    "db": {
+      "name": "db",
+      "host": "db2",
+      "password": "db",
+      "user": "db",
+      "port": 3306
+    }
+  },
+  "origin": {
+    "host": "www2",
+    "user": "user",
+    "password": "password",
+    "db": {
+      "name": "db",
+      "host": "db1",
+      "password": "db",
+      "user": "db",
+      "port": 3306
+    }
+  }
+}

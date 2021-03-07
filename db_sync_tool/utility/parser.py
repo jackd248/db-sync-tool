@@ -24,7 +24,8 @@ def get_database_configuration(client):
 
     # check framework type
     _base = ''
-    if 'type' in system.config:
+
+    if 'type' in system.config and ('path' in system.config[mode.Client.ORIGIN] or 'path' in system.config[mode.Client.TARGET]):
         _type = system.config['type'].lower()
         if _type == 'typo3':
             # TYPO3 sync base

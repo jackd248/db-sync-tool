@@ -25,6 +25,8 @@ def transfer_origin_database_dump():
             get_origin_database_dump(system.default_local_sync_path)
             system.check_target_configuration()
             put_origin_database_dump(system.default_local_sync_path)
+        elif mode.get_sync_mode() == mode.SyncMode.SYNC_REMOTE:
+            system.check_target_configuration()
         elif system.config['is_same_client']:
             utility.remove_origin_database_dump(True)
     else:
