@@ -68,6 +68,11 @@ def load_ssh_client(ssh):
                             password=_ssh_password,
                             port=_ssh_port,
                             compress=True)
+        #
+        # Workaround for long lasting requests
+        # https://stackoverflow.com/questions/50009688/python-paramiko-ssh-session-not-active-after-being-idle-for-many-hours
+        #
+        _ssh_client.get_transport().set_keepalive(60)
 
     except paramiko.ssh_exception.AuthenticationException:
         sys.exit(
