@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.2] - 2021-03-08
+### Added
+- [Task] Keep alive for ssh client
+### Fixed
+- [Bugfix] Ignore table wildcard fix
+
 ## [2.4.1] - 2021-03-07
 ### Fixed
 - [Bugfix] "Sync local" fix
