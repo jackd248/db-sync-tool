@@ -48,7 +48,7 @@ def generate_ignore_database_tables():
     if 'ignore_table' in system.config:
         for table in system.config['ignore_table']:
             if '*' in table:
-                _wildcard_tables = get_database_tables_like('origin', table.replace('*', ''))
+                _wildcard_tables = get_database_tables_like(mode.Client.ORIGIN, table.replace('*', ''))
                 if _wildcard_tables:
                     for wildcard_table in _wildcard_tables:
                         _ignore_tables = generate_ignore_database_table(_ignore_tables, wildcard_table)
@@ -78,7 +78,7 @@ def get_database_tables_like(client, name):
     _dbname = system.config[client]['db']['name']
     _tables = run_database_command(client, f'SHOW TABLES FROM {_dbname} LIKE \'%{name}%\';').strip()
     if _tables != '':
-        return _tables.split('\n', 1)[1:]
+        return _tables.split('\n')[1:]
 
 
 def generate_mysql_credentials(client):
