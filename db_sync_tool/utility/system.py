@@ -35,7 +35,7 @@ config = {
 # DEFAULTS
 #
 
-default_local_sync_path = '/tmp/'
+default_local_sync_path = '/tmp/db_sync_tool/'
 
 
 #

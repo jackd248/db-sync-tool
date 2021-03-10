@@ -24,12 +24,12 @@ def remove_temporary_data_dir():
     :return:
     """
     if os.path.exists(system.default_local_sync_path):
-        shutil.rmtree(system.default_local_sync_path)
         output.message(
             output.Subject.LOCAL,
             'Cleaning up',
             True
         )
+        shutil.rmtree(system.default_local_sync_path)
 
 
 def clean_up_dump_dir(client, path, num=5):
@@ -148,7 +148,7 @@ def create_local_temporary_data_dir():
     """
     # @ToDo: Combine with check_and_create_dump_dir()
     if not os.path.exists(system.default_local_sync_path):
-        os.mkdir(system.default_local_sync_path)
+        os.makedirs(system.default_local_sync_path)
 
 
 def dict_to_args(dict):
