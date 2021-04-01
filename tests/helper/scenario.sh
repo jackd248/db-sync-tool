@@ -24,6 +24,7 @@ if [ "$#" -eq "0" ]; then
   sh scenario/sync_remote_manual/test.sh $VERBOSE
   sh scenario/sync_local/test.sh $VERBOSE
   sh scenario/symfony/test.sh $VERBOSE
+  sh scenario/laravel/test.sh $VERBOSE
   sh scenario/symfony2.8/test.sh $VERBOSE
   sh scenario/drupal/test.sh $VERBOSE
   sh scenario/wordpress/test.sh $VERBOSE

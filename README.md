@@ -16,6 +16,7 @@ Python script to synchronize a database from an origin to a target system with a
     - [Symfony](https://symfony.com/) (>= v2.8)
     - [Drupal](https://www.drupal.org/) (>= v8.0)
     - [Wordpress](https://wordpress.org) (>= v5.0)
+    - [Laravel](https://laravel.com/) (>= v4.0)
 - Easily dump creation (database __backup__)
 - __Cleanup__ feature for backups
 - Extended __logging__ capabilities

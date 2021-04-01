@@ -51,3 +51,4 @@ Select one of the following scenarios:
 - drupal
 - typo3v7
 - wordpress
+- laravel

@@ -11,6 +11,7 @@ class Framework:
     SYMFONY = 'Symfony'
     DRUPAL = 'Drupal'
     WORDPRESS = 'Wordpress'
+    LARAVEL = 'Laravel'
     MANUAL = 'Manual'
 
 
@@ -34,11 +35,14 @@ def get_database_configuration(client):
             # Symfony sync base
             _base = Framework.SYMFONY
         elif _type == 'drupal':
-            # Symfony sync base
+            # Drupal sync base
             _base = Framework.DRUPAL
         elif _type == 'wordpress':
-            # Symfony sync base
+            # Wordpress sync base
             _base = Framework.WORDPRESS
+        elif _type == 'laravel':
+            # Laravel sync base
+            _base = Framework.LARAVEL
         else:
             sys.exit(
                 output.message(
@@ -73,6 +77,11 @@ def get_database_configuration(client):
         # Import Symfony parser
         from ..recipes import wordpress
         _parser = wordpress
+
+    elif _base == Framework.LARAVEL:
+        # Import Symfony parser
+        from ..recipes import laravel
+        _parser = laravel
 
     if client == mode.Client.ORIGIN:
         output.message(
