@@ -6,7 +6,7 @@ import json
 import os
 import getpass
 import yaml
-from db_sync_tool.utility import log, parser, mode, helper, output
+from db_sync_tool.utility import log, parser, mode, helper, output, validation
 
 #
 # GLOBALS
@@ -101,6 +101,7 @@ def get_configuration(host_config):
                 )
             )
 
+    validation.check(config)
     check_options()
     helper.run_script(script='before')
     log.get_logger().info('Starting db_sync_tool')
