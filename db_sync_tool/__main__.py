@@ -47,6 +47,14 @@ def get_arguments(args):
     parser = argparse.ArgumentParser(prog='db_sync_tool',
                                      description=f'A tool for automatic database synchronization from '
                                                  f'and to host systems.')
+    parser.add_argument('origin',
+                        help='Origin database defined in host file',
+                        nargs='?',
+                        type=str)
+    parser.add_argument('target',
+                        help='Target database defined in host file',
+                        nargs='?',
+                        type=str)
     parser.add_argument('-f', '--config-file',
                         help='Path to configuration file',
                         required=False,
@@ -228,6 +236,12 @@ def build_config(args):
 
     if not args.type is None:
         config['type'] = args.type
+
+    if not args.origin is None:
+        config['link_origin'] = args.origin
+
+    if not args.target is None:
+        config['link_target'] = args.target
 
     if not args.target_path is None:
         config['target']['path'] = args.target_path

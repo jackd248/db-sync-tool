@@ -29,7 +29,9 @@ config = {
     'ssh_password': {
         'origin': None,
         'target': None
-    }
+    },
+    'link_target': None,
+    'link_origin': None,
 }
 
 #
@@ -281,6 +283,7 @@ def check_args_options(config_file=None,
 def link_configuration_with_hosts():
     """
     Merging the hosts definition with the given configuration file
+    @ToDo Simplify function
     :return:
     """
     if ('link' in config['origin'] or 'link' in config['target']) and config['link_hosts'] == '':
@@ -303,15 +306,37 @@ def link_configuration_with_hosts():
                     f'Linking configuration with hosts {output.CliFormat.BLACK}{config["link_hosts"]}{output.CliFormat.ENDC}',
                     True
                 )
-                if 'link' in config['origin']:
-                    _host_name = str(config['origin']['link']).replace('@','')
-                    if _host_name in _hosts:
-                        config['origin'] = {**config['origin'], **_hosts[_host_name]}
+                if not config['config_file_path'] is None:
+                    if 'link' in config['origin']:
+                        _host_name = str(config['origin']['link']).replace('@','')
+                        if _host_name in _hosts:
+                            config['origin'] = {**config['origin'], **_hosts[_host_name]}
 
-                if 'link' in config['target']:
-                    _host_name = str(config['target']['link']).replace('@','')
-                    if _host_name in _hosts:
-                        config['target'] = {**config['target'], **_hosts[_host_name]}
+                    if 'link' in config['target']:
+                        _host_name = str(config['target']['link']).replace('@','')
+                        if _host_name in _hosts:
+                            config['target'] = {**config['target'], **_hosts[_host_name]}
+                else:
+                    if 'link_target' in config and 'link_origin' in config:
+                        if config['link_target'] in _hosts and config['link_origin'] in _hosts:
+                            config['target'] = _hosts[config['link_target']]
+                            config['origin'] = _hosts[config['link_origin']]
+                        else:
+                            sys.exit(
+                                output.message(
+                                    output.Subject.ERROR,
+                                    f'Misconfiguration of link hosts {config["link_origin"]}, {config["link_target"]} in {config["link_hosts"]}',
+                                    False
+                                )
+                            )
+                    else:
+                        sys.exit(
+                            output.message(
+                                output.Subject.ERROR,
+                                f'Missing link hosts for {config["link_hosts"]}',
+                                False
+                            )
+                        )
         else:
             sys.exit(
                 output.message(
