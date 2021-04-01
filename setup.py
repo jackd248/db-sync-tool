@@ -35,7 +35,8 @@ setuptools.setup(
     python_requires='>=3.5',
     install_requires=[
         "paramiko>=2.7.2",
-        "future-fstrings>=1.2"
+        "future-fstrings>=1.2",
+        "pyyaml>=5.4.1"
     ],
     entry_points={
         'console_scripts': [

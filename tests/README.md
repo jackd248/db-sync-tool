@@ -44,6 +44,7 @@ Select one of the following scenarios:
 - proxy
 - receiver
 - scripts
+- yaml
 - shell
 - sender
 - symfony

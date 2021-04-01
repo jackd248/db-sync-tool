@@ -5,6 +5,7 @@ import sys
 import json
 import os
 import getpass
+import yaml
 from db_sync_tool.utility import log, parser, mode, helper, output
 
 #
@@ -74,7 +75,18 @@ def get_configuration(host_config):
     if not _config_file_path is None:
         if os.path.isfile(_config_file_path):
             with open(_config_file_path, 'r') as read_file:
-                config.update(json.load(read_file))
+                if _config_file_path.endswith('.json'):
+                    config.update(json.load(read_file))
+                elif _config_file_path.endswith('.yaml') or _config_file_path.endswith('.yml'):
+                    config.update(yaml.safe_load(read_file))
+                else:
+                    sys.exit(
+                        output.message(
+                            output.Subject.ERROR,
+                            f'Unsupported configuration file type [json,yml,yaml]: {config["config_file_path"]}',
+                            False
+                        )
+                    )
                 output.message(
                     output.Subject.LOCAL,
                     f'Loading host configuration {output.CliFormat.BLACK}{_config_file_path}{output.CliFormat.ENDC}',

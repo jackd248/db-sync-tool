@@ -37,6 +37,7 @@ if [ "$#" -eq "0" ]; then
   sh scenario/manual/test.sh $VERBOSE
   sh scenario/shell/test.sh $VERBOSE
   sh scenario/scripts/test.sh $VERBOSE
+  sh scenario/yaml/test.sh $VERBOSE
 else
   # Default is mute mode
   if [ -z "$2" ]; then
