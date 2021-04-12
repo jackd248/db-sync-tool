@@ -210,6 +210,15 @@ def run_script(client=None, script='before'):
         )
 
 
+def get_file_from_path(path):
+    """
+    Trims a path string to retrieve the file
+    :param path:
+    :return: file
+    """
+    return path.split('/')[-1]
+
+
 def confirm(prompt=None, resp=False):
     """
     https://code.activestate.com/recipes/541096-prompt-the-user-for-confirmation/

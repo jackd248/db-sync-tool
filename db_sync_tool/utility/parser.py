@@ -15,6 +15,26 @@ class Framework:
     MANUAL = 'Manual'
 
 
+mapping = {
+    Framework.TYPO3: [
+        'LocalConfiguration.php'
+    ],
+    Framework.SYMFONY: [
+        '.env',
+        'parameters.yml'
+    ],
+    Framework.DRUPAL: [
+        'settings.php'
+    ],
+    Framework.WORDPRESS: [
+        'wp-config.php'
+    ],
+    Framework.LARAVEL: [
+        '.env'
+    ]
+}
+
+
 def get_database_configuration(client):
     """
     Getting database configuration of given client and defined sync base (framework type)
@@ -26,7 +46,10 @@ def get_database_configuration(client):
     # check framework type
     _base = ''
 
-    if 'type' in system.config and ('path' in system.config[mode.Client.ORIGIN] or 'path' in system.config[mode.Client.TARGET]):
+    automatic_type_detection()
+
+    if 'type' in system.config and (
+            'path' in system.config[mode.Client.ORIGIN] or 'path' in system.config[mode.Client.TARGET]):
         _type = system.config['type'].lower()
         if _type == 'typo3':
             # TYPO3 sync base
@@ -54,8 +77,13 @@ def get_database_configuration(client):
     elif 'db' in system.config['origin'] or 'db' in system.config['target']:
         _base = Framework.MANUAL
     else:
-        # Default is TYPO3 sync base
-        _base = Framework.TYPO3
+        sys.exit(
+            output.message(
+                output.Subject.ERROR,
+                f'Missing framework type or database credentials',
+                False
+            )
+        )
 
     sys.path.append('../recipes')
     if _base == Framework.TYPO3:
@@ -174,3 +202,29 @@ def validate_database_credentials(client):
                 f'Database credential "{_key}" valid',
                 verbose_only=True
             )
+
+
+def automatic_type_detection():
+    """
+    Detects the framework type by the provided path using the default mapping
+    """
+    if 'type' in system.config or 'db' in system.config['origin'] or 'db' in system.config['target']:
+        return
+
+    type = None
+    file = None
+
+    for _client in [mode.Client.ORIGIN, mode.Client.TARGET]:
+        if 'path' in system.config[_client]:
+            file = helper.get_file_from_path(system.config[_client]['path'])
+            for _key, _files in mapping.items():
+                if file in _files:
+                    type = _key
+
+    if type:
+        output.message(
+            output.Subject.LOCAL,
+            f'Automatic framework type detection {output.CliFormat.BLACK}{file}{output.CliFormat.ENDC}',
+            verbose_only=True
+        )
+        system.config['type'] = type
