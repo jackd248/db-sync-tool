@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Parser script
+"""
+
 import sys
 from db_sync_tool.utility import mode, system, output, helper
-from db_sync_tool.remote import client as remote_client, utility as remote_utility
+from db_sync_tool.remote import client as remote_client
 
 
 class Framework:
@@ -49,7 +53,9 @@ def get_database_configuration(client):
     automatic_type_detection()
 
     if 'type' in system.config and (
-            'path' in system.config[mode.Client.ORIGIN] or 'path' in system.config[mode.Client.TARGET]):
+            'path' in system.config[mode.Client.ORIGIN] or
+            'path' in system.config[mode.Client.TARGET]
+    ):
         _type = system.config['type'].lower()
         if _type == 'typo3':
             # TYPO3 sync base
@@ -208,7 +214,8 @@ def automatic_type_detection():
     """
     Detects the framework type by the provided path using the default mapping
     """
-    if 'type' in system.config or 'db' in system.config['origin'] or 'db' in system.config['target']:
+    if 'type' in system.config or 'db' in system.config['origin'] or 'db' in system.config[
+        'target']:
         return
 
     type = None
@@ -224,7 +231,8 @@ def automatic_type_detection():
     if type:
         output.message(
             output.Subject.LOCAL,
-            f'Automatic framework type detection {output.CliFormat.BLACK}{file}{output.CliFormat.ENDC}',
+            f'Automatic framework type detection '
+            f'{output.CliFormat.BLACK}{file}{output.CliFormat.ENDC}',
             verbose_only=True
         )
         system.config['type'] = type

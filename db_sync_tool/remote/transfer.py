@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Transfer script
+"""
+
 import sys
 from db_sync_tool.utility import mode, system, helper, output
 from db_sync_tool.database import utility as database_utility
@@ -49,7 +53,7 @@ def get_origin_database_dump(target_path):
         helper.check_and_create_dump_dir(mode.Client.TARGET, target_path)
 
     #
-    # ToDo: Download speed problems
+    # Download speed problems
     # https://github.com/paramiko/paramiko/issues/60
     #
     if not system.config['dry_run']:
@@ -86,7 +90,7 @@ def put_origin_database_dump(origin_path):
     """
     sftp = client.ssh_client_target.open_sftp()
 
-    if (mode.get_sync_mode() == mode.SyncMode.PROXY):
+    if mode.get_sync_mode() == mode.SyncMode.PROXY:
         _subject = output.Subject.LOCAL
     else:
         _subject = output.Subject.ORIGIN
@@ -99,7 +103,7 @@ def put_origin_database_dump(origin_path):
     helper.check_and_create_dump_dir(mode.Client.TARGET, helper.get_dump_dir(mode.Client.TARGET))
 
     #
-    # ToDo: Download speed problems
+    # Download speed problems
     # https://github.com/paramiko/paramiko/issues/60
     #
     if not system.config['dry_run']:

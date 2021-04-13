@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Output script
+"""
+
 from db_sync_tool.utility import log, mode, system
 
 
@@ -40,7 +44,16 @@ def message(header, message, do_print=True, do_log=False, debug=False, verbose_o
     """
     # Logging if explicitly forced or verbose option is active
     if do_log or system.config['verbose']:
-        _message = remove_multiple_elements_from_string([CliFormat.BEIGE, CliFormat.PURPLE, CliFormat.BLUE, CliFormat.YELLOW, CliFormat.GREEN, CliFormat.RED, CliFormat.BLACK, CliFormat.ENDC, CliFormat.BOLD, CliFormat.UNDERLINE], message)
+        _message = remove_multiple_elements_from_string([CliFormat.BEIGE,
+                                                         CliFormat.PURPLE,
+                                                         CliFormat.BLUE,
+                                                         CliFormat.YELLOW,
+                                                         CliFormat.GREEN,
+                                                         CliFormat.RED,
+                                                         CliFormat.BLACK,
+                                                         CliFormat.ENDC,
+                                                         CliFormat.BOLD,
+                                                         CliFormat.UNDERLINE], message)
         # @ToDo: Can this be done better? Dynamic functions?
         if debug:
             log.get_logger().debug(_message)
@@ -72,7 +85,8 @@ def extend_output_by_sync_mode(header, debug=False):
     if debug:
         _debug = Subject.DEBUG
 
-    if header == Subject.INFO or header == Subject.LOCAL or header == Subject.WARNING or header == Subject.ERROR:
+    if header == Subject.INFO or header == Subject.LOCAL or \
+            header == Subject.WARNING or header == Subject.ERROR:
         return ''
     else:
         if mode.is_remote(subject_to_host(header)):
@@ -123,4 +137,3 @@ def remove_multiple_elements_from_string(elements, string):
         if element in string:
             string = string.replace(element, '')
     return string
-

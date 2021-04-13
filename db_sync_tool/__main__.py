@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Main script
+"""
+
 import argparse
 import os
 import sys
@@ -45,8 +49,8 @@ def get_arguments(args):
     :return:
     """
     parser = argparse.ArgumentParser(prog='db_sync_tool',
-                                     description=f'A tool for automatic database synchronization from '
-                                                 f'and to host systems.')
+                                     description='A tool for automatic database synchronization from '
+                                                 'and to host systems.')
     parser.add_argument('origin',
                         help='Origin database defined in host file',
                         nargs='?',

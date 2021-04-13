@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Symfony script
+"""
+
 import re
 import sys
 

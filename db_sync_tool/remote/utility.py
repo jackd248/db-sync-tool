@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Utility script
+"""
+
 import os
 from db_sync_tool.utility import mode, system, helper, output
 from db_sync_tool.database import utility as database_utility
@@ -36,7 +40,8 @@ def remove_origin_database_dump(keep_compressed_file=False):
 
     if keep_compressed_file:
         if 'keep_dumps' in system.config[mode.Client.ORIGIN]:
-            helper.clean_up_dump_dir(mode.Client.ORIGIN, helper.get_dump_dir(mode.Client.ORIGIN) + '*',
+            helper.clean_up_dump_dir(mode.Client.ORIGIN,
+                                     helper.get_dump_dir(mode.Client.ORIGIN) + '*',
                                      system.config[mode.Client.ORIGIN]['keep_dumps'])
 
         output.message(
@@ -75,7 +80,7 @@ def remove_target_database_dump():
     #
     # Clean up
     #
-    if (not mode.is_dump() and not mode.is_import()):
+    if not mode.is_dump() and not mode.is_import():
         output.message(
             output.Subject.TARGET,
             'Cleaning up',

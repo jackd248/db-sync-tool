@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+System script
+"""
+
 import sys
 from db_sync_tool.utility import mode, output, helper
 from db_sync_tool.remote import client as remote_client
@@ -15,7 +19,7 @@ def run_ssh_command_by_client(client, command):
     """
     if client == mode.Client.ORIGIN:
         return run_ssh_command(command, remote_client.ssh_client_origin, client)
-    elif client == mode.Client.TARGET:
+    else:
         return run_ssh_command(command, remote_client.ssh_client_target, client)
 
 
@@ -32,7 +36,7 @@ def run_ssh_command(command, ssh_client=remote_client.ssh_client_origin, client=
 
     err = stderr.read().decode()
 
-    if err and 0 != exit_status:
+    if err and exit_status != 0:
         helper.run_script(client=client, script='error')
         sys.exit(output.message(output.Subject.ERROR, err, False))
     elif err:

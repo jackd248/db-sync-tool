@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Drupal script
+"""
+
 import json
 from db_sync_tool.utility import mode, system, helper, output
 
@@ -15,7 +19,8 @@ def check_configuration(client):
 
     # Check Drush version
     _raw_version = mode.run_command(
-        f'{helper.get_command(client, "drush")} status --fields=drush-version --format=string -r {_path}',
+        f'{helper.get_command(client, "drush")} status --fields=drush-version --format=string '
+        f'-r {_path}',
         client,
         True
     )

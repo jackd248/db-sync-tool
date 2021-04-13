@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+TYPO3 script
+"""
+
 import json
 
 from db_sync_tool.utility import mode, system, helper
@@ -15,7 +19,8 @@ def check_configuration(client):
     _path = system.config[client]['path']
 
     stdout = mode.run_command(
-        helper.get_command(client, 'php') + ' -r "echo json_encode(include \'' + system.config[client][
+        helper.get_command(client, 'php') + ' -r "echo json_encode(include \'' +
+        system.config[client][
             'path'] + '\');"',
         client,
         True

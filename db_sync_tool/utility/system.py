@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+System module
+"""
+
 import sys
 import json
 import os
@@ -85,13 +89,15 @@ def get_configuration(host_config):
                     sys.exit(
                         output.message(
                             output.Subject.ERROR,
-                            f'Unsupported configuration file type [json,yml,yaml]: {config["config_file_path"]}',
+                            f'Unsupported configuration file type [json,yml,yaml]: '
+                            f'{config["config_file_path"]}',
                             False
                         )
                     )
                 output.message(
                     output.Subject.LOCAL,
-                    f'Loading host configuration {output.CliFormat.BLACK}{_config_file_path}{output.CliFormat.ENDC}',
+                    f'Loading host configuration '
+                    f'{output.CliFormat.BLACK}{_config_file_path}{output.CliFormat.ENDC}',
                     True
                 )
         else:
@@ -146,9 +152,12 @@ def check_authorization(client):
     # only need authorization if client is remote
     if mode.is_remote(client):
         # Workaround if no authorization is needed
-        if (mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and client == mode.Client.TARGET) or (
-                mode.get_sync_mode() == mode.SyncMode.DUMP_LOCAL and client == mode.Client.ORIGIN) or (
-                mode.get_sync_mode() == mode.SyncMode.IMPORT_REMOTE and client == mode.Client.ORIGIN):
+        if (mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and
+            client == mode.Client.TARGET) or \
+                (mode.get_sync_mode() == mode.SyncMode.DUMP_LOCAL and
+                 client == mode.Client.ORIGIN) or \
+                (mode.get_sync_mode() == mode.SyncMode.IMPORT_REMOTE and
+                 client == mode.Client.ORIGIN):
             return
 
         # ssh key authorization
@@ -168,7 +177,9 @@ def check_authorization(client):
             # user input authorization
             config[client]['password'] = get_password_by_user(client)
 
-        if mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and client == mode.Client.ORIGIN and 'password' in config[mode.Client.ORIGIN]:
+        if mode.get_sync_mode() == mode.SyncMode.DUMP_REMOTE and \
+                client == mode.Client.ORIGIN and 'password' in \
+                config[mode.Client.ORIGIN]:
             config[mode.Client.TARGET]['password'] = config[mode.Client.ORIGIN]['password']
 
 
@@ -292,7 +303,8 @@ def link_configuration_with_hosts():
             output.message(
                 output.Subject.ERROR,
                 f'Missing hosts file for linking hosts with configuration. '
-                f'Use the "-o" / "--hosts" argument to define the filepath for the hosts file, when using a link parameter within the configuration.',
+                f'Use the "-o" / "--hosts" argument to define the filepath for the hosts file, '
+                f'when using a link parameter within the configuration.',
                 False
             )
         )
@@ -308,12 +320,12 @@ def link_configuration_with_hosts():
                 )
                 if not config['config_file_path'] is None:
                     if 'link' in config['origin']:
-                        _host_name = str(config['origin']['link']).replace('@','')
+                        _host_name = str(config['origin']['link']).replace('@', '')
                         if _host_name in _hosts:
                             config['origin'] = {**config['origin'], **_hosts[_host_name]}
 
                     if 'link' in config['target']:
-                        _host_name = str(config['target']['link']).replace('@','')
+                        _host_name = str(config['target']['link']).replace('@', '')
                         if _host_name in _hosts:
                             config['target'] = {**config['target'], **_hosts[_host_name]}
                 else:
@@ -325,7 +337,8 @@ def link_configuration_with_hosts():
                             sys.exit(
                                 output.message(
                                     output.Subject.ERROR,
-                                    f'Misconfiguration of link hosts {config["link_origin"]}, {config["link_target"]} in {config["link_hosts"]}',
+                                    f'Misconfiguration of link hosts {config["link_origin"]}, '
+                                    f'{config["link_target"]} in {config["link_hosts"]}',
                                     False
                                 )
                             )
@@ -345,6 +358,3 @@ def link_configuration_with_hosts():
                     False
                 )
             )
-
-
-

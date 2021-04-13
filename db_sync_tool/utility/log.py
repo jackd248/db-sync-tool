@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Log script
+"""
+
 import logging
 from db_sync_tool.utility import system
 
@@ -9,6 +13,7 @@ from db_sync_tool.utility import system
 #
 
 logger = None
+
 
 #
 # FUNCTIONS

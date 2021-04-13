@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+
+"""
 import sys
 import json
 import os
@@ -14,12 +17,11 @@ def print_header(mute):
     :param mute: Boolean
     :return:
     """
-
+    # pylint: max-line-length=240
     if mute is False:
         print(output.CliFormat.BLACK + '##############################################' + output.CliFormat.ENDC)
         print(output.CliFormat.BLACK + '#                                            #' + output.CliFormat.ENDC)
-        print(
-            output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '                DB SYNC TOOL                ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
+        print(output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '                db sync tool                ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
         print(output.CliFormat.BLACK + '#                   v' + info.__version__ + '                   #' + output.CliFormat.ENDC)
         print(output.CliFormat.BLACK + '#  ' + info.__homepage__ + '  #' + output.CliFormat.ENDC)
         print(output.CliFormat.BLACK + '#                                            #' + output.CliFormat.ENDC)
@@ -33,7 +35,9 @@ def print_footer():
     """
     if system.config['dry_run']:
         _message = 'Successfully executed dry run'
-    elif not system.config['keep_dump'] and not system.config['is_same_client'] and not mode.is_import():
+    elif not system.config['keep_dump'] and \
+            not system.config['is_same_client'] and \
+            not mode.is_import():
         _message = 'Successfully synchronized databases'
     elif mode.is_import():
         _message = 'Successfully imported database dump'

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
+"""
+Sync script
+"""
 
 from db_sync_tool.utility import system, helper, info
 from db_sync_tool.database import process
@@ -22,7 +25,7 @@ class Sync:
                  keep_dump=None,
                  host_file=None,
                  clear=False,
-                 config={}):
+                 config=None):
         """
         Initialization
         :param config_file:
@@ -37,6 +40,9 @@ class Sync:
         :param clear:
         :param config:
         """
+        if config is None:
+            config = {}
+
         info.print_header(mute)
         system.check_args_options(
             config_file,

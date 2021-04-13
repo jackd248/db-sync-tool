@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Helper script
+"""
+
 import shutil
 import os
 from db_sync_tool.utility import mode, system, output
@@ -42,13 +46,14 @@ def clean_up_dump_dir(client, path, num=5):
     """
     # Distinguish stat command on os system (Darwin|Linux)
     if check_os(client).strip() == 'Darwin':
-        _command = get_command(client, 'stat') + ' -f "%Sm %N" ' + path + ' | ' + get_command(client,
-                                                                                              'sort') + ' -rn | ' + get_command(
+        _command = get_command(client, 'stat') + ' -f "%Sm %N" ' + path + ' | ' + get_command(
+            client,
+            'sort') + ' -rn | ' + get_command(
             client, 'grep') + ' -E ".tar.gz|.sql"'
     else:
-        _command = get_command(client, 'stat') + ' -c "%y %n" ' + path + ' | ' + get_command(client,
-                                                                                             'sort') + ' -rn | ' + get_command(
-            client, 'grep') + ' -E ".tar.gz|.sql"'
+        _command = get_command(client, 'stat') + ' -c "%y %n" ' + path + ' | ' + \
+                   get_command(client,'sort') + ' -rn | ' + get_command(client, 'grep') + \
+                   ' -E ".tar.gz|.sql"'
 
     # List files in directory sorted by change date
     _files = mode.run_command(
@@ -136,7 +141,8 @@ def get_ssh_host_name(client, with_user=False):
 
     if 'name' in system.config[client]:
         return output.CliFormat.BOLD + system.config[client][
-            'name'] + output.CliFormat.ENDC + output.CliFormat.BLACK + ' (' + _host + ')' + output.CliFormat.ENDC
+            'name'] + output.CliFormat.ENDC + output.CliFormat.BLACK + ' (' + _host + ')' + \
+               output.CliFormat.ENDC
     else:
         return _host
 

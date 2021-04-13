@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Validation script
+"""
+
 import sys
 from jsonschema import validators
 from db_sync_tool.utility import output
@@ -90,7 +94,7 @@ schema = {
 def check(config):
     output.message(
         output.Subject.LOCAL,
-        f'Validating configuration',
+        'Validating configuration',
         True
     )
     v = validators.Draft7Validator(schema)
@@ -106,7 +110,7 @@ def check(config):
         sys.exit(
             output.message(
                 output.Subject.ERROR,
-                f'Validation error(s)',
+                'Validation error(s)',
                 do_print=False
             )
         )

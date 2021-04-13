@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Mode script
+"""
+
 import subprocess
 import sys
 
@@ -47,7 +51,8 @@ class SyncMode:
 
         :return: boolean
         """
-        return SyncMode.is_full_remote() and SyncMode.is_same_host() and not SyncMode.is_sync_remote()
+        return SyncMode.is_full_remote() and SyncMode.is_same_host() and \
+               not SyncMode.is_sync_remote()
 
     @staticmethod
     def is_receiver():
@@ -55,7 +60,8 @@ class SyncMode:
 
         :return: boolean
         """
-        return 'host' in system.config[Client.ORIGIN] and not SyncMode.is_proxy() and not SyncMode.is_sync_remote()
+        return 'host' in system.config[Client.ORIGIN] and not SyncMode.is_proxy() and \
+               not SyncMode.is_sync_remote()
 
     @staticmethod
     def is_sender():
@@ -63,7 +69,8 @@ class SyncMode:
 
         :return: boolean
         """
-        return 'host' in system.config[Client.TARGET] and not SyncMode.is_proxy() and not SyncMode.is_sync_remote()
+        return 'host' in system.config[Client.TARGET] and not SyncMode.is_proxy() and \
+               not SyncMode.is_sync_remote()
 
     @staticmethod
     def is_proxy():
@@ -107,8 +114,14 @@ class SyncMode:
 
     @staticmethod
     def is_same_sync():
-        return ((SyncMode.is_available_configuration('path') and not SyncMode.is_same_configuration('path')) or
-               (SyncMode.is_available_configuration('db') and not SyncMode.is_same_configuration('db')))
+        """
+
+        :return: boolean
+        """
+        return ((SyncMode.is_available_configuration('path') and
+                 not SyncMode.is_same_configuration('path')) or
+               (SyncMode.is_available_configuration('db') and
+                not SyncMode.is_same_configuration('db')))
 
     @staticmethod
     def is_full_remote():
@@ -229,6 +242,8 @@ def is_remote(client):
         return is_target_remote()
     elif client == Client.LOCAL:
         return False
+    else:
+        return False
 
 
 def is_target_remote():
@@ -236,8 +251,8 @@ def is_target_remote():
     Check if target is remote client
     :return: Boolean
     """
-    return sync_mode == SyncMode.SENDER or sync_mode == SyncMode.PROXY or sync_mode == SyncMode.DUMP_REMOTE or \
-           sync_mode == SyncMode.IMPORT_REMOTE or sync_mode == SyncMode.SYNC_REMOTE
+    return sync_mode in (SyncMode.SENDER, SyncMode.PROXY, SyncMode.DUMP_REMOTE,
+                         SyncMode.IMPORT_REMOTE, SyncMode.SYNC_REMOTE)
 
 
 def is_origin_remote():
@@ -245,8 +260,8 @@ def is_origin_remote():
     Check if origin is remote client
     :return: Boolean
     """
-    return sync_mode == SyncMode.RECEIVER or sync_mode == SyncMode.PROXY or sync_mode == SyncMode.DUMP_REMOTE or \
-           sync_mode == SyncMode.IMPORT_REMOTE or sync_mode == SyncMode.SYNC_REMOTE
+    return sync_mode in (SyncMode.RECEIVER, SyncMode.PROXY, SyncMode.DUMP_REMOTE,
+                         SyncMode.IMPORT_REMOTE, SyncMode.SYNC_REMOTE)
 
 
 def is_import():
@@ -254,7 +269,7 @@ def is_import():
     Check if sync mode is import
     :return: Boolean
     """
-    return sync_mode == SyncMode.IMPORT_LOCAL or sync_mode == SyncMode.IMPORT_REMOTE
+    return sync_mode in (SyncMode.IMPORT_LOCAL, SyncMode.IMPORT_REMOTE)
 
 
 def is_dump():
@@ -262,7 +277,7 @@ def is_dump():
     Check if sync mode is import
     :return: Boolean
     """
-    return sync_mode == SyncMode.DUMP_LOCAL or sync_mode == SyncMode.DUMP_REMOTE
+    return sync_mode in (SyncMode.DUMP_LOCAL, SyncMode.DUMP_REMOTE)
 
 
 def run_command(command, client, force_output=False, allow_fail=False, skip_dry_run=False):

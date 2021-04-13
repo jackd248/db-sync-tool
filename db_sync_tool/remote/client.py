@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Client script
+"""
+
 import sys
 import paramiko
 from db_sync_tool.utility import mode, system, helper, output
-from db_sync_tool.remote import utility
 
 ssh_client_origin = None
 ssh_client_target = None
@@ -46,16 +49,18 @@ def load_ssh_client(ssh):
 
     # Check authentication
     if 'ssh_key' in system.config[ssh]:
-        _authentication_method = f'{output.CliFormat.BLACK} - (authentication: key){output.CliFormat.ENDC}'
+        _authentication_method = f'{output.CliFormat.BLACK} - ' \
+                                 f'(authentication: key){output.CliFormat.ENDC}'
         _ssh_key = system.config[ssh]['ssh_key']
     elif 'password' in system.config[ssh]:
-        _authentication_method = f'{output.CliFormat.BLACK} - (authentication: password){output.CliFormat.ENDC}'
+        _authentication_method = f'{output.CliFormat.BLACK} - ' \
+                                 f'authentication: password){output.CliFormat.ENDC}'
         _ssh_password = system.config[ssh]['password']
     else:
         sys.exit(
             output.message(
                 output.Subject.ERROR,
-                f'Missing SSH authentication. Neither ssh key nor ssh password given.',
+                'Missing SSH authentication. Neither ssh key nor ssh password given.',
                 False
             )
         )

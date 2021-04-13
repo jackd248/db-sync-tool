@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
-import re
-import sys
-
-from db_sync_tool.utility import mode, system, helper, output
+"""
+Laravel script
+"""
+from db_sync_tool.utility import mode, system, helper
 
 
 def check_configuration(client):

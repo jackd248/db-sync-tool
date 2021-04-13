@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: future_fstrings -*-
 
+"""
+Process script
+"""
+
 from db_sync_tool.utility import parser, mode, system, helper, output
 from db_sync_tool.database import utility as database_utility
 
@@ -13,9 +17,11 @@ def create_origin_database_dump():
     if not mode.is_import():
         parser.get_database_configuration(mode.Client.ORIGIN)
         database_utility.generate_database_dump_filename()
-        helper.check_and_create_dump_dir(mode.Client.ORIGIN, helper.get_dump_dir(mode.Client.ORIGIN))
+        helper.check_and_create_dump_dir(mode.Client.ORIGIN,
+                                         helper.get_dump_dir(mode.Client.ORIGIN))
 
-        _dump_file_path = helper.get_dump_dir(mode.Client.ORIGIN) + database_utility.database_dump_file_name
+        _dump_file_path = helper.get_dump_dir(
+            mode.Client.ORIGIN) + database_utility.database_dump_file_name
 
         output.message(
             output.Subject.ORIGIN,
@@ -24,7 +30,7 @@ def create_origin_database_dump():
         )
         mode.run_command(
             helper.get_command('origin', 'mysqldump') + ' --no-tablespaces ' +
-            database_utility. generate_mysql_credentials('origin') + ' ' +
+            database_utility.generate_mysql_credentials('origin') + ' ' +
             system.config['origin']['db']['name'] + ' ' +
             database_utility.generate_ignore_database_tables() +
             ' > ' + _dump_file_path,
@@ -61,12 +67,14 @@ def import_database_dump():
         )
 
         if not mode.is_import():
-           _dump_path = helper.get_dump_dir(mode.Client.TARGET) + database_utility.database_dump_file_name
+            _dump_path = helper.get_dump_dir(
+                mode.Client.TARGET) + database_utility.database_dump_file_name
         else:
-           _dump_path = system.config['import']
+            _dump_path = system.config['import']
 
         if not system.config['yes']:
-            _host_name = helper.get_ssh_host_name(mode.Client.TARGET, True) if mode.is_remote(mode.Client.TARGET) else 'local'
+            _host_name = helper.get_ssh_host_name(mode.Client.TARGET, True) if mode.is_remote(
+                mode.Client.TARGET) else 'local'
 
             helper.confirm(
                 output.message(
@@ -121,8 +129,9 @@ def prepare_origin_database_dump():
     )
     mode.run_command(
         helper.get_command(mode.Client.ORIGIN, 'tar') + ' cfvz ' + helper.get_dump_dir(
-            mode.Client.ORIGIN) + database_utility.database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(
-            mode.Client.ORIGIN) + ' ' + database_utility.database_dump_file_name + ' > /dev/null',
+            mode.Client.ORIGIN) + database_utility.database_dump_file_name + '.tar.gz -C ' +
+        helper.get_dump_dir(mode.Client.ORIGIN) + ' ' +
+        database_utility.database_dump_file_name + ' > /dev/null',
         mode.Client.ORIGIN,
         skip_dry_run=True
     )
@@ -135,9 +144,9 @@ def prepare_target_database_dump():
     """
     output.message(output.Subject.TARGET, 'Extracting database dump', True)
     mode.run_command(
-        helper.get_command('target', 'tar') + ' xzf ' + helper.get_dump_dir(
-            mode.Client.TARGET) + database_utility.database_dump_file_name + '.tar.gz -C ' + helper.get_dump_dir(
-            mode.Client.TARGET) + ' > /dev/null',
+        helper.get_command('target', 'tar') + ' xzf ' + helper.get_dump_dir(mode.Client.TARGET) +
+        database_utility.database_dump_file_name + '.tar.gz -C ' +
+        helper.get_dump_dir(mode.Client.TARGET) + ' > /dev/null',
         mode.Client.TARGET,
         skip_dry_run=True
     )
@@ -148,9 +157,11 @@ def clear_database(client):
     Clearing the database by dropping all tables
     https://www.techawaken.com/drop-tables-mysql-database/
 
-    { mysql -hHOSTNAME -uUSERNAME -pPASSWORD -Nse 'show tables' DB_NAME; } | ( while read table; do if [ -z ${i+x} ];
-    then echo 'SET FOREIGN_KEY_CHECKS = 0;'; fi; i=1; echo "drop table \`$table\`;"; done;
-    echo 'SET FOREIGN_KEY_CHECKS = 1;' ) | awk '{print}' ORS=' ' | mysql -hHOSTNAME -uUSERNAME -pPASSWORD DB_NAME;
+    { mysql -hHOSTNAME -uUSERNAME -pPASSWORD -Nse 'show tables' DB_NAME; } |
+    ( while read table; do if [ -z ${i+x} ]; then echo 'SET FOREIGN_KEY_CHECKS = 0;'; fi; i=1;
+    echo "drop table \`$table\`;"; done;
+    echo 'SET FOREIGN_KEY_CHECKS = 1;' ) |
+    awk '{print}' ORS=' ' | mysql -hHOSTNAME -uUSERNAME -pPASSWORD DB_NAME;
 
     :param client: String
     :return:
