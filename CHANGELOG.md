@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0] - 2021-05-31
+### Added
+- [Task] Laravel support
+- [Task] YAML support
+- [Task] JSON Schema
+- [Task] Host linking arguments
+- [Task] Automatic framework type detection
+- [CleanUp] pylint
+
 ## [2.4.3] - 2021-03-10
 ### Fixed
 - [Bugfix] Proxy mode clean up temp dir
