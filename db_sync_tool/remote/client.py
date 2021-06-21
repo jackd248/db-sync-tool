@@ -12,6 +12,8 @@ from db_sync_tool.utility import mode, system, helper, output
 ssh_client_origin = None
 ssh_client_target = None
 
+default_timeout = 600
+
 
 def load_ssh_client_origin():
     """
@@ -72,7 +74,8 @@ def load_ssh_client(ssh):
                             key_filename=_ssh_key,
                             password=_ssh_password,
                             port=_ssh_port,
-                            compress=True)
+                            compress=True,
+                            timeout=default_timeout)
         #
         # Workaround for long lasting requests
         # https://stackoverflow.com/questions/50009688/python-paramiko-ssh-session-not-active-after-being-idle-for-many-hours

@@ -43,7 +43,8 @@ def get_origin_database_dump(target_path):
     :param target_path: String
     :return:
     """
-    sftp = client.ssh_client_origin.open_sftp()
+    sftp = get_sftp_client(client.ssh_client_origin)
+
     output.message(
         output.Subject.ORIGIN,
         'Downloading database dump',
@@ -88,7 +89,7 @@ def put_origin_database_dump(origin_path):
     :param origin_path: String
     :return:
     """
-    sftp = client.ssh_client_target.open_sftp()
+    sftp = get_sftp_client(client.ssh_client_target)
 
     if mode.get_sync_mode() == mode.SyncMode.PROXY:
         _subject = output.Subject.LOCAL
@@ -136,3 +137,14 @@ def upload_status(sent, size):
             _subject + " Status: {0} MB of {1} MB uploaded".
             format(sent_mb, size, ))
         sys.stdout.write('\r')
+
+
+def get_sftp_client(ssh_client):
+    """
+
+    :param ssh_client:
+    :return:
+    """
+    sftp = ssh_client.open_sftp()
+    sftp.get_channel().settimeout(client.default_timeout)
+    return sftp
