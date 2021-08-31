@@ -98,7 +98,7 @@ usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-y] [-m] [-dr]
                     [-odd ORIGIN_DUMP_DIR] [-okd ORIGIN_KEEP_DUMPS]
                     [-odn ORIGIN_DB_NAME] [-odh ORIGIN_DB_HOST]
                     [-odu ORIGIN_DB_USER] [-odpw ORIGIN_DB_PASSWORD]
-                    [-odpo ORIGIN_DB_PORT]
+                    [-odpo ORIGIN_DB_PORT] [-fpw]
 
 A tool for automatic database synchronization from and to host systems.
 
@@ -190,6 +190,8 @@ optional arguments:
                         Database password for origin system
   -odpo ORIGIN_DB_PORT, --origin-db-port ORIGIN_DB_PORT
                         Database port for origin system
+  -fpw, --force-password
+                        Force password user query
 ```
 
 If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the shell argument or the `config.json` to enable a SSH connection for the remote system. 

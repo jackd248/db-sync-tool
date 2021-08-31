@@ -102,15 +102,23 @@ You can use wildcards to define several tables:
 <a name="authentication"></a>
 ### Authentication
 
-If you want to authenticate with a private ssh key instead of a user entered password to the server (useful for CI/CD), you can add the file path to the private key file in your `config.json`:
+There a different ways to authenticate against remote systems.
+
+### SSH key
+
+Without any option, the db_sync_tool tries to authenticate with a running ssh agent.
+
+If you want to authenticate with a specific private ssh key instead of a user entered password to the server (useful for CI/CD), you can add the file path to the private key file in your `config.json`:
 
 ```json
 {
   "origin": {
-    "ssh_key": "~/bob/.ssh/id_rsa"
+    "ssh_key": "/home/bob/.ssh/id_rsa"
   }
 }
 ```
+
+### SSH password
 
 It's not recommended, but you can also specify the plain password inside the host configuration in the `config.json`:
 
@@ -121,6 +129,8 @@ It's not recommended, but you can also specify the plain password inside the hos
   }
 }
 ```
+
+If no options are provided so far (no ssh agent, ssh key, defined password), a prompt is displayed to enter the necessary password for the ssh authentication. You can also force the user input by adding the `--force-password` / `-fpw` option to the script call. 
 
 <a name="linking"></a>
 ### Linking hosts

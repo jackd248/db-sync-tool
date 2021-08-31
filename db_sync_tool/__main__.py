@@ -38,6 +38,7 @@ def main(args=None):
         keep_dump=args.keep_dump,
         host_file=args.host_file,
         clear=args.clear_database,
+        force_password=args.force_password,
         config=config
     )
 
@@ -224,6 +225,10 @@ def get_arguments(args):
                         help='Database port for origin system',
                         required=False,
                         type=int)
+    parser.add_argument('-fpw', '--force-password',
+                        help='Force password user query',
+                        required=False,
+                        action='store_true')
 
     return parser.parse_args(helper.dict_to_args(args))
 

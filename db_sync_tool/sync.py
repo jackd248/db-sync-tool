@@ -25,6 +25,7 @@ class Sync:
                  keep_dump=None,
                  host_file=None,
                  clear=False,
+                 force_password=False,
                  config=None):
         """
         Initialization
@@ -38,6 +39,7 @@ class Sync:
         :param keep_dump:
         :param host_file:
         :param clear:
+        :param force_password:
         :param config:
         """
         if config is None:
@@ -54,7 +56,8 @@ class Sync:
             dump_name,
             keep_dump,
             host_file,
-            clear
+            clear,
+            force_password
         )
         system.get_configuration(config)
         system.check_authorizations()

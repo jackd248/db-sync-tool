@@ -31,6 +31,7 @@ config = {
     'is_same_client': False,
     'config_file_path': None,
     'clear_database': False,
+    'force_password': False,
     'ssh_agent': False,
     'ssh_password': {
         'origin': None,
@@ -163,7 +164,9 @@ def check_authorization(client):
             return
 
         # ssh key authorization
-        if 'ssh_key' in config[client]:
+        if config['force_password']:
+            config[client]['password'] = get_password_by_user(client)
+        elif 'ssh_key' in config[client]:
             _ssh_key = config[client]['ssh_key']
             if not os.path.isfile(_ssh_key):
                 sys.exit(
@@ -228,7 +231,8 @@ def check_args_options(config_file=None,
                        dump_name=None,
                        keep_dump=None,
                        host_file=None,
-                       clear=False):
+                       clear=False,
+                       force_password=False):
     """
     Checking arguments and fill options array
     :param config_file:
@@ -241,6 +245,7 @@ def check_args_options(config_file=None,
     :param keep_dump:
     :param host_file:
     :param clear:
+    :param force_password:
     :return:
     """
     global config
@@ -279,6 +284,9 @@ def check_args_options(config_file=None,
 
     if not clear is None:
         config['clear_database'] = clear
+
+    if not force_password is None:
+        config['force_password'] = force_password
 
     if not keep_dump is None:
         default_local_sync_path = keep_dump
