@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.3] - 2021-08-31
+### Added
+- [Task] Force password option
+
+## [2.5.2] - 2021-08-31
+### Added
+- [Task] SSH authentication via SSH agent
+
 ## [2.5.1] - 2021-06-21
 ### Added
 - [Task] Default Timeout for Paramiko Clients
