@@ -30,8 +30,8 @@ def create_origin_database_dump():
         )
         mode.run_command(
             helper.get_command('origin', 'mysqldump') + ' --no-tablespaces ' +
-            database_utility.generate_mysql_credentials('origin') + ' ' +
-            system.config['origin']['db']['name'] + ' ' +
+            database_utility.generate_mysql_credentials('origin') + ' \'' +
+            system.config['origin']['db']['name'] + '\' ' +
             database_utility.generate_ignore_database_tables() +
             ' > ' + _dump_file_path,
             mode.Client.ORIGIN,
@@ -110,8 +110,8 @@ def import_database_dump_file(client, filepath):
     if helper.check_file_exists(client, filepath):
         mode.run_command(
             helper.get_command(client, 'mysql') + ' ' +
-            database_utility.generate_mysql_credentials(client) + ' ' +
-            system.config[client]['db']['name'] + ' < ' + filepath,
+            database_utility.generate_mysql_credentials(client) + ' \'' +
+            system.config[client]['db']['name'] + '\' < ' + filepath,
             client,
             skip_dry_run=True
         )
@@ -169,8 +169,8 @@ def clear_database(client):
     mode.run_command(
         '{ ' + helper.get_command(client, 'mysql') + ' ' +
         database_utility.generate_mysql_credentials(client) +
-        ' -Nse \'show tables\' ' +
-        system.config[client]['db']['name'] + '; }' +
+        ' -Nse \'show tables\' \'' +
+        system.config[client]['db']['name'] + '\'; }' +
         ' | ( while read table; do if [ -z ${i+x} ]; then echo \'SET FOREIGN_KEY_CHECKS = 0;\'; fi; i=1; ' +
         'echo "drop table \\`$table\\`;"; done; echo \'SET FOREIGN_KEY_CHECKS = 1;\' ) | awk \'{print}\' ORS=' ' | ' +
         helper.get_command(client, 'mysql') + ' ' +
