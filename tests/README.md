@@ -8,6 +8,14 @@ Start the docker container:
  $ docker-compose up -d
 ```
 
+Install python dependencies in the containers:
+
+```bash
+ $ docker-compose exec www1 pip3 install -r requirements.txt
+ $ docker-compose exec www2 pip3 install -r requirements.txt
+ $ docker-compose exec proxy pip3 install -r requirements.txt
+```
+
 All possible scenarios will be executed by the following command:
 
 ```bash
