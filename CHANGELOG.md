@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.4] - 2021-08-31
+### Added
+- [Bugfix] Mask database name
+- [Build] Dockerfile updated
+
 ## [2.5.3] - 2021-08-31
 ### Added
 - [Task] Force password option
