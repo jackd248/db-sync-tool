@@ -6,6 +6,7 @@ Utility script
 """
 
 import os
+import paramiko
 from db_sync_tool.utility import mode, system, helper, output
 from db_sync_tool.database import utility as database_utility
 from db_sync_tool.remote import client as remote_client
@@ -100,3 +101,15 @@ def remove_target_database_dump():
                 os.remove(_file_path)
             if os.path.isfile(f'{_file_path}.tar.gz'):
                 os.remove(f'{_file_path}.tar.gz')
+
+
+def check_keys_from_ssh_agent():
+    """
+    Check if private keys are available from an SSH agent.
+    :return:
+    """
+    agent = paramiko.Agent()
+    agent_keys = agent.get_keys()
+    if len(agent_keys) == 0:
+        return False
+    return True

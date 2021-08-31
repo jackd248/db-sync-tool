@@ -11,6 +11,7 @@ import os
 import getpass
 import yaml
 from db_sync_tool.utility import log, parser, mode, helper, output, validation
+from db_sync_tool.remote import utility as remote_utility
 
 #
 # GLOBALS
@@ -30,6 +31,7 @@ config = {
     'is_same_client': False,
     'config_file_path': None,
     'clear_database': False,
+    'ssh_agent': False,
     'ssh_password': {
         'origin': None,
         'target': None
@@ -173,6 +175,8 @@ def check_authorization(client):
                 )
         elif 'password' in config[client]:
             config[client]['password'] = config[client]['password']
+        elif remote_utility.check_keys_from_ssh_agent():
+            config['ssh_agent'] = True
         else:
             # user input authorization
             config[client]['password'] = get_password_by_user(client)

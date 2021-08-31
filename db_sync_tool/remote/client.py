@@ -58,6 +58,9 @@ def load_ssh_client(ssh):
         _authentication_method = f'{output.CliFormat.BLACK} - ' \
                                  f'authentication: password){output.CliFormat.ENDC}'
         _ssh_password = system.config[ssh]['password']
+    elif 'ssh_agent' in system.config:
+        _authentication_method = f'{output.CliFormat.BLACK} - ' \
+                                 f'(authentication: key){output.CliFormat.ENDC}'
     else:
         sys.exit(
             output.message(
