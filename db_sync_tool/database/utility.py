@@ -7,9 +7,15 @@ Utility script
 
 import sys
 import datetime
+import re
 from db_sync_tool.utility import mode, system, helper, output
 
 database_dump_file_name = None
+
+
+class DatabaseSystem:
+    MYSQL = 'MySQL'
+    MARIADB = 'MariaDB'
 
 
 def run_database_command(client, command):
@@ -157,3 +163,29 @@ def count_tables(client, filepath):
             output.host_to_subject(client),
             f'{int(_count)} table(s) exported'
         )
+
+
+def get_database_version(client):
+    """
+    Check the database version and distinguish between mysql and mariadb
+    :param client:
+    :return: Tuple<String,String>
+    """
+    try:
+        _database_version = run_database_command(mode.Client.ORIGIN, 'SELECT VERSION();').splitlines()[1]
+        _database_system = DatabaseSystem.MYSQL
+
+        _version_number = re.search('(\d+\.)?(\d+\.)?(\*|\d+)', _database_version).group()
+
+        if DatabaseSystem.MARIADB.lower() in _database_version.lower():
+            _database_system = DatabaseSystem.MARIADB
+
+        output.message(
+            output.host_to_subject(client),
+            f'Database version: {_database_system} v{_version_number}',
+            True
+        )
+        return [_database_system, _version_number]
+    finally:
+        return None
+

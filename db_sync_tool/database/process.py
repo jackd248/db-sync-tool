@@ -23,11 +23,13 @@ def create_origin_database_dump():
         _dump_file_path = helper.get_dump_dir(
             mode.Client.ORIGIN) + database_utility.database_dump_file_name
 
+        database_utility.get_database_version(mode.Client.ORIGIN)
         output.message(
             output.Subject.ORIGIN,
             f'Creating database dump {output.CliFormat.BLACK}{_dump_file_path}{output.CliFormat.ENDC}',
             True
         )
+
         mode.run_command(
             helper.get_command('origin', 'mysqldump') + ' --no-tablespaces ' +
             database_utility.generate_mysql_credentials('origin') + ' \'' +
@@ -60,6 +62,9 @@ def import_database_dump():
         clear_database(mode.Client.TARGET)
 
     if not system.config['keep_dump'] and not mode.is_dump():
+
+        database_utility.get_database_version(mode.Client.TARGET)
+
         output.message(
             output.Subject.TARGET,
             'Importing database dump',
