@@ -17,32 +17,41 @@ def print_header(mute):
     """
     # pylint: max-line-length=240
     if mute is False:
-        print(output.CliFormat.BLACK + '##############################################' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '#                                            #' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '                db sync tool                ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '#                   v' + info.__version__ + '                   #' + output.CliFormat.ENDC)
+        print(
+            output.CliFormat.BLACK + '##############################################' + output.CliFormat.ENDC)
+        print(
+            output.CliFormat.BLACK + '#                                            #' + output.CliFormat.ENDC)
+        print(
+            output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '                db sync tool                ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
+        print(
+            output.CliFormat.BLACK + '#                   v' + info.__version__ + '                   #' + output.CliFormat.ENDC)
         print(output.CliFormat.BLACK + '#  ' + info.__homepage__ + '  #' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '#                                            #' + output.CliFormat.ENDC)
-        print(output.CliFormat.BLACK + '##############################################' + output.CliFormat.ENDC)
+        print(
+            output.CliFormat.BLACK + '#                                            #' + output.CliFormat.ENDC)
+        print(
+            output.CliFormat.BLACK + '##############################################' + output.CliFormat.ENDC)
         check_updates()
 
 
 def check_updates():
     """
-
+    Check for updates of the db_sync_tool
     :return:
     """
-    response = requests.get(f'{info.__pypi_package_url__}/json')
-    latest_version = response.json()['info']['version']
-    comparable_latest_version = int(latest_version.replace('.', ''))
-    comparable_actual_version = int(info.__version__.replace('.', ''))
-    if comparable_actual_version < comparable_latest_version:
-        output.message(
-            output.Subject.WARNING,
-            f'A new version {output.CliFormat.BOLD}v{latest_version}{output.CliFormat.ENDC} is available for the db-sync-tool: {info.__pypi_package_url__}',
-            True
-        )
-
+    try:
+        response = requests.get(f'{info.__pypi_package_url__}/json')
+        latest_version = response.json()['info']['version']
+        comparable_latest_version = int(latest_version.replace('.', ''))
+        comparable_actual_version = int(info.__version__.replace('.', ''))
+        if comparable_actual_version < comparable_latest_version:
+            output.message(
+                output.Subject.WARNING,
+                f'A new version {output.CliFormat.BOLD}v{latest_version}{output.CliFormat.ENDC} is '
+                f'available for the db-sync-tool: {info.__pypi_package_url__}',
+                True
+            )
+    finally:
+        return
 
 
 def print_footer():
