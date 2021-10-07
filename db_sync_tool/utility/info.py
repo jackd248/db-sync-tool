@@ -4,9 +4,7 @@
 """
 
 """
-import sys
-import json
-import os
+import requests
 from db_sync_tool.utility import mode, system, output
 from db_sync_tool import info
 
@@ -26,6 +24,25 @@ def print_header(mute):
         print(output.CliFormat.BLACK + '#  ' + info.__homepage__ + '  #' + output.CliFormat.ENDC)
         print(output.CliFormat.BLACK + '#                                            #' + output.CliFormat.ENDC)
         print(output.CliFormat.BLACK + '##############################################' + output.CliFormat.ENDC)
+        check_updates()
+
+
+def check_updates():
+    """
+
+    :return:
+    """
+    response = requests.get(f'{info.__pypi_package_url__}/json')
+    latest_version = response.json()['info']['version']
+    comparable_latest_version = int(latest_version.replace('.', ''))
+    comparable_actual_version = int(info.__version__.replace('.', ''))
+    if comparable_actual_version < comparable_latest_version:
+        output.message(
+            output.Subject.WARNING,
+            f'A new version {output.CliFormat.BOLD}v{latest_version}{output.CliFormat.ENDC} is available for the db-sync-tool: {info.__pypi_package_url__}',
+            True
+        )
+
 
 
 def print_footer():
