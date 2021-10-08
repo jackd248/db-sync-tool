@@ -5,6 +5,7 @@
 
 """
 import requests
+import semantic_version
 from db_sync_tool.utility import mode, system, output
 from db_sync_tool import info
 
@@ -41,9 +42,7 @@ def check_updates():
     try:
         response = requests.get(f'{info.__pypi_package_url__}/json')
         latest_version = response.json()['info']['version']
-        comparable_latest_version = int(latest_version.replace('.', ''))
-        comparable_actual_version = int(info.__version__.replace('.', ''))
-        if comparable_actual_version < comparable_latest_version:
+        if semantic_version.Version(info.__version__) < semantic_version.Version(latest_version):
             output.message(
                 output.Subject.WARNING,
                 f'A new version {output.CliFormat.BOLD}v{latest_version}{output.CliFormat.ENDC} is '
