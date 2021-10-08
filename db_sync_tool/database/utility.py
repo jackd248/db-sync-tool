@@ -171,6 +171,8 @@ def get_database_version(client):
     :param client:
     :return: Tuple<String,String>
     """
+    _database_system = None
+    _version_number = None
     try:
         _database_version = run_database_command(mode.Client.ORIGIN, 'SELECT VERSION();').splitlines()[1]
         _database_system = DatabaseSystem.MYSQL
@@ -185,7 +187,6 @@ def get_database_version(client):
             f'Database version: {_database_system} v{_version_number}',
             True
         )
-        return _database_system, _version_number
     finally:
-        return None
+        return _database_system, _version_number
 

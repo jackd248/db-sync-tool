@@ -34,9 +34,9 @@ def create_origin_database_dump():
         _mysqldump_options = '--no-tablespaces '
         # Remove --no-tablespaces option for mysql < 5.6
         # @ToDo: Better option handling
-        if _database_version:
+        if not _database_version is None:
             if _database_version[0] == database_utility.DatabaseSystem.MYSQL and \
-                    semantic_version.Version(_database_version[1]) < semantic_version.Version('5.6'):
+                    semantic_version.Version(_database_version[1]) < semantic_version.Version('5.6.0'):
                 _mysqldump_options = ''
 
         # Run mysql dump command, e.g.
