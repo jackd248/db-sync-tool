@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.5] - 2021-10-08
+### Added
+- [Task] mysql command fix for < v5.6
+- [Task] Improve version comparison
+- [Task] Check for database version
+- [Task] Check for own package update
+
 ## [2.5.4] - 2021-08-31
 ### Added
 - [Bugfix] Mask database name

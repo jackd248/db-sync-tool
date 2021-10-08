@@ -10,6 +10,8 @@ Python script to synchronize a database from an origin to a target system with a
 ## Features
 
 - __Database sync__ from and to a remote system
+  - [MySQL](https://www.mysql.com/) (>= 5.5)
+  - [MariaDB](https://mariadb.org/) (>= 10.0)
 - __Proxy mode__ between two remote systems
 - Automatic database __credential extraction__ using a supported framework
     - [TYPO3](https://typo3.org/) (>= v7.6)
