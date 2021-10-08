@@ -185,7 +185,7 @@ def get_database_version(client):
             f'Database version: {_database_system} v{_version_number}',
             True
         )
-        return [_database_system, _version_number]
+        return _database_system, _version_number
     finally:
         return None
 

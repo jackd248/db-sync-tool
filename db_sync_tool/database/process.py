@@ -4,6 +4,7 @@
 """
 Process script
 """
+import semantic_version
 
 from db_sync_tool.utility import parser, mode, system, helper, output
 from db_sync_tool.database import utility as database_utility
@@ -23,15 +24,25 @@ def create_origin_database_dump():
         _dump_file_path = helper.get_dump_dir(
             mode.Client.ORIGIN) + database_utility.database_dump_file_name
 
-        database_utility.get_database_version(mode.Client.ORIGIN)
+        _database_version = database_utility.get_database_version(mode.Client.ORIGIN)
         output.message(
             output.Subject.ORIGIN,
             f'Creating database dump {output.CliFormat.BLACK}{_dump_file_path}{output.CliFormat.ENDC}',
             True
         )
 
+        _mysqldump_options = '--no-tablespaces '
+        # Remove --no-tablespaces option for mysql < 5.6
+        # @ToDo: Better option handling
+        if _database_version:
+            if _database_version[0] == database_utility.DatabaseSystem.MYSQL and \
+                    semantic_version.Version(_database_version[1]) < semantic_version.Version('5.6'):
+                _mysqldump_options = ''
+
+        # Run mysql dump command, e.g.
+        # mysqldump --no-tablespaces -u'db' -p'db' -h'db1' -P'3306' 'db'  > /tmp/_db_08-10-2021_07-00.sql
         mode.run_command(
-            helper.get_command('origin', 'mysqldump') + ' --no-tablespaces ' +
+            helper.get_command('origin', 'mysqldump') + ' ' + _mysqldump_options +
             database_utility.generate_mysql_credentials('origin') + ' \'' +
             system.config['origin']['db']['name'] + '\' ' +
             database_utility.generate_ignore_database_tables() +
