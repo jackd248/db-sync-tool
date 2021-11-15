@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.7] - 2021-11-15
+### Added
+- [Bugfix] Python3.9 warning fixed
+- [Task] Requirements updated
+
 ## [2.5.6] - 2021-10-08
 ### Added
 - [Bugfix] Fix mysql command option
