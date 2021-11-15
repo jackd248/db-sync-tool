@@ -34,11 +34,11 @@ setuptools.setup(
     ],
     python_requires='>=3.5',
     install_requires=[
-        "paramiko>=2.7.2",
+        "paramiko>=2.8.0",
         "future-fstrings>=1.2",
-        "pyyaml>=5.4.1",
-        "jsonschema>=3.2.0",
-        "requests>=2.24.0",
+        "pyyaml>=6.0",
+        "jsonschema>=4.2.1",
+        "requests>=2.26.0",
         "semantic_version>=2.8.5"
     ],
     entry_points={
