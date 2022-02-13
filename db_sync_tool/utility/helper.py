@@ -7,6 +7,7 @@ Helper script
 
 import shutil
 import os
+import re
 from db_sync_tool.utility import mode, system, output
 from db_sync_tool.remote import utility as remote_utility
 
@@ -214,6 +215,60 @@ def run_script(client=None, script='before'):
             _config['scripts'][script],
             client
         )
+
+def check_rsync_version():
+    """
+    Check rsync version
+    :return:
+    """
+    _raw_version = mode.run_command(
+        'rsync --version',
+        mode.Client.LOCAL,
+        True
+    )
+    _version = parse_version(_raw_version)
+    output.message(
+        output.Subject.LOCAL,
+        f'rsync version {_version}'
+    )
+
+
+def check_sshpass_version():
+    """
+    Check sshpass version
+    :return:
+    """
+    _raw_version = mode.run_command(
+        'sshpass -V',
+        mode.Client.LOCAL,
+        force_output=True,
+        allow_fail=True
+    )
+    _version = parse_version(_raw_version)
+
+    if _version:
+        output.message(
+            output.Subject.LOCAL,
+            f'sshpass version {_version}'
+        )
+        system.config['use_sshpass'] = True
+        return True
+
+
+def parse_version(output):
+    """
+    Parse version out of console output
+    https://stackoverflow.com/a/60730346
+    :param output: String
+    :return:
+    """
+    _version_pattern = r'\d+(=?\.(\d+(=?\.(\d+)*)*)*)*'
+    _regex_matcher = re.compile(_version_pattern)
+    _version = _regex_matcher.search(output)
+    if _version:
+        return _version.group(0)
+    else:
+        return None
 
 
 def get_file_from_path(path):

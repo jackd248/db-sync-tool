@@ -100,9 +100,14 @@ usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-y] [-m] [-dr]
                     [-odd ORIGIN_DUMP_DIR] [-okd ORIGIN_KEEP_DUMPS]
                     [-odn ORIGIN_DB_NAME] [-odh ORIGIN_DB_HOST]
                     [-odu ORIGIN_DB_USER] [-odpw ORIGIN_DB_PASSWORD]
-                    [-odpo ORIGIN_DB_PORT] [-fpw]
+                    [-odpo ORIGIN_DB_PORT] [-fpw] [-ur] [-uro USE_RSYNC_OPTIONS]
+                    [origin] [target]
 
 A tool for automatic database synchronization from and to host systems.
+
+positional arguments:
+  origin                Origin database defined in host file
+  target                Target database defined in host file
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -194,6 +199,9 @@ optional arguments:
                         Database port for origin system
   -fpw, --force-password
                         Force password user query
+  -ur, --use-rsync      Use rsync as transfer method
+  -uro USE_RSYNC_OPTIONS, --use-rsync-options USE_RSYNC_OPTIONS
+                        Additional rsync options
 ```
 
 If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the shell argument or the `config.json` to enable a SSH connection for the remote system. 

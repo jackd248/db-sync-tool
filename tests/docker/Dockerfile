@@ -4,7 +4,7 @@ FROM php:7.2-fpm
 # Benötigte Pakete installieren
 #
 RUN apt-get update \
- && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests \
     curl \
     git \
     gnupg \
@@ -28,6 +28,7 @@ RUN apt-get update \
     ruby \
     ruby-dev \
     rsync \
+    sshpass \
     msmtp \
     vim \
     zlib1g-dev \
@@ -52,6 +53,7 @@ RUN docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
 #
 #
 #
+RUN pip3 install -U pip
 RUN pip3 install paramiko
 RUN pip3 install future-fstrings
 RUN pip3 install pyyaml

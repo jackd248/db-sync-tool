@@ -32,6 +32,9 @@ config = {
     'config_file_path': None,
     'clear_database': False,
     'force_password': False,
+    'use_rsync': False,
+    'use_rsync_options': None,
+    'use_sshpass': False,
     'ssh_agent': False,
     'ssh_password': {
         'origin': None,
@@ -232,7 +235,9 @@ def check_args_options(config_file=None,
                        keep_dump=None,
                        host_file=None,
                        clear=False,
-                       force_password=False):
+                       force_password=False,
+                       use_rsync=False,
+                       use_rsync_options=None):
     """
     Checking arguments and fill options array
     :param config_file:
@@ -246,6 +251,8 @@ def check_args_options(config_file=None,
     :param host_file:
     :param clear:
     :param force_password:
+    :param use_rsync:
+    :param use_rsync_options:
     :return:
     """
     global config
@@ -287,6 +294,14 @@ def check_args_options(config_file=None,
 
     if not force_password is None:
         config['force_password'] = force_password
+
+    if not use_rsync is None:
+        config['use_rsync'] = use_rsync
+        helper.check_rsync_version()
+        helper.check_sshpass_version()
+
+        if not use_rsync_options is None:
+            config['use_rsync_options'] = use_rsync_options
 
     if not keep_dump is None:
         default_local_sync_path = keep_dump

@@ -24,6 +24,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',
         'Operating System :: MacOS :: MacOS X',

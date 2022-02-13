@@ -39,6 +39,8 @@ def main(args=None):
         host_file=args.host_file,
         clear=args.clear_database,
         force_password=args.force_password,
+        use_rsync=args.use_rsync,
+        use_rsync_options=args.use_rsync_options,
         config=config
     )
 
@@ -229,6 +231,14 @@ def get_arguments(args):
                         help='Force password user query',
                         required=False,
                         action='store_true')
+    parser.add_argument('-ur', '--use-rsync',
+                        help='Use rsync as transfer method',
+                        required=False,
+                        action='store_true')
+    parser.add_argument('-uro', '--use-rsync-options',
+                        help='Additional rsync options',
+                        required=False,
+                        type=str)
 
     return parser.parse_args(helper.dict_to_args(args))
 

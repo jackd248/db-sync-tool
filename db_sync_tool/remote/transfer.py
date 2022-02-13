@@ -8,7 +8,7 @@ Transfer script
 import sys
 from db_sync_tool.utility import mode, system, helper, output
 from db_sync_tool.database import utility as database_utility
-from db_sync_tool.remote import utility, client
+from db_sync_tool.remote import utility, client, rsync
 
 
 def transfer_origin_database_dump():
@@ -43,8 +43,6 @@ def get_origin_database_dump(target_path):
     :param target_path: String
     :return:
     """
-    sftp = get_sftp_client(client.ssh_client_origin)
-
     output.message(
         output.Subject.ORIGIN,
         'Downloading database dump',
@@ -53,17 +51,29 @@ def get_origin_database_dump(target_path):
     if mode.get_sync_mode() != mode.SyncMode.PROXY:
         helper.check_and_create_dump_dir(mode.Client.TARGET, target_path)
 
-    #
-    # Download speed problems
-    # https://github.com/paramiko/paramiko/issues/60
-    #
     if not system.config['dry_run']:
-        sftp.get(helper.get_dump_dir(mode.Client.ORIGIN) + database_utility.database_dump_file_name + '.tar.gz',
-                 target_path + database_utility.database_dump_file_name + '.tar.gz', download_status)
-        if not system.config['mute']:
-            print('')
+        _remotepath = helper.get_dump_dir(mode.Client.ORIGIN) + database_utility.database_dump_file_name + '.tar.gz'
+        _localpath = target_path
 
-    sftp.close()
+        if system.config['use_rsync']:
+            rsync.run_rsync_command(
+                remote_client=mode.Client.ORIGIN,
+                origin_path=_remotepath,
+                target_path=_localpath,
+                origin_ssh=system.config[mode.Client.ORIGIN]['user'] + '@' + system.config[mode.Client.ORIGIN]['host']
+            )
+        else:
+            #
+            # Download speed problems
+            # https://github.com/paramiko/paramiko/issues/60
+            #
+            sftp = get_sftp_client(client.ssh_client_origin)
+            sftp.get(helper.get_dump_dir(mode.Client.ORIGIN) + database_utility.database_dump_file_name + '.tar.gz',
+                     target_path + database_utility.database_dump_file_name + '.tar.gz', download_status)
+            sftp.close()
+            if not system.config['mute']:
+                print('')
+
     utility.remove_origin_database_dump()
 
 
@@ -89,8 +99,6 @@ def put_origin_database_dump(origin_path):
     :param origin_path: String
     :return:
     """
-    sftp = get_sftp_client(client.ssh_client_target)
-
     if mode.get_sync_mode() == mode.SyncMode.PROXY:
         _subject = output.Subject.LOCAL
     else:
@@ -103,18 +111,30 @@ def put_origin_database_dump(origin_path):
     )
     helper.check_and_create_dump_dir(mode.Client.TARGET, helper.get_dump_dir(mode.Client.TARGET))
 
-    #
-    # Download speed problems
-    # https://github.com/paramiko/paramiko/issues/60
-    #
     if not system.config['dry_run']:
-        sftp.put(origin_path + database_utility.database_dump_file_name + '.tar.gz',
-                 helper.get_dump_dir(mode.Client.TARGET) + database_utility.database_dump_file_name + '.tar.gz',
-                 upload_status)
-        if not system.config['mute']:
-            print('')
+        _localpath = origin_path + database_utility.database_dump_file_name + '.tar.gz'
+        _remotepath = helper.get_dump_dir(mode.Client.TARGET) + '/'
 
-    sftp.close()
+        if system.config['use_rsync']:
+            rsync.run_rsync_command(
+                remote_client=mode.Client.TARGET,
+                origin_path=_localpath,
+                target_path=_remotepath,
+                target_ssh=system.config[mode.Client.TARGET]['user'] + '@' + system.config[mode.Client.TARGET]['host']
+            )
+        else:
+            #
+            # Download speed problems
+            # https://github.com/paramiko/paramiko/issues/60
+            #
+            sftp = get_sftp_client(client.ssh_client_target)
+            sftp.put(origin_path + database_utility.database_dump_file_name + '.tar.gz',
+                     helper.get_dump_dir(mode.Client.TARGET) + database_utility.database_dump_file_name + '.tar.gz',
+                     upload_status)
+            sftp.close()
+            if not system.config['mute']:
+                print('')
+
 
 
 def upload_status(sent, size):
@@ -148,3 +168,4 @@ def get_sftp_client(ssh_client):
     sftp = ssh_client.open_sftp()
     sftp.get_channel().settimeout(client.default_timeout)
     return sftp
+

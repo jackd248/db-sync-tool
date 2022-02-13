@@ -26,6 +26,8 @@ class Sync:
                  host_file=None,
                  clear=False,
                  force_password=False,
+                 use_rsync=False,
+                 use_rsync_options=None,
                  config=None):
         """
         Initialization
@@ -40,6 +42,8 @@ class Sync:
         :param host_file:
         :param clear:
         :param force_password:
+        :param use_rsync:
+        :param use_rsync_options:
         :param config:
         """
         if config is None:
@@ -57,7 +61,9 @@ class Sync:
             keep_dump,
             host_file,
             clear,
-            force_password
+            force_password,
+            use_rsync,
+            use_rsync_options
         )
         system.get_configuration(config)
         system.check_authorizations()
