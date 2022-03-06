@@ -93,6 +93,21 @@ def get_database_tables_like(client, name):
     return
 
 
+def get_database_tables():
+    """
+    Generate specific tables for export
+    :return: String
+    """
+    if system.config['tables'] == '':
+        return ''
+
+    _result = ''
+    _tables = system.config['tables'].split(',')
+    for _table in _tables:
+        _result += '\'' + _table + '\' '
+    return _result
+
+
 def generate_mysql_credentials(client):
     """
     Generate the needed database credential information for the mysql command

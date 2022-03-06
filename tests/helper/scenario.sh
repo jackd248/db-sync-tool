@@ -13,32 +13,10 @@ cd ..
 VERBOSE="-m"
 
 if [ "$#" -eq "0" ]; then
-  sh scenario/receiver/test.sh $VERBOSE
-  sh scenario/sender/test.sh $VERBOSE
-  sh scenario/proxy/test.sh $VERBOSE
-  sh scenario/dump_local/test.sh $VERBOSE
-  sh scenario/dump_remote/test.sh $VERBOSE
-  sh scenario/import_local/test.sh $VERBOSE
-  sh scenario/import_remote/test.sh $VERBOSE
-  sh scenario/sync_remote/test.sh $VERBOSE
-  sh scenario/sync_remote_manual/test.sh $VERBOSE
-  sh scenario/sync_local/test.sh $VERBOSE
-  sh scenario/symfony/test.sh $VERBOSE
-  sh scenario/laravel/test.sh $VERBOSE
-  sh scenario/symfony2.8/test.sh $VERBOSE
-  sh scenario/drupal/test.sh $VERBOSE
-  sh scenario/wordpress/test.sh $VERBOSE
-  sh scenario/typo3v7/test.sh $VERBOSE
-  sh scenario/logging/test.sh $VERBOSE
-  sh scenario/link/test.sh $VERBOSE
-  sh scenario/download/test.sh $VERBOSE
-  sh scenario/cleanup/test.sh $VERBOSE
-  sh scenario/module/test.sh $VERBOSE
-  sh scenario/manual/test.sh $VERBOSE
-  sh scenario/shell/test.sh $VERBOSE
-  sh scenario/scripts/test.sh $VERBOSE
-  sh scenario/yaml/test.sh $VERBOSE
-  sh scenario/host/test.sh $VERBOSE
+  for d in "scenario/"*
+  do
+    sh $d/test.sh $VERBOSE
+  done
 else
   # Default is mute mode
   if [ -z "$2" ]; then

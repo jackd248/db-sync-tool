@@ -42,10 +42,11 @@ def create_origin_database_dump():
         # Run mysql dump command, e.g.
         # mysqldump --no-tablespaces -u'db' -p'db' -h'db1' -P'3306' 'db'  > /tmp/_db_08-10-2021_07-00.sql
         mode.run_command(
-            helper.get_command('origin', 'mysqldump') + ' ' + _mysqldump_options +
-            database_utility.generate_mysql_credentials('origin') + ' \'' +
-            system.config['origin']['db']['name'] + '\' ' +
+            helper.get_command(mode.Client.ORIGIN, 'mysqldump') + ' ' + _mysqldump_options +
+            database_utility.generate_mysql_credentials(mode.Client.ORIGIN) + ' \'' +
+            system.config[mode.Client.ORIGIN]['db']['name'] + '\' ' +
             database_utility.generate_ignore_database_tables() +
+            database_utility.get_database_tables() +
             ' > ' + _dump_file_path,
             mode.Client.ORIGIN,
             skip_dry_run=True

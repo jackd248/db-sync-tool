@@ -107,6 +107,10 @@ def get_arguments(args):
                         help='Dropping all tables before importing a new sync to get a clean database.',
                         required=False,
                         action='store_true')
+    parser.add_argument('-ta', '--tables',
+                        help='Defining specific tables to export, e.g. --tables=table1,table2',
+                        required=False,
+                        type=str)
     parser.add_argument('-t', '--type',
                         help='Defining the framework type [TYPO3, Symfony, Drupal, Wordpress]',
                         required=False,
@@ -255,6 +259,9 @@ def build_config(args):
 
     if not args.type is None:
         config['type'] = args.type
+
+    if not args.tables is None:
+        config['tables'] = args.tables
 
     if not args.origin is None:
         config['link_origin'] = args.origin

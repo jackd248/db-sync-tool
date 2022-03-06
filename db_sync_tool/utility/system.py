@@ -42,6 +42,7 @@ config = {
     },
     'link_target': None,
     'link_origin': None,
+    'tables': ''
 }
 
 #
