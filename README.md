@@ -87,7 +87,7 @@ $ python3 vendor/kmi/db-sync-tool/db_sync_tool
 ```bash
 usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-y] [-m] [-dr]
                     [-i IMPORT_FILE] [-dn DUMP_NAME] [-kd KEEP_DUMP]
-                    [-o HOST_FILE] [-l LOG_FILE] [-cd] [-t TYPE]
+                    [-o HOST_FILE] [-l LOG_FILE] [-cd] [-ta TABLES] [-t TYPE]
                     [-tp TARGET_PATH] [-tn TARGET_NAME] [-th TARGET_HOST]
                     [-tu TARGET_USER] [-tpw TARGET_PASSWORD] [-tk TARGET_KEY]
                     [-tpo TARGET_PORT] [-tdd TARGET_DUMP_DIR]
@@ -100,7 +100,8 @@ usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-y] [-m] [-dr]
                     [-odd ORIGIN_DUMP_DIR] [-okd ORIGIN_KEEP_DUMPS]
                     [-odn ORIGIN_DB_NAME] [-odh ORIGIN_DB_HOST]
                     [-odu ORIGIN_DB_USER] [-odpw ORIGIN_DB_PASSWORD]
-                    [-odpo ORIGIN_DB_PORT] [-fpw] [-ur] [-uro USE_RSYNC_OPTIONS]
+                    [-odpo ORIGIN_DB_PORT] [-fpw] [-ur]
+                    [-uro USE_RSYNC_OPTIONS]
                     [origin] [target]
 
 A tool for automatic database synchronization from and to host systems.
@@ -134,6 +135,9 @@ optional arguments:
   -cd, --clear-database
                         Dropping all tables before importing a new sync to get
                         a clean database.
+  -ta TABLES, --tables TABLES
+                        Defining specific tables to export, e.g.
+                        --tables=table1,table2
   -t TYPE, --type TYPE  Defining the framework type [TYPO3, Symfony, Drupal,
                         Wordpress]
   -tp TARGET_PATH, --target-path TARGET_PATH

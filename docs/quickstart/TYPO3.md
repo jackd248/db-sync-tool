@@ -42,7 +42,7 @@ Example configuration file:
 }
 ```
 
-It is possible to extend the [configuration](docs/CONFIG.md).
+It is possible to extend the [configuration](../CONFIG.md).
 
 ## Example
 
