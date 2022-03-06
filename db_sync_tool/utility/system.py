@@ -325,21 +325,40 @@ def link_configuration_with_hosts():
     :return:
     """
     if ('link' in config['origin'] or 'link' in config['target']) and config['link_hosts'] == '':
-        # Try to find default hosts.json file in same directory
-        sys.exit(
-            output.message(
-                output.Subject.ERROR,
-                f'Missing hosts file for linking hosts with configuration. '
-                f'Use the "-o" / "--hosts" argument to define the filepath for the hosts file, '
-                f'when using a link parameter within the configuration.',
-                False
+        #
+        # Try to read host file path from link entry
+        #
+        _host = str(config['origin']['link'].split('@')[0]) if 'link' in config['origin'] else ''
+        _host = str(config['target']['link'].split('@')[0]) if 'link' in config['target'] else _host
+
+        config['link_hosts'] = _host
+
+        if config['link_hosts'] == '':
+            # Try to find default hosts.json file in same directory
+            sys.exit(
+                output.message(
+                    output.Subject.ERROR,
+                    f'Missing hosts file for linking hosts with configuration. '
+                    f'Use the "-o" / "--hosts" argument to define the filepath for the hosts file, '
+                    f'when using a link parameter within the configuration or define the the '
+                    f'filepath direct in the link entry e.g. "host.yaml@entry1".',
+                    False
+                )
             )
-        )
 
     if config['link_hosts'] != '':
+
+        # Adjust filepath from relative to absolute
+        if config['link_hosts'][0] != '/':
+            config['link_hosts'] = os.path.dirname(os.path.abspath(config['config_file_path'])) + '/' + config['link_hosts']
+
         if os.path.isfile(config['link_hosts']):
             with open(config['link_hosts'], 'r') as read_file:
-                _hosts = json.load(read_file)
+                if config['link_hosts'].endswith('.json'):
+                    _hosts = json.load(read_file)
+                elif config['link_hosts'].endswith('.yaml') or config['link_hosts'].endswith('.yml'):
+                    _hosts = yaml.safe_load(read_file)
+
                 output.message(
                     output.Subject.INFO,
                     f'Linking configuration with hosts {output.CliFormat.BLACK}{config["link_hosts"]}{output.CliFormat.ENDC}',
@@ -347,12 +366,12 @@ def link_configuration_with_hosts():
                 )
                 if not config['config_file_path'] is None:
                     if 'link' in config['origin']:
-                        _host_name = str(config['origin']['link']).replace('@', '')
+                        _host_name = str(config['origin']['link']).split('@')[1]
                         if _host_name in _hosts:
                             config['origin'] = {**config['origin'], **_hosts[_host_name]}
 
                     if 'link' in config['target']:
-                        _host_name = str(config['target']['link']).replace('@', '')
+                        _host_name = str(config['target']['link']).split('@')[1]
                         if _host_name in _hosts:
                             config['target'] = {**config['target'], **_hosts[_host_name]}
                 else:

@@ -1,0 +1,4 @@
+target:
+  link: hosts.yaml@www2
+origin:
+  link: hosts.yaml@www1
