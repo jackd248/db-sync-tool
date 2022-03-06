@@ -6,9 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.5.8] - 2022-02-13
+## [2.7.0] - 2022-03-06
 ### Added
-[Task] Use rsync as transfer method
+- [Task] Single table export
+- [Task] Read from TYPO3 AdditionalConfiguration.php
+- [Task] Hosts in config option
+
+## [2.6.0] - 2022-02-13
+### Added
+- [Task] Use rsync as transfer method
 
 ## [2.5.7] - 2021-11-15
 ### Added
