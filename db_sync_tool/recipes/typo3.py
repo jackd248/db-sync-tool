@@ -18,15 +18,27 @@ def check_configuration(client):
     """
     _path = system.config[client]['path']
 
-    stdout = mode.run_command(
-        helper.get_command(client, 'php') + ' -r "echo json_encode(include \'' +
-        system.config[client][
-            'path'] + '\');"',
-        client,
-        True
-    )
+    if 'LocalConfiguration' in _path:
+        stdout = mode.run_command(
+            helper.get_command(client, 'php') + ' -r "echo json_encode(include \'' +
+            system.config[client][
+                'path'] + '\');"',
+            client,
+            True
+        )
 
-    _db_config = parse_database_credentials(json.loads(stdout)['DB'])
+        _db_config = parse_database_credentials(json.loads(stdout)['DB'])
+    else:
+        # Try to parse settings from AdditionalConfiguration.php file
+        _db_config = {
+            'name': get_database_setting(client, 'dbname', system.config[client]['path']),
+            'host': get_database_setting(client, 'host', system.config[client]['path']),
+            'password': get_database_setting(client, 'password', system.config[client]['path']),
+            'port': get_database_setting(client, 'port', system.config[client]['path'])
+            if get_database_setting(client, 'port',
+                                    system.config[client]['path']) != '' else 3306,
+            'user': get_database_setting(client, 'user', system.config[client]['path']),
+        }
 
     system.config[client]['db'] = _db_config
 
@@ -52,3 +64,20 @@ def parse_database_credentials(db_credentials):
         _db_config['port'] = 3306
 
     return _db_config
+
+
+def get_database_setting(client, name, file):
+    """
+    Get database setting try to regex from AdditionalConfiguration
+    sed -nE "s/'dbname'.*=>.*'(.*)'.*$/\1/p" /var/www/html/tests/files/www1/AdditionalConfiguration.php
+    :param client: String
+    :param name: String
+    :param file: String
+    :return:
+    """
+    return mode.run_command(
+        helper.get_command(client, 'sed') +
+        f' -nE "s/\'{name}\'.*=>.*\'(.*)\'.*$/\\1/p" {file}',
+        client,
+        True
+    ).replace('\n', '').strip()

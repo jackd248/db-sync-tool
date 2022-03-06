@@ -46,6 +46,7 @@ Select one of the following scenarios:
 - sync_remote_manual
 - sync_local
 - link
+- link_inline
 - logging
 - manual
 - module
@@ -60,5 +61,6 @@ Select one of the following scenarios:
 - symfony2.8
 - drupal
 - typo3v7
+- typo3_additional
 - wordpress
 - laravel
