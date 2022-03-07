@@ -298,8 +298,10 @@ def check_args_options(config_file=None,
 
     if not use_rsync is None:
         config['use_rsync'] = use_rsync
-        helper.check_rsync_version()
-        helper.check_sshpass_version()
+
+        if use_rsync is True:
+            helper.check_rsync_version()
+            helper.check_sshpass_version()
 
         if not use_rsync_options is None:
             config['use_rsync_options'] = use_rsync_options
