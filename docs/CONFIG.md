@@ -21,68 +21,127 @@ Here you can find an overview over the possible configuration adjustments.
 <a name="configuration_reference"></a>
 ### Full configuration reference
 
-```json
-{
-  "name": "project",
-  "type": "type",
-  "target": {
-    "name": "name",
-    "link": "@link",
-    "host": "www1",
-    "user": "user",
-    "port": 22,
-    "password": "password",
-    "ssh_key": "ssh_key",
-    "dump_dir": "/path/to/writable/dir/",
-    "db": {
-      "name": "db",
-      "host": "db2",
-      "password": "db",
-      "user": "db",
-      "port": 3306
-    },
-    "after_script": "",
-    "script": {
-      "before": "",
-      "after": "",
-      "error": ""
-    },
-    "console": {
-      "php": "/usr/bin/php"
-    },
-    "keep_dumps": 5,
-    "after_dump": "path/to/dump/file.sql"
-  },
-  "origin": {
-    "name": "name",
-    "link": "@link",
-    "host": "www1",
-    "user": "user",
-    "port": 22,
-    "password": "password",
-    "ssh_key": "ssh_key",
-    "dump_dir": "/path/to/writable/dir/",
-    "db": {
-      "name": "db",
-      "host": "db1",
-      "password": "db",
-      "user": "db",
-      "port": 3306
-    },
-    "script": {
-      "before": "",
-      "after": "",
-      "error": ""
-    },
-    "console": {
-      "php": "/usr/bin/php"
-    }
-  },
-  "log_file": "/path/to/file/info.log",
-  "ignore_table": [],
-  "check_dump": false
-}
+Here you can find the full configuration reference for a `config.yml`:
+
+```yaml
+# Application type: TYPO3 [ Symfony | Drupal | Wordpress | Laravel
+# Isn't necessary if the database credentials are provided manually
+type: 
+# Database source system
+origin:
+    # Just informative for logging, e.g. prod
+    name:
+    # Full path to the application file, which contains the necessary database credentials
+    path: 
+    # For reusability reasons you can store the host information in an additional hosts.yml file and link the needed entry here
+    # See the section "Linking hosts" for more information
+    # e.g. hosts.yml@prod
+    link:
+    # SSH host
+    host:
+    # SSH user
+    user:
+    # SSH port (default: 22)
+    port:
+    # SSh password (is not recommended to store the password here, use the interactive prompt or a ssh key instead)
+    password:
+    # SSH key path
+    ssh_key:
+    # Temporary or finally dump file directory (default: /tmp/)
+    dump_dir:
+    # Manual database credentials
+    db:
+        # Database name
+        name:
+        # Database host
+        host:
+        # Database password
+        password:
+        # Database user
+        user:
+        # Database port (default: 3306)
+        port:
+    # Additional console scripts
+    script:
+        # Script before synchronisation on origin system
+        before:
+        # Script after synchronisation on origin system
+        after:
+        # Script in failure case
+        error:
+    # Additional console path variables
+    console:
+        # If a command variable is not available via the standard path, you can define a divergent path
+        # e.g. php: /usr/bin/php
+# Database target system
+target:
+    # Just informative for logging, e.g. prod
+    name:
+    # Full path to the application file, which contains the necessary database credentials
+    path: 
+    # For reusability reasons you can store the host information in an additional hosts.yml file and link the needed entry here
+    # See the section "Linking hosts" for more information
+    # e.g. hosts.yml@prod
+    link:
+    # SSH host
+    host:
+    # SSH user
+    user:
+    # SSH port (default: 22)
+    port:
+    # SSh password (is not recommended to store the password here, use the interactive prompt or a ssh key instead)
+    password:
+    # SSH key path
+    ssh_key:
+    # Temporary or finally dump file directory (default: /tmp/)
+    dump_dir:
+    # Manual database credentials
+    db:
+        # Database name
+        name:
+        # Database host
+        host:
+        # Database password
+        password:
+        # Database user
+        user:
+        # Database port (default: 3306)
+        port:
+    # Additional console scripts
+    script:
+        # Script before synchronisation on target system
+        before:
+        # Script after synchronisation on target system
+        after:
+        # Script in failure case
+        error:
+    # Additional console path variables
+    console:
+        # If a command variable is not available via the standard path, you can define a divergent path
+        # e.g. php: /usr/bin/php
+    # Define the backup clean up functionality and defines how many dumps will be keep depending on time
+    keep_dumps:
+    # Path to an additional dump file, which will be imported after the synchronisation finished
+    # e.g. /path/to/dump/file.sql
+    after_dump:
+# Path to an additional log file
+log_file:
+# List of tables to ignore for the synchronisation
+ignore_table: []
+# Disable the check dump feature, to verify the completeness of the created dump file (default: true)
+check_dump:
+# Additional console scripts
+script:
+    # Script before synchronisation
+    before:
+    # Script after synchronisation
+    after:
+    # Script in failure case
+    error:
 ```
+
+
+> The config file can be written in `yaml` or `json`.
 
 <a name="ignore_tables"></a>
 ### Ignore tables 

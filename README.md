@@ -13,6 +13,7 @@ Python script to synchronize a database from an origin to a target system with a
   - [MySQL](https://www.mysql.com/) (>= 5.5)
   - [MariaDB](https://mariadb.org/) (>= 10.0)
 - __Proxy mode__ between two remote systems
+- Several [synchronisation modes](docs/MODE.md)
 - Automatic database __credential extraction__ using a supported framework
     - [TYPO3](https://typo3.org/) (>= v7.6)
     - [Symfony](https://symfony.com/) (>= v2.8)
@@ -22,7 +23,7 @@ Python script to synchronize a database from an origin to a target system with a
 - Easily dump creation (database __backup__)
 - __Cleanup__ feature for backups
 - Extended __logging__ capabilities
-- Many more possibilities for __customization__
+- Many more possibilities for [customization](docs/CONFIG.md)
 
 ## Installation
 
@@ -229,22 +230,18 @@ You can configure the script with [shell arguments](#shell-arguments) or using a
 
 The `config.json` contains important information about the origin and the target system. In dependence on the given configuration the [synchronisation mode](docs/MODE.md) is implicitly selected.
 
-Example structure of a `config.json` for a Symfony system in receiver mode (`path` defines the location of the Symfony database configuration file):
-```json
-{
-  "type": "Symfony",
-  "target": {
-    "path": "/var/www/html/app/.env"
-  },
-  "origin": {
-    "host": "ssh_host",
-    "user": "ssh_user",
-    "path": "/var/www/html/project/shared/.env"
-  }
-}
+Example structure of a `config.yml` for a Symfony system in receiver mode (`path` defines the location of the Symfony database configuration file):
+```yaml
+type: Symfony
+origin:
+    host: 192.87.33.123
+    user: ssh_demo_user
+    path: /var/www/html/project/shared/.env
+target:
+    path: /var/www/html/app/.env
 ```
 
-It is possible to adjust the `config.json` [configuration](docs/CONFIG.md).
+It is possible to adjust the `config.yml` [configuration](docs/CONFIG.md).
 
 ## File sync
 
