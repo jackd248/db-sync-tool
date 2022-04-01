@@ -405,3 +405,20 @@ It is also possible to skip the automatic database credential detection dependin
 ### Clearing database
 
 If you want a clean database sync, it is necessary to drop all existing tables of the target database. Use the `--clear-database` option (`-cd`) for this.
+
+<a name="protect"></a>
+### Protect host
+
+You can declare a protected to host to prevent an unintentional import on this system. 
+
+```yaml
+type: TYPO3
+origin:
+    host: <ORIGIN_HOST>
+    user: <ORIGIN_USER>
+    path: <ORIGIN_PATH>
+    name: Demo Prod
+    protect: true
+target:
+    path: <TARGET_PATH>
+```

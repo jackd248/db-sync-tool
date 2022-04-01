@@ -229,6 +229,8 @@ def check_sync_mode():
         True
     )
 
+    check_for_protection()
+
 
 def is_remote(client):
     """
@@ -316,3 +318,18 @@ def run_command(command, client, force_output=False, allow_fail=False, skip_dry_
 
         if force_output:
             return out.decode().strip()
+
+
+def check_for_protection():
+    """
+    Check if the target system is protected
+    :return: Boolean
+    """
+    if sync_mode in (SyncMode.RECEIVER, SyncMode.SENDER, SyncMode.PROXY, SyncMode.SYNC_LOCAL,
+                     SyncMode.SYNC_REMOTE, SyncMode.IMPORT_LOCAL, SyncMode.IMPORT_REMOTE) and \
+            'protect' in system.config[Client.TARGET]:
+        _host = helper.get_ssh_host_name(Client.TARGET)
+        sys.exit(output.message(output.Subject.ERROR,
+                                f'The host {_host} is protected against the import of a database dump. Please '
+                                'check synchronisation target or adjust the host configuration.', False))
+

@@ -216,6 +216,7 @@ def run_script(client=None, script='before'):
             client
         )
 
+
 def check_rsync_version():
     """
     Check rsync version
