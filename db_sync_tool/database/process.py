@@ -113,8 +113,16 @@ def import_database_dump():
             f'Importing after_dump file {output.CliFormat.BLACK}{_after_dump}{output.CliFormat.ENDC}',
             True
         )
-
         import_database_dump_file(mode.Client.TARGET, _after_dump)
+
+    if 'post_sql' in system.config['target']:
+        output.message(
+            output.Subject.TARGET,
+            f'Running addition post sql commands',
+            True
+        )
+        for _sql_command in system.config['target']['post_sql']:
+            database_utility.run_database_command(mode.Client.TARGET, _sql_command, True)
 
 
 def import_database_dump_file(client, filepath):

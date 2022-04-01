@@ -95,6 +95,8 @@ target:
     ssh_key:
     # Temporary or finally dump file directory (default: /tmp/)
     dump_dir:
+    # Lock the host against the import of a database dump
+    protect: true
     # Manual database credentials
     db:
         # Database name
@@ -124,6 +126,9 @@ target:
     # Path to an additional dump file, which will be imported after the synchronisation finished
     # e.g. /path/to/dump/file.sql
     after_dump:
+    # Additional sql commands after the import
+    post_sql: 
+    - 
 # Path to an additional log file
 log_file:
 # List of tables to ignore for the synchronisation
@@ -302,14 +307,19 @@ Sometimes it is necessary to run a specific command before or after the dump cre
 <a name="after-dump"></a>
 ### After dump
 
-It is possible to provide an additional dump file, which will be imported after the regular database import is finished. You can specify the path to the `after_dump` file of the target host in the `config.json`:
+It is possible to provide an additional dump file, which will be imported after the regular database import is finished. You can specify the path to the `after_dump` file of the target host in the `config.yml`:
 
-```json
-{
-  "target": {
-    "after_dump": "path/to/dump/file.sql"
-  }
-}
+```yaml
+target:
+    after_dump: path/to/dump/file.sql
+```
+
+Alternatively you can define post sql commands, which will be executed in the 
+
+```yaml
+target:
+    post_sql: 
+        - UPDATE sys_domain SET hidden = 1;
 ```
 
 <a name="logging"></a>

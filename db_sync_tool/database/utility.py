@@ -18,16 +18,19 @@ class DatabaseSystem:
     MARIADB = 'MariaDB'
 
 
-def run_database_command(client, command):
+def run_database_command(client, command, force_database_name=False):
     """
     Run a database command using the "mysql -e" command
     :param client: String
     :param command: String database command
+    :param force_database_name: Bool forces the database name
     :return:
     """
+    _database_name = ' ' + system.config[client]['db']['name'] if force_database_name else ''
+
     return mode.run_command(
         helper.get_command(client, 'mysql') + ' ' + generate_mysql_credentials(
-            client) + ' -e "' + command + '"',
+            client) + _database_name + ' -e "' + command + '"',
         client, True)
 
 
@@ -41,7 +44,7 @@ def generate_database_dump_filename():
     if system.config['dump_name'] == '':
         # _project-db_20-08-2020_12-37.sql
         _now = datetime.datetime.now()
-        database_dump_file_name = '_' + system.config['origin']['db']['name'] + '_' + _now.strftime(
+        database_dump_file_name = '_' + system.config[mode.Client.ORIGIN]['db']['name'] + '_' + _now.strftime(
             "%d-%m-%Y_%H-%M") + '.sql'
     else:
         database_dump_file_name = system.config['dump_name'] + '.sql'
