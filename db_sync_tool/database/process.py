@@ -73,6 +73,8 @@ def import_database_dump():
         )
         clear_database(mode.Client.TARGET)
 
+    database_utility.truncate_tables()
+
     if not system.config['keep_dump'] and not mode.is_dump():
 
         database_utility.get_database_version(mode.Client.TARGET)

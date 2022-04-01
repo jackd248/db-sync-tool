@@ -133,6 +133,8 @@ target:
 log_file:
 # List of tables to ignore for the synchronisation
 ignore_table: []
+# List of tables to truncate before the synchronisation
+truncate_table: []
 # Disable the check dump feature, to verify the completeness of the created dump file (default: true)
 check_dump:
 # Additional console scripts
@@ -149,18 +151,21 @@ script:
 > The config file can be written in `yaml` or `json`.
 
 <a name="ignore_tables"></a>
-### Ignore tables 
+### Ignore/truncate tables 
 
 Often it is better to exclude some tables from the sql dump for performance reasons, e.g. caching tables. Specify them as comma separated list in the `ignore_table` array.
 
 You can use wildcards to define several tables:
 
-```json
-{
-  "ignore_table": [ 
-    "cache_*"
-  ]  
-}
+```yaml
+ignore_tables:
+    - cache_*
+```
+
+There is also an option to truncate tables before the import with listing shown as below:
+```yaml
+truncate_tables:
+    - cache_*
 ```
 
 <a name="authentication"></a>

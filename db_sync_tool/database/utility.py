@@ -50,6 +50,31 @@ def generate_database_dump_filename():
         database_dump_file_name = system.config['dump_name'] + '.sql'
 
 
+def truncate_tables():
+    """
+    Generate the ignore tables options for the mysqldump command by the given table list
+    # ToDo: Too much conditional nesting
+    :return: String
+    """
+    if 'truncate_table' in system.config:
+        output.message(
+            output.Subject.TARGET,
+            'Truncating tables before import',
+            True
+        )
+        for _table in system.config['truncate_table']:
+            if '*' in _table:
+                _wildcard_tables = get_database_tables_like(mode.Client.TARGET,
+                                                            _table.replace('*', ''))
+                if _wildcard_tables:
+                    for _wildcard_table in _wildcard_tables:
+                        _sql_command = f'TRUNCATE TABLE IF EXISTS {_wildcard_table}'
+                        run_database_command(mode.Client.TARGET, _sql_command, True)
+            else:
+                _sql_command = f'TRUNCATE TABLE IF EXISTS {_table}'
+                run_database_command(mode.Client.TARGET, _sql_command, True)
+
+
 def generate_ignore_database_tables():
     """
     Generate the ignore tables options for the mysqldump command by the given table list
@@ -192,7 +217,7 @@ def get_database_version(client):
     _database_system = None
     _version_number = None
     try:
-        _database_version = run_database_command(mode.Client.ORIGIN, 'SELECT VERSION();').splitlines()[1]
+        _database_version = run_database_command(client, 'SELECT VERSION();').splitlines()[1]
         _database_system = DatabaseSystem.MYSQL
 
         _version_number = re.search('(\d+\.)?(\d+\.)?(\*|\d+)', _database_version).group()
