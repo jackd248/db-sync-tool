@@ -26,7 +26,6 @@ def main(args=None):
         args = {}
 
     args = get_arguments(args)
-    config = build_config(args)
     sync.Sync(
         config_file=args.config_file,
         verbose=args.verbose,
@@ -41,7 +40,7 @@ def main(args=None):
         force_password=args.force_password,
         use_rsync=args.use_rsync,
         use_rsync_options=args.use_rsync_options,
-        config=config
+        args=args
     )
 
 
@@ -245,112 +244,6 @@ def get_arguments(args):
                         type=str)
 
     return parser.parse_args(helper.dict_to_args(args))
-
-
-def build_config(args):
-    """
-    Building an optional config
-    :param args:
-    :return:
-    """
-    config = defaultdict(lambda: defaultdict(dict))
-    config['target'] = defaultdict(dict)
-    config['origin'] = defaultdict(dict)
-
-    if not args.type is None:
-        config['type'] = args.type
-
-    if not args.tables is None:
-        config['tables'] = args.tables
-
-    if not args.origin is None:
-        config['link_origin'] = args.origin
-
-    if not args.target is None:
-        config['link_target'] = args.target
-
-    if not args.target_path is None:
-        config['target']['path'] = args.target_path
-
-    if not args.target_name is None:
-        config['target']['name'] = args.target_name
-
-    if not args.target_host is None:
-        config['target']['host'] = args.target_host
-
-    if not args.target_user is None:
-        config['target']['user'] = args.target_user
-
-    if not args.target_password is None:
-        config['target']['password'] = args.target_password
-
-    if not args.target_key is None:
-        config['target']['ssh_key'] = args.target_key
-
-    if not args.target_port is None:
-        config['target']['port'] = args.target_port
-
-    if not args.target_dump_dir is None:
-        config['target']['dump_dir'] = args.target_dump_dir
-
-    if not args.target_db_name is None:
-        config['target']['db']['name'] = args.target_db_name
-
-    if not args.target_db_host is None:
-        config['target']['db']['host'] = args.target_db_host
-
-    if not args.target_db_user is None:
-        config['target']['db']['user'] = args.target_db_user
-
-    if not args.target_db_password is None:
-        config['target']['db']['password'] = args.target_db_password
-
-    if not args.target_db_port is None:
-        config['target']['db']['port'] = args.target_db_port
-
-    if not args.target_after_dump is None:
-        config['target']['after_dump'] = args.target_after_dump
-
-    if not args.origin_path is None:
-        config['origin']['path'] = args.origin_path
-
-    if not args.origin_name is None:
-        config['origin']['name'] = args.origin_name
-
-    if not args.origin_host is None:
-        config['origin']['host'] = args.origin_host
-
-    if not args.origin_user is None:
-        config['origin']['user'] = args.origin_user
-
-    if not args.origin_password is None:
-        config['origin']['password'] = args.origin_password
-
-    if not args.origin_key is None:
-        config['origin']['ssh_key'] = args.origin_key
-
-    if not args.origin_port is None:
-        config['origin']['port'] = args.origin_port
-
-    if not args.origin_dump_dir is None:
-        config['origin']['dump_dir'] = args.origin_dump_dir
-
-    if not args.origin_db_name is None:
-        config['origin']['db']['name'] = args.origin_db_name
-
-    if not args.origin_db_host is None:
-        config['origin']['db']['host'] = args.origin_db_host
-
-    if not args.origin_db_user is None:
-        config['origin']['db']['user'] = args.origin_db_user
-
-    if not args.origin_db_password is None:
-        config['origin']['db']['password'] = args.origin_db_password
-
-    if not args.origin_db_port is None:
-        config['origin']['db']['port'] = args.origin_db_port
-
-    return config
 
 
 if __name__ == "__main__":

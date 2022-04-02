@@ -37,8 +37,8 @@ config = {
     'use_sshpass': False,
     'ssh_agent': False,
     'ssh_password': {
-        'origin': None,
-        'target': None
+        mode.Client.ORIGIN: None,
+        mode.Client.TARGET: None
     },
     'link_target': None,
     'link_origin': None,
@@ -64,25 +64,19 @@ def check_target_configuration():
     parser.get_database_configuration(mode.Client.TARGET)
 
 
-def get_configuration(host_config):
+def get_configuration(host_config, args):
     """
     Checking configuration information by file or dictionary
     :param host_config: Dictionary
+    :param args: Dictionary
     :return:
     """
     global config
-
-    if config['config_file_path'] is None and host_config == {}:
-        sys.exit(
-            output.message(
-                output.Subject.ERROR,
-                f'Configuration is missing, use a separate file or provide host parameter',
-                False
-            )
-        )
+    config[mode.Client.TARGET] = {}
+    config[mode.Client.ORIGIN] = {}
 
     if host_config:
-        config.update(host_config)
+        config.update(json.dumps(host_config))
 
     _config_file_path = config['config_file_path']
     if not _config_file_path is None:
@@ -116,10 +110,126 @@ def get_configuration(host_config):
                 )
             )
 
+    args_config = build_config(args)
+
+    if config['config_file_path'] is None and args_config == {}:
+        sys.exit(
+            output.message(
+                output.Subject.ERROR,
+                f'Configuration is missing, use a separate file or provide host parameter',
+                False
+            )
+        )
+
     validation.check(config)
     check_options()
     helper.run_script(script='before')
     log.get_logger().info('Starting db_sync_tool')
+
+
+def build_config(args):
+    """
+    ADding the provided arguments
+    :param args:
+    :return:
+    """
+    if args is None:
+        return
+
+    if not args.type is None:
+        config['type'] = args.type
+
+    if not args.tables is None:
+        config['tables'] = args.tables
+
+    if not args.origin is None:
+        config['link_origin'] = args.origin
+
+    if not args.target is None:
+        config['link_target'] = args.target
+
+    if not args.target_path is None:
+        config[mode.Client.TARGET]['path'] = args.target_path
+
+    if not args.target_name is None:
+        config[mode.Client.TARGET]['name'] = args.target_name
+
+    if not args.target_host is None:
+        config[mode.Client.TARGET]['host'] = args.target_host
+
+    if not args.target_user is None:
+        config[mode.Client.TARGET]['user'] = args.target_user
+
+    if not args.target_password is None:
+        config[mode.Client.TARGET]['password'] = args.target_password
+
+    if not args.target_key is None:
+        config[mode.Client.TARGET]['ssh_key'] = args.target_key
+
+    if not args.target_port is None:
+        config[mode.Client.TARGET]['port'] = args.target_port
+
+    if not args.target_dump_dir is None:
+        config[mode.Client.TARGET]['dump_dir'] = args.target_dump_dir
+
+    if not args.target_db_name is None:
+        config[mode.Client.TARGET]['db']['name'] = args.target_db_name
+
+    if not args.target_db_host is None:
+        config[mode.Client.TARGET]['db']['host'] = args.target_db_host
+
+    if not args.target_db_user is None:
+        config[mode.Client.TARGET]['db']['user'] = args.target_db_user
+
+    if not args.target_db_password is None:
+        config[mode.Client.TARGET]['db']['password'] = args.target_db_password
+
+    if not args.target_db_port is None:
+        config[mode.Client.TARGET]['db']['port'] = args.target_db_port
+
+    if not args.target_after_dump is None:
+        config[mode.Client.TARGET]['after_dump'] = args.target_after_dump
+
+    if not args.origin_path is None:
+        config[mode.Client.ORIGIN]['path'] = args.origin_path
+
+    if not args.origin_name is None:
+        config[mode.Client.ORIGIN]['name'] = args.origin_name
+
+    if not args.origin_host is None:
+        config[mode.Client.ORIGIN]['host'] = args.origin_host
+
+    if not args.origin_user is None:
+        config[mode.Client.ORIGIN]['user'] = args.origin_user
+
+    if not args.origin_password is None:
+        config[mode.Client.ORIGIN]['password'] = args.origin_password
+
+    if not args.origin_key is None:
+        config[mode.Client.ORIGIN]['ssh_key'] = args.origin_key
+
+    if not args.origin_port is None:
+        config[mode.Client.ORIGIN]['port'] = args.origin_port
+
+    if not args.origin_dump_dir is None:
+        config[mode.Client.ORIGIN]['dump_dir'] = args.origin_dump_dir
+
+    if not args.origin_db_name is None:
+        config[mode.Client.ORIGIN]['db']['name'] = args.origin_db_name
+
+    if not args.origin_db_host is None:
+        config[mode.Client.ORIGIN]['db']['host'] = args.origin_db_host
+
+    if not args.origin_db_user is None:
+        config[mode.Client.ORIGIN]['db']['user'] = args.origin_db_user
+
+    if not args.origin_db_password is None:
+        config[mode.Client.ORIGIN]['db']['password'] = args.origin_db_password
+
+    if not args.origin_db_port is None:
+        config[mode.Client.ORIGIN]['db']['port'] = args.origin_db_port
+
+    return config
 
 
 def check_options():
@@ -128,10 +238,10 @@ def check_options():
     :return:
     """
     global config
-    if 'dump_dir' in config['origin']:
+    if 'dump_dir' in config[mode.Client.ORIGIN]:
         config['default_origin_dump_dir'] = False
 
-    if 'dump_dir' in config['target']:
+    if 'dump_dir' in config[mode.Client.TARGET]:
         config['default_target_dump_dir'] = False
 
     if 'check_dump' in config:
@@ -327,12 +437,12 @@ def link_configuration_with_hosts():
     @ToDo Simplify function
     :return:
     """
-    if ('link' in config['origin'] or 'link' in config['target']) and config['link_hosts'] == '':
+    if ('link' in config[mode.Client.ORIGIN] or 'link' in config[mode.Client.TARGET]) and config['link_hosts'] == '':
         #
         # Try to read host file path from link entry
         #
-        _host = str(config['origin']['link'].split('@')[0]) if 'link' in config['origin'] else ''
-        _host = str(config['target']['link'].split('@')[0]) if 'link' in config['target'] else _host
+        _host = str(config[mode.Client.ORIGIN]['link'].split('@')[0]) if 'link' in config[mode.Client.ORIGIN] else ''
+        _host = str(config[mode.Client.TARGET]['link'].split('@')[0]) if 'link' in config[mode.Client.TARGET] else _host
 
         config['link_hosts'] = _host
 
@@ -368,20 +478,20 @@ def link_configuration_with_hosts():
                     True
                 )
                 if not config['config_file_path'] is None:
-                    if 'link' in config['origin']:
-                        _host_name = str(config['origin']['link']).split('@')[1]
+                    if 'link' in config[mode.Client.ORIGIN]:
+                        _host_name = str(config[mode.Client.ORIGIN]['link']).split('@')[1]
                         if _host_name in _hosts:
-                            config['origin'] = {**config['origin'], **_hosts[_host_name]}
+                            config[mode.Client.ORIGIN] = {**config[mode.Client.ORIGIN], **_hosts[_host_name]}
 
-                    if 'link' in config['target']:
-                        _host_name = str(config['target']['link']).split('@')[1]
+                    if 'link' in config[mode.Client.TARGET]:
+                        _host_name = str(config[mode.Client.TARGET]['link']).split('@')[1]
                         if _host_name in _hosts:
-                            config['target'] = {**config['target'], **_hosts[_host_name]}
+                            config[mode.Client.TARGET] = {**config[mode.Client.TARGET], **_hosts[_host_name]}
                 else:
                     if 'link_target' in config and 'link_origin' in config:
                         if config['link_target'] in _hosts and config['link_origin'] in _hosts:
-                            config['target'] = _hosts[config['link_target']]
-                            config['origin'] = _hosts[config['link_origin']]
+                            config[mode.Client.TARGET] = _hosts[config['link_target']]
+                            config[mode.Client.ORIGIN] = _hosts[config['link_origin']]
                         else:
                             sys.exit(
                                 output.message(

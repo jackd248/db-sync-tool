@@ -35,7 +35,7 @@ setuptools.setup(
     ],
     python_requires='>=3.5',
     install_requires=[
-        "paramiko>=2.8.0",
+        "paramiko>=2.10.1",
         "future-fstrings>=1.2",
         "pyyaml>=6.0",
         "jsonschema>=4.2.1",

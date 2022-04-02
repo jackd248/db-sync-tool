@@ -28,7 +28,8 @@ class Sync:
                  force_password=False,
                  use_rsync=False,
                  use_rsync_options=None,
-                 config=None):
+                 config=None,
+                 args=None):
         """
         Initialization
         :param config_file:
@@ -45,6 +46,7 @@ class Sync:
         :param use_rsync:
         :param use_rsync_options:
         :param config:
+        :param args:
         """
         if config is None:
             config = {}
@@ -65,7 +67,7 @@ class Sync:
             use_rsync,
             use_rsync_options
         )
-        system.get_configuration(config)
+        system.get_configuration(config, args)
         system.check_authorizations()
         process.create_origin_database_dump()
         transfer.transfer_origin_database_dump()
