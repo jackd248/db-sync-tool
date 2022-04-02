@@ -86,23 +86,11 @@ $ python3 vendor/kmi/db-sync-tool/db_sync_tool
 #### Shell arguments
 
 ```bash
-usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-y] [-m] [-dr]
-                    [-i IMPORT_FILE] [-dn DUMP_NAME] [-kd KEEP_DUMP]
-                    [-o HOST_FILE] [-l LOG_FILE] [-cd] [-ta TABLES] [-t TYPE]
-                    [-tp TARGET_PATH] [-tn TARGET_NAME] [-th TARGET_HOST]
-                    [-tu TARGET_USER] [-tpw TARGET_PASSWORD] [-tk TARGET_KEY]
-                    [-tpo TARGET_PORT] [-tdd TARGET_DUMP_DIR]
-                    [-tkd TARGET_KEEP_DUMPS] [-tdn TARGET_DB_NAME]
-                    [-tdh TARGET_DB_HOST] [-tdu TARGET_DB_USER]
-                    [-tdpw TARGET_DB_PASSWORD] [-tdpo TARGET_DB_PORT]
-                    [-tad TARGET_AFTER_DUMP] [-op ORIGIN_PATH]
-                    [-on ORIGIN_NAME] [-oh ORIGIN_HOST] [-ou ORIGIN_USER]
-                    [-opw ORIGIN_PASSWORD] [-ok ORIGIN_KEY] [-opo ORIGIN_PORT]
-                    [-odd ORIGIN_DUMP_DIR] [-okd ORIGIN_KEEP_DUMPS]
-                    [-odn ORIGIN_DB_NAME] [-odh ORIGIN_DB_HOST]
-                    [-odu ORIGIN_DB_USER] [-odpw ORIGIN_DB_PASSWORD]
-                    [-odpo ORIGIN_DB_PORT] [-fpw] [-ur]
-                    [-uro USE_RSYNC_OPTIONS]
+usage: db_sync_tool [-h] [-f CONFIG_FILE] [-v] [-y] [-m] [-dr] [-i IMPORT_FILE] [-dn DUMP_NAME] [-kd KEEP_DUMP] [-o HOST_FILE] [-l LOG_FILE] [-cd] [-ta TABLES] [-r] [-t TYPE] [-tp TARGET_PATH]
+                    [-tn TARGET_NAME] [-th TARGET_HOST] [-tu TARGET_USER] [-tpw TARGET_PASSWORD] [-tk TARGET_KEY] [-tpo TARGET_PORT] [-tdd TARGET_DUMP_DIR] [-tkd TARGET_KEEP_DUMPS] [-tdn TARGET_DB_NAME]
+                    [-tdh TARGET_DB_HOST] [-tdu TARGET_DB_USER] [-tdpw TARGET_DB_PASSWORD] [-tdpo TARGET_DB_PORT] [-tad TARGET_AFTER_DUMP] [-op ORIGIN_PATH] [-on ORIGIN_NAME] [-oh ORIGIN_HOST]
+                    [-ou ORIGIN_USER] [-opw ORIGIN_PASSWORD] [-ok ORIGIN_KEY] [-opo ORIGIN_PORT] [-odd ORIGIN_DUMP_DIR] [-okd ORIGIN_KEEP_DUMPS] [-odn ORIGIN_DB_NAME] [-odh ORIGIN_DB_HOST]
+                    [-odu ORIGIN_DB_USER] [-odpw ORIGIN_DB_PASSWORD] [-odpo ORIGIN_DB_PORT] [-fpw] [-ur] [-uro USE_RSYNC_OPTIONS]
                     [origin] [target]
 
 A tool for automatic database synchronization from and to host systems.
@@ -118,32 +106,25 @@ optional arguments:
   -v, --verbose         Enable extended console output
   -y, --yes             Skipping user confirmation for database import
   -m, --mute            Mute console output
-  -dr, --dry-run        Testing process without running database export,
-                        transfer or import.
+  -dr, --dry-run        Testing process without running database export, transfer or import.
   -i IMPORT_FILE, --import-file IMPORT_FILE
                         Import database from a specific file dump
   -dn DUMP_NAME, --dump-name DUMP_NAME
-                        Set a specific dump file name (default is
-                        "_[dbname]_[date]")
+                        Set a specific dump file name (default is "_[dbname]_[date]")
   -kd KEEP_DUMP, --keep-dump KEEP_DUMP
-                        Skipping target import of the database dump and saving
-                        the available dump file in the given directory
+                        Skipping target import of the database dump and saving the available dump file in the given directory
   -o HOST_FILE, --host-file HOST_FILE
-                        Using an additional hosts file for merging hosts
-                        information with the configuration file
+                        Using an additional hosts file for merging hosts information with the configuration file
   -l LOG_FILE, --log-file LOG_FILE
                         File path for creating a additional log file
   -cd, --clear-database
-                        Dropping all tables before importing a new sync to get
-                        a clean database.
+                        Dropping all tables before importing a new sync to get a clean database.
   -ta TABLES, --tables TABLES
-                        Defining specific tables to export, e.g.
-                        --tables=table1,table2
-  -t TYPE, --type TYPE  Defining the framework type [TYPO3, Symfony, Drupal,
-                        Wordpress]
+                        Defining specific tables to export, e.g. --tables=table1,table2
+  -r, --reverse         Reverse origin and target hosts
+  -t TYPE, --type TYPE  Defining the framework type [TYPO3, Symfony, Drupal, Wordpress]
   -tp TARGET_PATH, --target-path TARGET_PATH
-                        File path to target database credential file depending
-                        on the framework type
+                        File path to target database credential file depending on the framework type
   -tn TARGET_NAME, --target-name TARGET_NAME
                         Providing a name for the target system
   -th TARGET_HOST, --target-host TARGET_HOST
@@ -171,11 +152,9 @@ optional arguments:
   -tdpo TARGET_DB_PORT, --target-db-port TARGET_DB_PORT
                         Database port for target system
   -tad TARGET_AFTER_DUMP, --target-after-dump TARGET_AFTER_DUMP
-                        Additional dump file to insert after the regular
-                        database import
+                        Additional dump file to insert after the regular database import
   -op ORIGIN_PATH, --origin-path ORIGIN_PATH
-                        File path to origin database credential file depending
-                        on the framework type
+                        File path to origin database credential file depending on the framework type
   -on ORIGIN_NAME, --origin-name ORIGIN_NAME
                         Providing a name for the origin system
   -oh ORIGIN_HOST, --origin-host ORIGIN_HOST

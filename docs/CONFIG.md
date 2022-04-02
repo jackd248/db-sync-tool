@@ -17,6 +17,8 @@ Here you can find an overview over the possible configuration adjustments.
 - [Check dump](#check)
 - [Manual database credentials](#manual)
 - [Clearing database](#clear)
+- [Protect host](#protect)
+- [Reverse hosts](#reverse)
 
 <a name="configuration_reference"></a>
 ### Full configuration reference
@@ -436,4 +438,14 @@ origin:
     protect: true
 target:
     path: <TARGET_PATH>
+```
+
+
+<a name="reverse"></a>
+### Reverse hosts
+
+You can easily reverse the declared origin and target hosts with the `--reverse` argument:
+
+```yaml
+$ db_sync_tool -f config.yml --reverse
 ```

@@ -28,6 +28,7 @@ class Sync:
                  force_password=False,
                  use_rsync=False,
                  use_rsync_options=None,
+                 reverse=False,
                  config=None,
                  args=None):
         """
@@ -45,6 +46,7 @@ class Sync:
         :param force_password:
         :param use_rsync:
         :param use_rsync_options:
+        :param reverse:
         :param config:
         :param args:
         """
@@ -65,7 +67,8 @@ class Sync:
             clear,
             force_password,
             use_rsync,
-            use_rsync_options
+            use_rsync_options,
+            reverse
         )
         system.get_configuration(config, args)
         system.check_authorizations()

@@ -40,6 +40,7 @@ def main(args=None):
         force_password=args.force_password,
         use_rsync=args.use_rsync,
         use_rsync_options=args.use_rsync_options,
+        reverse=args.reverse,
         args=args
     )
 
@@ -110,6 +111,10 @@ def get_arguments(args):
                         help='Defining specific tables to export, e.g. --tables=table1,table2',
                         required=False,
                         type=str)
+    parser.add_argument('-r', '--reverse',
+                        help='Reverse origin and target hosts',
+                        required=False,
+                        action='store_true')
     parser.add_argument('-t', '--type',
                         help='Defining the framework type [TYPO3, Symfony, Drupal, Wordpress]',
                         required=False,

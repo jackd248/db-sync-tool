@@ -248,6 +248,7 @@ def check_options():
         config['check_dump'] = config['check_dump']
 
     link_configuration_with_hosts()
+    reverse_hosts()
     mode.check_sync_mode()
 
 
@@ -348,7 +349,8 @@ def check_args_options(config_file=None,
                        clear=False,
                        force_password=False,
                        use_rsync=False,
-                       use_rsync_options=None):
+                       use_rsync_options=None,
+                       reverse=False):
     """
     Checking arguments and fill options array
     :param config_file:
@@ -364,6 +366,7 @@ def check_args_options(config_file=None,
     :param force_password:
     :param use_rsync:
     :param use_rsync_options:
+    :param reverse:
     :return:
     """
     global config
@@ -416,6 +419,9 @@ def check_args_options(config_file=None,
         if not use_rsync_options is None:
             config['use_rsync_options'] = use_rsync_options
 
+    if not reverse is None:
+        config['reverse'] = reverse
+
     if not keep_dump is None:
         default_local_sync_path = keep_dump
 
@@ -427,6 +433,25 @@ def check_args_options(config_file=None,
         output.message(
             output.Subject.INFO,
             '"Keep dump" option chosen',
+            True
+        )
+
+
+def reverse_hosts():
+    """
+    Checking authorization for clients
+    :return:
+    """
+    if config['reverse']:
+        _origin = config[mode.Client.ORIGIN]
+        _target = config[mode.Client.TARGET]
+
+        config[mode.Client.ORIGIN] = _target
+        config[mode.Client.TARGET] = _origin
+
+        output.message(
+            output.Subject.INFO,
+            'Reverse origin and target hosts',
             True
         )
 
