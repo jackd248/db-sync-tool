@@ -11,11 +11,12 @@ cd "$parent_path"
 cd ..
 
 VERBOSE="-m"
+PYTHON="python3"
 
 if [ "$#" -eq "0" ]; then
   for d in "scenario/"*
   do
-    sh $d/test.sh $VERBOSE
+    sh $d/test.sh $PYTHON $VERBOSE
   done
 else
   # Default is mute mode
@@ -24,5 +25,5 @@ else
   else
     VERBOSE=$2
   fi
-  sh scenario/$1/test.sh $VERBOSE
+  sh scenario/$1/test.sh $PYTHON $VERBOSE
 fi

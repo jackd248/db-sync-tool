@@ -6,7 +6,7 @@
 
 printf "\033[94m[TEST]\033[m Feature: tables"
 printf " \033[90m(Sync: WWW1 -> WWW2, Initiator: WWW2)\033[m"
-docker-compose exec www2 python3 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/tables/sync-www1-to-local.json -y -ta person $1
+docker-compose exec www2 $1 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/tables/sync-www1-to-local.json -y -ta person $2
 
 # Expecting 3 results in the database
 count=$(docker-compose exec db2 mysql -udb -pdb db -e 'SELECT COUNT(*) FROM person' | grep 3 | tr -d '[:space:]')

@@ -17,7 +17,7 @@ touch ./files/www1/database_backup/3.sql
 touch ./files/www1/database_backup/4.sql
 touch ./files/www1/database_backup/5.sql
 
-docker-compose exec www2 python3 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/cleanup/dump-www1-from-local.json -y -dn test $1
+docker-compose exec www2 $1 /var/www/html/db_sync_tool -f /var/www/html/tests/scenario/cleanup/dump-www1-from-local.json -y -dn test $2
 FILE=./files/www1/database_backup/1.sql
 if [ ! -f "$FILE" ]; then
     echo " \033[92m✔\033[m"

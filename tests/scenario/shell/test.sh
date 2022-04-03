@@ -6,7 +6,7 @@
 
 printf "\033[94m[TEST]\033[m Feature: Shell"
 printf " \033[90m(Sync: WWW1 -> WWW2, Initiator: WWW2)\033[m"
-docker-compose exec www2 python3 /var/www/html/db_sync_tool $1 \
+docker-compose exec www2 $1 /var/www/html/db_sync_tool $2 \
   --type TYPO3 \
   --target-path /var/www/html/tests/files/www2/LocalConfiguration.php \
   --origin-path /var/www/html/tests/files/www1/LocalConfiguration.php \

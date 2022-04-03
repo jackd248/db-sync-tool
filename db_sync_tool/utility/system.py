@@ -76,7 +76,10 @@ def get_configuration(host_config, args):
     config[mode.Client.ORIGIN] = {}
 
     if host_config:
-        config.update(json.dumps(host_config))
+        if type(host_config) is dict:
+            config.update(host_config)
+        else:
+            config.update(json.dumps(host_config))
 
     _config_file_path = config['config_file_path']
     if not _config_file_path is None:

@@ -1,4 +1,4 @@
-FROM php:7.2-fpm
+FROM php:7.4-fpm
 
 #
 # Benötigte Pakete installieren
@@ -21,9 +21,10 @@ RUN apt-get update \
     libpng-dev \
     libgmp-dev \
     libxml2-dev \
+    libzip-dev \
     libldap2-dev \
     mariadb-client \
-    python-pip \
+    python3 \
     python3-pip \
     ruby \
     ruby-dev \
@@ -41,7 +42,7 @@ RUN apt-get update \
 #
 #
 RUN docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
- && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+ && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
  && docker-php-ext-install -j$(nproc) \
     exif \
     gd \
@@ -49,6 +50,12 @@ RUN docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
     mysqli \
     pdo_mysql \
     zip
+
+# RUN git config --global url."https://".insteadOf git://
+# RUN git clone git://github.com/yyuu/pyenv.git .pyenv
+#
+# ENV PYENV_ROOT $HOME/.pyenv
+# ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
 
 #
 #
@@ -65,9 +72,9 @@ RUN mkdir /var/run/sshd && \
     chmod 0755 /var/run/sshd && \
     useradd -p $(openssl passwd -1 password) --create-home --shell /bin/bash --groups sudo user
 
-RUN mkdir /root/.ssh && \
-    ssh-keyscan -H www1 >> ~/.ssh/known_hosts && \
-    ssh-keyscan -H www2 >> ~/.ssh/known_hosts
+# RUN mkdir /root/.ssh && \
+#     ssh-keyscan -H www1 >> ~/.ssh/known_hosts && \
+#     ssh-keyscan -H www2 >> ~/.ssh/known_hosts
 
 EXPOSE 22
 
