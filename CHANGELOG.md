@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.8.0] - 2022-04-03
+### Added
+- [Test] Test Setting adjusted
+- [Task] Reverse feature
+- [Task] Load arguments after config file
+- [Task] Truncate feature
+- [Task] Post SQL feature
+- [Task] Protected hosts
+- [Doc] Extended documentation for yml usage
+- [Task] Bump paramiko from 2.8.0 to 2.10.1
+
 ## [2.7.0] - 2022-03-06
 ### Added
 - [Task] Single table export
