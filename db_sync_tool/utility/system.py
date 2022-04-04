@@ -64,7 +64,7 @@ def check_target_configuration():
     parser.get_database_configuration(mode.Client.TARGET)
 
 
-def get_configuration(host_config, args):
+def get_configuration(host_config, args = {}):
     """
     Checking configuration information by file or dictionary
     :param host_config: Dictionary
