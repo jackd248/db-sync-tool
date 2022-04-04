@@ -115,7 +115,7 @@ def get_configuration(host_config, args = {}):
 
     args_config = build_config(args)
 
-    if config['config_file_path'] is None and args_config == {}:
+    if not config[mode.Client.TARGET] and not config[mode.Client.ORIGIN]:
         sys.exit(
             output.message(
                 output.Subject.ERROR,
@@ -136,8 +136,8 @@ def build_config(args):
     :param args:
     :return:
     """
-    if args is None:
-        return
+    if args is None or not args:
+        return {}
 
     if not args.type is None:
         config['type'] = args.type
