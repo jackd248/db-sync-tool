@@ -56,16 +56,20 @@ def truncate_tables():
     # ToDo: Too much conditional nesting
     :return: String
     """
+    # Workaround for config naming
     if 'truncate_table' in system.config:
+        system.config['truncate_tables'] = system.config['truncate_table']
+
+    if 'truncate_tables' in system.config:
         output.message(
             output.Subject.TARGET,
             'Truncating tables before import',
             True
         )
-        for _table in system.config['truncate_table']:
+        for _table in system.config['truncate_tables']:
             if '*' in _table:
                 _wildcard_tables = get_database_tables_like(mode.Client.TARGET,
-                                                            _table.replace('*', ''))
+                                                            _table.replace('*', '%'))
                 if _wildcard_tables:
                     for _wildcard_table in _wildcard_tables:
                         _sql_command = f'TRUNCATE TABLE IF EXISTS {_wildcard_table}'
@@ -81,12 +85,16 @@ def generate_ignore_database_tables():
     # ToDo: Too much conditional nesting
     :return: String
     """
-    _ignore_tables = []
+    # Workaround for config naming
     if 'ignore_table' in system.config:
-        for table in system.config['ignore_table']:
+        system.config['ignore_tables'] = system.config['ignore_table']
+
+    _ignore_tables = []
+    if 'ignore_tables' in system.config:
+        for table in system.config['ignore_tables']:
             if '*' in table:
                 _wildcard_tables = get_database_tables_like(mode.Client.ORIGIN,
-                                                            table.replace('*', ''))
+                                                            table.replace('*', '%'))
                 if _wildcard_tables:
                     for wildcard_table in _wildcard_tables:
                         _ignore_tables = generate_ignore_database_table(_ignore_tables,
@@ -115,7 +123,7 @@ def get_database_tables_like(client, name):
     :return: Dictionary
     """
     _dbname = system.config[client]['db']['name']
-    _tables = run_database_command(client, f'SHOW TABLES FROM {_dbname} LIKE \'%{name}%\';').strip()
+    _tables = run_database_command(client, f'SHOW TABLES FROM \`{_dbname}\` LIKE \'{name}\';').strip()
     if _tables != '':
         return _tables.split('\n')[1:]
     return
