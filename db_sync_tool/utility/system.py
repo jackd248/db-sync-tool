@@ -115,6 +115,9 @@ def get_configuration(host_config, args = {}):
 
     args_config = build_config(args)
 
+    validation.check(config)
+    check_options()
+
     if not config[mode.Client.TARGET] and not config[mode.Client.ORIGIN]:
         sys.exit(
             output.message(
@@ -123,9 +126,6 @@ def get_configuration(host_config, args = {}):
                 False
             )
         )
-
-    validation.check(config)
-    check_options()
     helper.run_script(script='before')
     log.get_logger().info('Starting db_sync_tool')
 
