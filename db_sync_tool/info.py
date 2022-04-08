@@ -1,6 +1,6 @@
 """
 Info script
 """
-__version__ = "2.8.2"
+__version__ = "2.8.3"
 __pypi_package_url__ = "https://pypi.org/pypi/db-sync-tool-kmi"
 __homepage__ = "https://github.com/jackd248/db-sync-tool"

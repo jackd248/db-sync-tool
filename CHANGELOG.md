@@ -6,17 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.8.3] - 2022-04-08
+
+- [Bugfix] Ignore table wildcard
+- [Bugfix] Fix hosts without config
+
 ## [2.8.2] - 2022-04-04
-### Added
+
 - [Bugfix] Module usage broken
 
 ## [2.8.1] - 2022-04-04
-### Added
+
 - [Bugfix] Optional args argument
 - [Task] Changelog updated
 
 ## [2.8.0] - 2022-04-03
-### Added
+
 - [Test] Test Setting adjusted
 - [Task] Reverse feature
 - [Task] Load arguments after config file
