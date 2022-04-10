@@ -125,11 +125,12 @@ def check_and_create_dump_dir(client, path):
     )
 
 
-def get_ssh_host_name(client, with_user=False):
+def get_ssh_host_name(client, with_user=False, minimal=False):
     """
     Format ssh host name depending on existing client name
     :param client:
     :param with_user:
+    :param short:
     :return:
     """
     if not 'user' in system.config[client] and not 'host' in system.config[client]:
@@ -141,8 +142,11 @@ def get_ssh_host_name(client, with_user=False):
         _host = system.config[client]['host']
 
     if 'name' in system.config[client]:
-        return output.CliFormat.BOLD + system.config[client][
-            'name'] + output.CliFormat.ENDC + output.CliFormat.BLACK + ' (' + _host + ')' + \
+        if minimal:
+            return system.config[client]['name']
+        else:
+            return output.CliFormat.BOLD + system.config[client][
+                'name'] + output.CliFormat.ENDC + output.CliFormat.BLACK + ' (' + _host + ')' + \
                output.CliFormat.ENDC
     else:
         return _host

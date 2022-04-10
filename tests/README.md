@@ -11,9 +11,7 @@ Start the docker container:
 Install python dependencies in the containers:
 
 ```bash
- $ docker-compose exec www1 pip3 install -r requirements.txt
- $ docker-compose exec www2 pip3 install -r requirements.txt
- $ docker-compose exec proxy pip3 install -r requirements.txt
+ $ docker-compose exec www1 pip3 install -r requirements.txt && docker-compose exec www2 pip3 install -r requirements.txt && docker-compose exec proxy pip3 install -r requirements.txt
 ```
 
 All possible scenarios will be executed by the following command:
@@ -44,6 +42,7 @@ Select one of the following scenarios:
 - host
 - import_local
 - import_remote
+- jump_host
 - laravel
 - link
 - link_inline

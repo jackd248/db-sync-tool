@@ -19,6 +19,7 @@ Here you can find an overview over the possible configuration adjustments.
 - [Clearing database](#clear)
 - [Protect host](#protect)
 - [Reverse hosts](#reverse)
+- [Jump host](#jump_host)
 
 <a name="configuration_reference"></a>
 ### Full configuration reference
@@ -49,6 +50,14 @@ origin:
     password:
     # SSH key path
     ssh_key:
+    # Provide an optional configuration for a SSH jump host
+    jump_host:
+        # SSH jump host host
+        host:
+        # SSH jump host private ip, necessary for session channel
+        private:
+        # Just informative for logging, e.g. prod
+        name:
     # Temporary or finally dump file directory (default: /tmp/)
     dump_dir:
     # Manual database credentials
@@ -95,6 +104,14 @@ target:
     password:
     # SSH key path
     ssh_key:
+    # Provide an optional configuration for a SSH jump host
+    jump_host:
+        # SSH jump host host
+        host:
+        # SSH jump host private ip, necessary for session channel
+        private:
+        # Just informative for logging, e.g. prod
+        name:
     # Temporary or finally dump file directory (default: /tmp/)
     dump_dir:
     # Lock the host against the import of a database dump
@@ -449,3 +466,17 @@ You can easily reverse the declared origin and target hosts with the `--reverse`
 ```yaml
 $ db_sync_tool -f config.yml --reverse
 ```
+
+<a name="jump_host"></a>
+### Jump host
+
+You can define an optionally SSH jump host, for accessing protected server. Unfortunately this can not be read out of the `.ssh/config`, so you have to specify them as follows:
+```yaml
+origin:
+    jump_host:
+        host: <ORIGIN_JUMP_HOST_HOST>
+        private: <ORIGIN_JUMP_HOST_PRIVATE>
+        name: Demo Jump Host
+```
+
+The `host` entry is the public ip address, the `private` entry is the private ip address (can be determined by `hostname -I` or `ip addr` or `ifconfig`).
