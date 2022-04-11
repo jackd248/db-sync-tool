@@ -56,6 +56,10 @@ origin:
         host:
         # SSH jump host private ip, necessary for session channel
         private:
+        # SSH jump host user (default: origin SSH user)
+        user:
+        # SSH jump host port (default: origin SSH port)
+        port:
         # Just informative for logging, e.g. prod
         name:
     # Temporary or finally dump file directory (default: /tmp/)
@@ -110,6 +114,10 @@ target:
         host:
         # SSH jump host private ip, necessary for session channel
         private:
+        # SSH jump host user (default: target SSH user)
+        user:
+        # SSH jump host port (default: target SSH port)
+        port:
         # Just informative for logging, e.g. prod
         name:
     # Temporary or finally dump file directory (default: /tmp/)
@@ -476,7 +484,11 @@ origin:
     jump_host:
         host: <ORIGIN_JUMP_HOST_HOST>
         private: <ORIGIN_JUMP_HOST_PRIVATE>
+        user: <ORIGIN_JUMP_HOST_USER>
+        port: <ORIGIN_JUMP_HOST_PORT>
         name: Demo Jump Host
 ```
 
 The `host` entry is the public ip address, the `private` entry is the private ip address (can be determined by `hostname -I` or `ip addr` or `ifconfig`).
+
+The entries for `user` (as default the parent/origin SSH user is used), `port` (as default the parent/origin SSH port is used) and `name` are optional. 
