@@ -77,9 +77,9 @@ def get_configuration(host_config, args = {}):
 
     if host_config:
         if type(host_config) is dict:
-            config.update(host_config)
+            config.update(__m=host_config)
         else:
-            config.update(json.dumps(host_config))
+            config.update(__m=json.dumps(obj=host_config))
 
     _config_file_path = config['config_file_path']
     if not _config_file_path is None:
