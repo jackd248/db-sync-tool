@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.9.1] - 2022-05-04
+
+- [Bugfix] Dictionary argument fix
+- [Doc] Additional documentation for the jump host feature
+
 ## [2.9.0] - 2022-04-10
 
 - [Task] Jump host feature
