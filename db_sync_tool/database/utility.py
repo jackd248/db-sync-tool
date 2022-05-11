@@ -137,7 +137,7 @@ def get_database_tables():
     if system.config['tables'] == '':
         return ''
 
-    _result = ''
+    _result = ' '
     _tables = system.config['tables'].split(',')
     for _table in _tables:
         _result += '\'' + _table + '\' '
