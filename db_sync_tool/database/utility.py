@@ -42,10 +42,10 @@ def generate_database_dump_filename():
     global database_dump_file_name
 
     if system.config['dump_name'] == '':
-        # _project-db_20-08-2020_12-37.sql
+        # _project-db_2022-08-22_12-37.sql
         _now = datetime.datetime.now()
         database_dump_file_name = '_' + system.config[mode.Client.ORIGIN]['db']['name'] + '_' + _now.strftime(
-            "%d-%m-%Y_%H-%M") + '.sql'
+            "%Y-%m-%d_%H-%M") + '.sql'
     else:
         database_dump_file_name = system.config['dump_name'] + '.sql'
 
