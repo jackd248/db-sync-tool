@@ -6,6 +6,7 @@
 """
 import requests
 import semantic_version
+import random
 from db_sync_tool.utility import mode, system, output
 from db_sync_tool import info
 
@@ -18,12 +19,13 @@ def print_header(mute):
     """
     # pylint: max-line-length=240
     if mute is False:
+        _colors = get_random_colors()
         print(
             output.CliFormat.BLACK + '##############################################' + output.CliFormat.ENDC)
         print(
             output.CliFormat.BLACK + '#                                            #' + output.CliFormat.ENDC)
         print(
-            output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '                db sync tool                ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
+            output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '              ' + _colors[0] + '⥣ ' + _colors[1] + '⥥ ' + output.CliFormat.ENDC + ' db sync tool             ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
         print(
             output.CliFormat.BLACK + '#                   v' + info.__version__ + '                   #' + output.CliFormat.ENDC)
         print(output.CliFormat.BLACK + '#  ' + info.__homepage__ + '  #' + output.CliFormat.ENDC)
@@ -75,3 +77,13 @@ def print_footer():
         True,
         True
     )
+
+
+def get_random_colors():
+    """
+    Generate a tuple of random console colors
+    :return:
+    """
+    _colors = [output.CliFormat.BEIGE, output.CliFormat.PURPLE, output.CliFormat.BLUE, output.CliFormat.YELLOW, output.CliFormat.GREEN, output.CliFormat.RED]
+    return random.sample(_colors, 2)
+
