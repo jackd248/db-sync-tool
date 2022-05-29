@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.10.0] - 2022-05-29
+
+- [Task] Loading spinner added
+- [Task] Rename database dump filename
+- [Task] Colored header
+- [Task] Released dependencies
+- [Test] Docker compose updated for ARM/M1
+
 ## [2.9.2] - 2022-05-11
 
 - [Bugfix] Tables option with necessary whitespace
