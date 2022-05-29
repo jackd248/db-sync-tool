@@ -40,7 +40,8 @@ setuptools.setup(
         "pyyaml>=6.0",
         "jsonschema>=4.2.1",
         "requests>=2.26.0",
-        "semantic_version>=2.8.5"
+        "semantic_version>=2.8.5",
+        "yaspin>=2.1"
     ],
     entry_points={
         'console_scripts': [

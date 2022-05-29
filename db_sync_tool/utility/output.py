@@ -4,7 +4,8 @@
 """
 Output script
 """
-
+import time
+from yaspin import yaspin
 from db_sync_tool.utility import log, mode, system
 
 
@@ -68,7 +69,9 @@ def message(header, message, do_print=True, do_log=False, debug=False, verbose_o
     if (system.config['mute'] and header == Subject.ERROR) or (not system.config['mute']):
         if do_print:
             if not verbose_only or (verbose_only and system.config['verbose']):
-                print(header + extend_output_by_sync_mode(header, debug) + ' ' + message)
+                _message = header + extend_output_by_sync_mode(header, debug) + ' ' + message
+                with yaspin(text=_message, color="yellow", side="right") as spinner:
+                    spinner.ok("\b\b")
         else:
             return header + extend_output_by_sync_mode(header, debug) + ' ' + message
 
@@ -137,3 +140,4 @@ def remove_multiple_elements_from_string(elements, string):
         if element in string:
             string = string.replace(element, '')
     return string
+
