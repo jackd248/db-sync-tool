@@ -27,7 +27,7 @@ def print_header(mute):
         print(
             output.CliFormat.BLACK + '#' + output.CliFormat.ENDC + '              ' + _colors[0] + '⥣ ' + _colors[1] + '⥥ ' + output.CliFormat.ENDC + ' db sync tool             ' + output.CliFormat.BLACK + '#' + output.CliFormat.ENDC)
         print(
-            output.CliFormat.BLACK + '#                   v' + info.__version__ + '                   #' + output.CliFormat.ENDC)
+            output.CliFormat.BLACK + '#                   v' + info.__version__ + '                  #' + output.CliFormat.ENDC)
         print(output.CliFormat.BLACK + '#  ' + info.__homepage__ + '  #' + output.CliFormat.ENDC)
         print(
             output.CliFormat.BLACK + '#                                            #' + output.CliFormat.ENDC)
