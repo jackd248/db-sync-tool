@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.10.1] - 2022-06-22
+
+- [Bugfix] Console output header fixed
+- [Bugfix] Fix manual shell database arguments handling
+
 ## [2.10.0] - 2022-05-29
 
 - [Task] Loading spinner added
