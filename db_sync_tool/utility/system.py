@@ -176,18 +176,23 @@ def build_config(args):
         config[mode.Client.TARGET]['dump_dir'] = args.target_dump_dir
 
     if not args.target_db_name is None:
+        check_config_dict_key(mode.Client.TARGET, 'db')
         config[mode.Client.TARGET]['db']['name'] = args.target_db_name
 
     if not args.target_db_host is None:
+        check_config_dict_key(mode.Client.TARGET, 'db')
         config[mode.Client.TARGET]['db']['host'] = args.target_db_host
 
     if not args.target_db_user is None:
+        check_config_dict_key(mode.Client.TARGET, 'db')
         config[mode.Client.TARGET]['db']['user'] = args.target_db_user
 
     if not args.target_db_password is None:
+        check_config_dict_key(mode.Client.TARGET, 'db')
         config[mode.Client.TARGET]['db']['password'] = args.target_db_password
 
     if not args.target_db_port is None:
+        check_config_dict_key(mode.Client.TARGET, 'db')
         config[mode.Client.TARGET]['db']['port'] = args.target_db_port
 
     if not args.target_after_dump is None:
@@ -218,18 +223,23 @@ def build_config(args):
         config[mode.Client.ORIGIN]['dump_dir'] = args.origin_dump_dir
 
     if not args.origin_db_name is None:
+        check_config_dict_key(mode.Client.ORIGIN, 'db')
         config[mode.Client.ORIGIN]['db']['name'] = args.origin_db_name
 
     if not args.origin_db_host is None:
+        check_config_dict_key(mode.Client.ORIGIN, 'db')
         config[mode.Client.ORIGIN]['db']['host'] = args.origin_db_host
 
     if not args.origin_db_user is None:
+        check_config_dict_key(mode.Client.ORIGIN, 'db')
         config[mode.Client.ORIGIN]['db']['user'] = args.origin_db_user
 
     if not args.origin_db_password is None:
+        check_config_dict_key(mode.Client.ORIGIN, 'db')
         config[mode.Client.ORIGIN]['db']['password'] = args.origin_db_password
 
     if not args.origin_db_port is None:
+        check_config_dict_key(mode.Client.ORIGIN, 'db')
         config[mode.Client.ORIGIN]['db']['port'] = args.origin_db_port
 
     return config
@@ -545,3 +555,15 @@ def link_configuration_with_hosts():
                     False
                 )
             )
+
+
+def check_config_dict_key(client, key):
+    """
+    Create config key if is not present
+    :param client:
+    :param key:
+    :return:
+    """
+    if key not in config[client]:
+        config[client][key] = {}
+
