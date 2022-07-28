@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.10.2] - 2022-07-28
+
+- fix: overwrite hosts with arguments
+- fix: consider user confirmation input
+
 ## [2.10.1] - 2022-06-22
 
 - [Bugfix] Console output header fixed
