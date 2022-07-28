@@ -113,7 +113,10 @@ def get_configuration(host_config, args = {}):
                 )
             )
 
-    args_config = build_config(args)
+    # workaround for argument order handling respecting the linking feature
+    build_config(args, True)
+    link_configuration_with_hosts()
+    build_config(args)
 
     validation.check(config)
     check_options()
@@ -130,10 +133,11 @@ def get_configuration(host_config, args = {}):
     log.get_logger().info('Starting db_sync_tool')
 
 
-def build_config(args):
+def build_config(args, pre_run = False):
     """
     ADding the provided arguments
     :param args:
+    :param pre_run:
     :return:
     """
     if args is None or not args:
@@ -150,6 +154,9 @@ def build_config(args):
 
     if not args.target is None:
         config['link_target'] = args.target
+
+    # for order reasons check just the link arguments
+    if pre_run: return
 
     if not args.target_path is None:
         config[mode.Client.TARGET]['path'] = args.target_path
@@ -260,7 +267,6 @@ def check_options():
     if 'check_dump' in config:
         config['check_dump'] = config['check_dump']
 
-    link_configuration_with_hosts()
     reverse_hosts()
     mode.check_sync_mode()
 

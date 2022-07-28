@@ -1,8 +1,5 @@
 type: TYPO3
 origin:
-    host: www1
-    user: user
-    password: password
-    path: xxx
+    link: hosts.yml@origin
 target:
-    path: /var/www/html/tests/files/www2/LocalConfiguration.php
+    link: hosts.yml@target
