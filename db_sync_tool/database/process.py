@@ -95,7 +95,7 @@ def import_database_dump():
             _host_name = helper.get_ssh_host_name(mode.Client.TARGET, True) if mode.is_remote(
                 mode.Client.TARGET) else 'local'
 
-            helper.confirm(
+            _input = helper.confirm(
                 output.message(
                     output.Subject.TARGET,
                     f'Are you sure, you want to import the dump file into {_host_name} database?',
@@ -103,6 +103,8 @@ def import_database_dump():
                 ),
                 True
             )
+
+            if not _input: return
 
         database_utility.check_database_dump(mode.Client.TARGET, _dump_path)
 
