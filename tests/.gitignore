@@ -14,3 +14,5 @@ files/
 !files/www1/parameters.yml
 !files/www2/parameters.yml
 !files/www1/after_dump.sql
+!files/www1/typo3.env
+!files/www2/typo3.env

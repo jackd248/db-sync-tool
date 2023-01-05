@@ -40,9 +40,9 @@ def create_origin_database_dump():
                 _mysqldump_options = ''
 
         # Run mysql dump command, e.g.
-        # mysqldump --no-tablespaces -u'db' -p'db' -h'db1' -P'3306' 'db'  > /tmp/_db_08-10-2021_07-00.sql
+        # MYSQL_PWD="db" mysqldump --no-tablespaces -u'db' -p'db' -h'db1' -P'3306' 'db'  > /tmp/_db_08-10-2021_07-00.sql
         mode.run_command(
-            helper.get_command(mode.Client.ORIGIN, 'mysqldump') + ' ' + _mysqldump_options +
+            'MYSQL_PWD="' + system.config[mode.Client.ORIGIN]['db']['password'] + '" ' + helper.get_command(mode.Client.ORIGIN, 'mysqldump') + ' ' + _mysqldump_options +
             database_utility.generate_mysql_credentials(mode.Client.ORIGIN) + ' \'' +
             system.config[mode.Client.ORIGIN]['db']['name'] + '\' ' +
             database_utility.generate_ignore_database_tables() +
@@ -138,6 +138,7 @@ def import_database_dump_file(client, filepath):
     """
     if helper.check_file_exists(client, filepath):
         mode.run_command(
+            'MYSQL_PWD="' + system.config[mode.Client.ORIGIN]['db']['password'] + '" ' +
             helper.get_command(client, 'mysql') + ' ' +
             database_utility.generate_mysql_credentials(client) + ' \'' +
             system.config[client]['db']['name'] + '\' < ' + filepath,
@@ -197,7 +198,7 @@ def clear_database(client):
     """
     mode.run_command(
         '{ ' + helper.get_command(client, 'mysql') + ' ' +
-        database_utility.generate_mysql_credentials(client) +
+        database_utility.generate_mysql_credentials(client, True) +
         ' -Nse \'show tables\' \'' +
         system.config[client]['db']['name'] + '\'; }' +
         ' | ( while read table; do if [ -z ${i+x} ]; then echo \'SET FOREIGN_KEY_CHECKS = 0;\'; fi; i=1; ' +

@@ -5,9 +5,9 @@
 TYPO3 script
 """
 
-import json
+import json, sys
 
-from db_sync_tool.utility import mode, system, helper
+from db_sync_tool.utility import mode, system, helper, output
 
 
 def check_configuration(client):
@@ -28,17 +28,36 @@ def check_configuration(client):
         )
 
         _db_config = parse_database_credentials(json.loads(stdout)['DB'])
-    else:
+    elif '.env' in _path:
+        # Try to parse settings from .env file
+        _db_config = {
+            'name': get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__dbname', system.config[client]['path']),
+            'host': get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__host', system.config[client]['path']),
+            'password': get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__password', system.config[client]['path']),
+            'port': get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__port', system.config[client]['path'])
+            if get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__port',
+                                    system.config[client]['path']) != '' else 3306,
+            'user': get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__user', system.config[client]['path']),
+        }
+    elif 'AdditionalConfiguration.php' in _path:
         # Try to parse settings from AdditionalConfiguration.php file
         _db_config = {
-            'name': get_database_setting(client, 'dbname', system.config[client]['path']),
-            'host': get_database_setting(client, 'host', system.config[client]['path']),
-            'password': get_database_setting(client, 'password', system.config[client]['path']),
-            'port': get_database_setting(client, 'port', system.config[client]['path'])
-            if get_database_setting(client, 'port',
+            'name': get_database_setting_from_additional_configuration(client, 'dbname', system.config[client]['path']),
+            'host': get_database_setting_from_additional_configuration(client, 'host', system.config[client]['path']),
+            'password': get_database_setting_from_additional_configuration(client, 'password', system.config[client]['path']),
+            'port': get_database_setting_from_additional_configuration(client, 'port', system.config[client]['path'])
+            if get_database_setting_from_additional_configuration(client, 'port',
                                     system.config[client]['path']) != '' else 3306,
-            'user': get_database_setting(client, 'user', system.config[client]['path']),
+            'user': get_database_setting_from_additional_configuration(client, 'user', system.config[client]['path']),
         }
+    else:
+        sys.exit(
+            output.message(
+                output.Subject.ERROR,
+                f'Can\'t extract database information from given path {system.config[client]["path"]}. Can only extract settings from the following files: LocalConfiguration.php, AdditionalConfiguration.php, .env',
+                False
+            )
+        )
 
     system.config[client]['db'] = _db_config
 
@@ -66,7 +85,7 @@ def parse_database_credentials(db_credentials):
     return _db_config
 
 
-def get_database_setting(client, name, file):
+def get_database_setting_from_additional_configuration(client, name, file):
     """
     Get database setting try to regex from AdditionalConfiguration
     sed -nE "s/'dbname'.*=>.*'(.*)'.*$/\1/p" /var/www/html/tests/files/www1/AdditionalConfiguration.php
@@ -78,6 +97,22 @@ def get_database_setting(client, name, file):
     return mode.run_command(
         helper.get_command(client, 'sed') +
         f' -nE "s/\'{name}\'.*=>.*\'(.*)\'.*$/\\1/p" {file}',
+        client,
+        True
+    ).replace('\n', '').strip()
+
+def get_database_setting_from_env(client, name, file):
+    """
+    Get database setting try to regex from .env
+    sed -nE "s/TYPO3_CONF_VARS__DB__Connections__Default__host=(.*).*$/\1/p" /var/www/html/tests/files/www1/typo3.env
+    :param client: String
+    :param name: String
+    :param file: String
+    :return:
+    """
+    return mode.run_command(
+        helper.get_command(client, 'sed') +
+        f' -nE "s/{name}=(.*).*$/\\1/p" {file}',
         client,
         True
     ).replace('\n', '').strip()

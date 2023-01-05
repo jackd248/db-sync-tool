@@ -144,15 +144,16 @@ def get_database_tables():
     return _result
 
 
-def generate_mysql_credentials(client):
+def generate_mysql_credentials(client, force_password=False):
     """
     Generate the needed database credential information for the mysql command
     :param client: String
+    :param force_password: Bool
     :return:
     """
-    _credentials = '-u\'' + system.config[client]['db']['user'] + '\' -p\'' + \
-                   system.config[client]['db'][
-                       'password'] + '\''
+    _credentials = '-u\'' + system.config[client]['db']['user'] + '\''
+    if force_password:
+        _credentials += ' -p\'' + system.config[client]['db']['password'] + '\''
     if 'host' in system.config[client]['db']:
         _credentials += ' -h\'' + system.config[client]['db']['host'] + '\''
     if 'port' in system.config[client]['db']:
