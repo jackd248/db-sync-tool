@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.10.3] - 2023-01-05
+
+- feat: add typo3 env parse function
+
 ## [2.10.2] - 2022-07-28
 
 - fix: overwrite hosts with arguments
