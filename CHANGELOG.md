@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.10.4] - 2023-01-05
+
+- fix: missing database password within console command
+
 ## [2.10.3] - 2023-01-05
 
 - feat: add typo3 env parse function
