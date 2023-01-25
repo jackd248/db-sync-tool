@@ -138,7 +138,7 @@ def import_database_dump_file(client, filepath):
     """
     if helper.check_file_exists(client, filepath):
         mode.run_command(
-            'MYSQL_PWD="' + system.config[mode.Client.ORIGIN]['db']['password'] + '" ' +
+            'MYSQL_PWD="' + system.config[client]['db']['password'] + '" ' +
             helper.get_command(client, 'mysql') + ' ' +
             database_utility.generate_mysql_credentials(client) + ' \'' +
             system.config[client]['db']['name'] + '\' < ' + filepath,

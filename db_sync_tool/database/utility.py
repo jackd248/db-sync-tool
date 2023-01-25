@@ -29,7 +29,7 @@ def run_database_command(client, command, force_database_name=False):
     _database_name = ' ' + system.config[client]['db']['name'] if force_database_name else ''
 
     return mode.run_command(
-        'MYSQL_PWD="' + system.config[mode.Client.ORIGIN]['db']['password'] + '" ' + helper.get_command(client, 'mysql') + ' ' + generate_mysql_credentials(
+        'MYSQL_PWD="' + system.config[client]['db']['password'] + '" ' + helper.get_command(client, 'mysql') + ' ' + generate_mysql_credentials(
             client) + _database_name + ' -e "' + command + '"',
         client, True)
 
