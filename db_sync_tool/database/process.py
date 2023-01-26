@@ -197,6 +197,7 @@ def clear_database(client):
     :return:
     """
     mode.run_command(
+        'MYSQL_PWD="' + system.config[client]['db']['password'] + '" ' +
         '{ ' + helper.get_command(client, 'mysql') + ' ' +
         database_utility.generate_mysql_credentials(client, True) +
         ' -Nse \'show tables\' \'' +
