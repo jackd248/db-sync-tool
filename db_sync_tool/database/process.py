@@ -198,11 +198,12 @@ def clear_database(client):
     """
     mode.run_command(
         '{ MYSQL_PWD="' + system.config[client]['db']['password'] + '" ' + helper.get_command(client, 'mysql') + ' ' +
-        database_utility.generate_mysql_credentials(client, True) +
+        database_utility.generate_mysql_credentials(client) +
         ' -Nse \'show tables\' \'' +
         system.config[client]['db']['name'] + '\'; }' +
         ' | ( while read table; do if [ -z ${i+x} ]; then echo \'SET FOREIGN_KEY_CHECKS = 0;\'; fi; i=1; ' +
         'echo "drop table \\`$table\\`;"; done; echo \'SET FOREIGN_KEY_CHECKS = 1;\' ) | awk \'{print}\' ORS=' ' | ' +
+        'MYSQL_PWD = "' + system.config[client]['db']['password'] + '" ' +
         helper.get_command(client, 'mysql') + ' ' +
         database_utility.generate_mysql_credentials(client) + ' ' +
         system.config[client]['db']['name'],
