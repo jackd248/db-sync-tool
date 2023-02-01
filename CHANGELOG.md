@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.10.9] - 2023-02-01
+
+- fix: missing database password configuration for clearing
+
 ## [2.10.8] - 2023-02-01
 
 - fix: missing database password configuration for clearing
