@@ -17,6 +17,7 @@ if [ "$#" -eq "0" ]; then
   for d in "scenario/"*
   do
     sh $d/test.sh $PYTHON $VERBOSE
+    sh helper/cleanup.sh
   done
 else
   # Default is mute mode

@@ -49,9 +49,14 @@ def parse_database_credentials(db_credentials):
     """
     db_credentials = str(db_credentials).replace('\\n\'','')
     # DATABASE_URL=mysql://db-user:1234@db-host:3306/db-name
-    db_credentials = re.findall(r"\/{2}(.+):(.+)@(.+):(\d+)\/(.+)", db_credentials)[0]
+    pattern = r'^DATABASE_URL=(?P<db_type>\w+)://(?P<user>\w+):(?P<password>\w+)@(?P<host>\w+):(?P<port>\d+)/(?P<name>\w+)'
 
-    if len(db_credentials) != 5:
+    match = re.match(pattern, db_credentials)
+
+    if match:
+        db_config = match.groupdict()
+        return db_config
+    else:
         sys.exit(
             output.message(
                 output.Subject.ERROR,
@@ -59,16 +64,6 @@ def parse_database_credentials(db_credentials):
                 False
             )
         )
-
-    _db_config = {
-        'name': db_credentials[4],
-        'host': db_credentials[2],
-        'password': db_credentials[1],
-        'port': db_credentials[3],
-        'user': db_credentials[0],
-    }
-
-    return _db_config
 
 
 def get_database_parameter(client, name, file):
