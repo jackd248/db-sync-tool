@@ -49,7 +49,7 @@ def parse_database_credentials(db_credentials):
     """
     db_credentials = str(db_credentials).replace('\\n\'','')
     # DATABASE_URL=mysql://db-user:1234@db-host:3306/db-name
-    pattern = r'^DATABASE_URL=(?P<db_type>\w+)://(?P<user>\w+):(?P<password>\w+)@(?P<host>\w+):(?P<port>\d+)/(?P<name>\w+)'
+    pattern = r'^DATABASE_URL=(?P<db_type>\w+)://(?P<user>[^:]+):(?P<password>[^@]+)@(?P<host>[^:]+):(?P<port>\d+)/(?P<name>[^?]+)(?:\?.*)?$'
 
     match = re.match(pattern, db_credentials)
 
