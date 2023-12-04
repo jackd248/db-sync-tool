@@ -42,7 +42,8 @@ config = {
     },
     'link_target': None,
     'link_origin': None,
-    'tables': ''
+    'tables': '',
+    'where': ''
 }
 
 #
@@ -248,6 +249,9 @@ def build_config(args, pre_run = False):
     if not args.origin_db_port is None:
         check_config_dict_key(mode.Client.ORIGIN, 'db')
         config[mode.Client.ORIGIN]['db']['port'] = args.origin_db_port
+
+    if not args.where is None:
+        config['where'] = args.where
 
     return config
 

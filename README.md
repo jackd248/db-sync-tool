@@ -186,9 +186,11 @@ optional arguments:
   -ur, --use-rsync      Use rsync as transfer method
   -uro USE_RSYNC_OPTIONS, --use-rsync-options USE_RSYNC_OPTIONS
                         Additional rsync options
+  -w WHERE, --where WHERE
+                        Additional where clause for mysql dump to sync only selected rows, e.g. --where="deleted=0"
 ```
 
-If you haven't declare a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the shell argument or the `config.json` to enable a SSH connection for the remote system. 
+If you haven't declared a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the shell argument or the `config.json` to enable a SSH connection for the remote system. 
 
 ### Import
 

@@ -247,6 +247,10 @@ def get_arguments(args):
                         help='Additional rsync options',
                         required=False,
                         type=str)
+    parser.add_argument('-w', '--where',
+                        help='Additional where clause for mysql dump to sync only selected rows',
+                        required=False,
+                        type=str)
 
     return parser.parse_args(helper.dict_to_args(args))
 

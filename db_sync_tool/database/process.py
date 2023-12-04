@@ -39,6 +39,11 @@ def create_origin_database_dump():
                     semantic_version.Version(_database_version[1]) < semantic_version.Version('5.6.0'):
                 _mysqldump_options = ''
 
+        # Adding additional where clause to sync only selected rows
+        if not system.config['where'] is '':
+            _where = system.config['where']
+            _mysqldump_options = _mysqldump_options + f'--where=\'{_where}\' '
+
         # Run mysql dump command, e.g.
         # MYSQL_PWD="db" mysqldump --no-tablespaces -u'db' -p'db' -h'db1' -P'3306' 'db'  > /tmp/_db_08-10-2021_07-00.sql
         mode.run_command(
