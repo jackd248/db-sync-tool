@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.0] - 2023-12-04
+
+- feat: support additional where clause
+
 ## [2.10.11] - 2023-09-26
 
 - fix: symfony database url with additional parameters
