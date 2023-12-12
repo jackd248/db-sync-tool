@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.1] - 2023-12-12
+
+- feat: support additional mysqldump options
+
 ## [2.11.0] - 2023-12-04
 
 - feat: support additional where clause
