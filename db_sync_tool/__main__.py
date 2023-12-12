@@ -251,6 +251,10 @@ def get_arguments(args):
                         help='Additional where clause for mysql dump to sync only selected rows',
                         required=False,
                         type=str)
+    parser.add_argument('-amo', '--additional-mysqldump-options',
+                        help='Additional mysqldump options for creating the database dump, e.g. --additional-mysqldump-options="--where="deleted=0"',
+                        required=False,
+                        type=str)
 
     return parser.parse_args(helper.dict_to_args(args))
 

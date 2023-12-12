@@ -188,6 +188,8 @@ optional arguments:
                         Additional rsync options
   -w WHERE, --where WHERE
                         Additional where clause for mysql dump to sync only selected rows, e.g. --where="deleted=0"
+  -amo OPTIONS, --additional-mysqldump-options OPTIONS
+                        Additional where clause for mysql dump to sync only selected rows, e.g. --where="deleted=0"
 ```
 
 If you haven't declared a path to a SSH key, during the script execution you are requested to enter the SSH password for the given user in the shell argument or the `config.json` to enable a SSH connection for the remote system. 

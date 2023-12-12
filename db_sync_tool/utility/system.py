@@ -43,7 +43,8 @@ config = {
     'link_target': None,
     'link_origin': None,
     'tables': '',
-    'where': ''
+    'where': '',
+    'additional_mysqldump_options': ''
 }
 
 #
@@ -252,6 +253,9 @@ def build_config(args, pre_run = False):
 
     if not args.where is None:
         config['where'] = args.where
+
+    if not args.additional_mysqldump_options is None:
+        config['additional_mysqldump_options'] = args.additional_mysqldump_options
 
     return config
 

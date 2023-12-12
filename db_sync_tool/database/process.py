@@ -44,6 +44,12 @@ def create_origin_database_dump():
             _where = system.config['where']
             _mysqldump_options = _mysqldump_options + f'--where=\'{_where}\' '
 
+        # Adding additional mysqldump options
+        # see https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#mysqldump-option-summary
+        if not system.config['additional_mysqldump_options'] is '':
+            _additional = system.config['additional_mysqldump_options']
+            _mysqldump_options = _mysqldump_options + f'{_additional} '
+
         # Run mysql dump command, e.g.
         # MYSQL_PWD="db" mysqldump --no-tablespaces -u'db' -p'db' -h'db1' -P'3306' 'db'  > /tmp/_db_08-10-2021_07-00.sql
         mode.run_command(
