@@ -20,6 +20,7 @@ default_options = [
     '--chmod=D2770,F660'
 ]
 
+
 def get_password_environment(client):
     """
     Optionally create a password environment variable for sshpass password authentication
@@ -122,20 +123,25 @@ def unit_converter(size_in_bytes):
     """
     units = ['Bytes', 'kB', 'MB', 'GB']
 
-    _convertedSize = float(size_in_bytes)
-    for unit in units:
-        if _convertedSize < 1024:
-            return str(_convertedSize) + ' ' + unit
-        _convertedSize = _convertedSize/1024
+    if isinstance(size_in_bytes, (int, float)):
+        _convertedSize = float(size_in_bytes)
+        for unit in units:
+            if _convertedSize < 1024:
+                return str(_convertedSize) + ' ' + unit
+            _convertedSize = _convertedSize / 1024
 
-    return _convertedSize
+        return _convertedSize
+    return size_in_bytes
 
 
-def run_rsync_command(remote_client, origin_path, target_path, origin_ssh = '', target_ssh = ''):
+def run_rsync_command(remote_client, origin_path, target_path, origin_ssh='', target_ssh=''):
     """
 
-    :param localpath:
-    :param remotepath:
+    :param target_ssh:
+    :param origin_ssh:
+    :param target_path:
+    :param origin_path:
+    :param remote_client:
     :return:
     """
     if origin_ssh != '':
@@ -151,4 +157,3 @@ def run_rsync_command(remote_client, origin_path, target_path, origin_ssh = '', 
         True
     )
     read_stats(_output)
-
