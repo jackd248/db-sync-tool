@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.2] - 2024-03-18
+
+- fix: unit converter for rsync stats
+
 ## [2.11.1] - 2023-12-12
 
 - feat: support additional mysqldump options
