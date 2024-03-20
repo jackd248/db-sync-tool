@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.4] - 2024-03-20
+
+- fix: string contact within cleanup command
+
 ## [2.11.3] - 2024-03-20
 
 - feat: remove sftp from cleanup
