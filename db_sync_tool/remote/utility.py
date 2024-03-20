@@ -30,12 +30,12 @@ def remove_origin_database_dump(keep_compressed_file=False):
     _file_path = helper.get_dump_dir(mode.Client.ORIGIN) + database_utility.database_dump_file_name
     if mode.is_origin_remote():
         mode.run_command(
-            f'{helper.get_command(mode.Client.ORIGIN, 'rm')}  {_file_path}',
+            helper.get_command(mode.Client.ORIGIN, 'rm') + ' ' + _file_path,
             mode.Client.ORIGIN
         )
         if not keep_compressed_file:
             mode.run_command(
-                f'{helper.get_command(mode.Client.ORIGIN, 'rm')}  {_file_path}.tar.gz',
+                helper.get_command(mode.Client.ORIGIN, 'rm') + ' ' + _file_path + '.tar.gz',
                 mode.Client.ORIGIN
             )
     else:
@@ -97,11 +97,11 @@ def remove_target_database_dump():
 
         if mode.is_target_remote():
             mode.run_command(
-                f'{helper.get_command(mode.Client.TARGET, 'rm')}  {_file_path}',
+                helper.get_command(mode.Client.TARGET, 'rm') + ' ' + _file_path,
                 mode.Client.TARGET
             )
             mode.run_command(
-                f'{helper.get_command(mode.Client.TARGET, 'rm')}  {_file_path}.tar.gz',
+                helper.get_command(mode.Client.TARGET, 'rm') + ' ' + _file_path + '.tar.gz',
                 mode.Client.TARGET
             )
         else:
