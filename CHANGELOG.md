@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.3] - 2024-03-20
+
+- feat: remove sftp from cleanup
+
 ## [2.11.2] - 2024-03-18
 
 - fix: unit converter for rsync stats
