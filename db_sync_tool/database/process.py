@@ -40,13 +40,13 @@ def create_origin_database_dump():
                 _mysqldump_options = ''
 
         # Adding additional where clause to sync only selected rows
-        if not system.config['where'] is '':
+        if system.config['where'] != '':
             _where = system.config['where']
             _mysqldump_options = _mysqldump_options + f'--where=\'{_where}\' '
 
         # Adding additional mysqldump options
         # see https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#mysqldump-option-summary
-        if not system.config['additional_mysqldump_options'] is '':
+        if system.config['additional_mysqldump_options'] != '':
             _additional = system.config['additional_mysqldump_options']
             _mysqldump_options = _mysqldump_options + f'{_additional} '
 
