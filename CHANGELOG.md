@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.6] - 2024-06-17
+
+- fix: allow import local with remote config
+
 ## [2.11.5] - 2024-04-12
 
 - fix: syntaxwarning "is not" with a literal
