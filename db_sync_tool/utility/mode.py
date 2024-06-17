@@ -86,7 +86,7 @@ class SyncMode:
 
         :return: boolean
         """
-        return system.config['import'] != '' and SyncMode.is_full_local()
+        return system.config['import'] != '' and 'host' not in system.config[Client.TARGET]
 
     @staticmethod
     def is_import_remote():
@@ -102,7 +102,7 @@ class SyncMode:
 
         :return: boolean
         """
-        return SyncMode.is_full_local() and SyncMode.is_same_host()  and SyncMode.is_same_sync()
+        return SyncMode.is_full_local() and SyncMode.is_same_host() and SyncMode.is_same_sync()
 
     @staticmethod
     def is_sync_remote():
