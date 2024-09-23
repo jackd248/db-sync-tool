@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.7] - 2024-09-23
+
+- fix: cleanup quotes surrounding database credentials
+
 ## [2.11.6] - 2024-06-17
 
 - fix: allow import local with remote config

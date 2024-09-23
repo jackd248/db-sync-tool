@@ -59,7 +59,7 @@ def check_configuration(client):
             )
         )
 
-    system.config[client]['db'] = _db_config
+    system.config[client]['db'] = helper.clean_db_config(_db_config)
 
 
 def parse_database_credentials(db_credentials):

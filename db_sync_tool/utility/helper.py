@@ -323,3 +323,31 @@ def confirm(prompt=None, resp=False):
             return True
         if ans == 'n' or ans == 'N':
             return False
+
+
+def clean_db_config(config):
+    """
+    Iterates over all entries of a dictionary and removes enclosing inverted commas
+    from the values, if present.
+
+    :param config: The dictionary to be edited
+    :return: A new dictionary with adjusted values
+    """
+    # Iterate over all entries in the dictionary and use the inverted comma function
+    return {key: remove_surrounding_quotes(value) for key, value in config.items()}
+
+
+def remove_surrounding_quotes(s):
+    """
+    Removes the enclosing inverted commas (single or double),
+    if there are quotes at both the beginning and the end of the string.
+
+    :param s: The string to be checked
+    :return: The string without enclosing quotes, if available
+    """
+    if isinstance(s, str):
+        if s.startswith('"') and s.endswith('"'):
+            return s[1:-1]
+        elif s.startswith("'") and s.endswith("'"):
+            return s[1:-1]
+    return s

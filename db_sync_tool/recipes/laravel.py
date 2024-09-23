@@ -15,13 +15,13 @@ def check_configuration(client):
     """
     _path = system.config[client]['path']
 
-    system.config[client]['db'] = {
+    system.config[client]['db'] = helper.clean_db_config({
         'name': get_database_parameter(client, 'DB_DATABASE', _path),
         'host': get_database_parameter(client, 'DB_HOST', _path),
         'password': get_database_parameter(client, 'DB_PASSWORD', _path),
         'port': get_database_parameter(client, 'DB_PORT', _path),
         'user': get_database_parameter(client, 'DB_USERNAME', _path),
-    }
+    })
 
 
 def get_database_parameter(client, name, file):
