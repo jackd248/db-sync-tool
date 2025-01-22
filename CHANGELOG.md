@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.8] - 2025-01-22
+
+- fix: remove unsupported MYSQL_PWD env variable
+
 ## [2.11.7] - 2024-09-23
 
 - fix: cleanup quotes surrounding database credentials
