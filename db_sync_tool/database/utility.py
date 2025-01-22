@@ -29,7 +29,7 @@ def run_database_command(client, command, force_database_name=False):
     _database_name = ' ' + system.config[client]['db']['name'] if force_database_name else ''
 
     return mode.run_command(
-        'MYSQL_PWD="' + system.config[client]['db']['password'] + '" ' + helper.get_command(client, 'mysql') + ' ' + generate_mysql_credentials(
+        helper.get_command(client, 'mysql') + ' ' + generate_mysql_credentials(
             client) + _database_name + ' -e "' + command + '"',
         client, True)
 
@@ -144,7 +144,7 @@ def get_database_tables():
     return _result
 
 
-def generate_mysql_credentials(client, force_password=False):
+def generate_mysql_credentials(client, force_password=True):
     """
     Generate the needed database credential information for the mysql command
     :param client: String
