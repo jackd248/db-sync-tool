@@ -2,6 +2,8 @@
 
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/db_sync_tool-kmi)
 ![PyPI](https://img.shields.io/pypi/v/db_sync_tool-kmi)
+![Pepy Total Downloads](https://img.shields.io/pepy/dt/db-sync-tool-kmi)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/db-sync-tool-kmi)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jackd248/db-sync-tool/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jackd248/db-sync-tool/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/jackd248/db-sync-tool/badges/build.png?b=master)](https://scrutinizer-ci.com/g/jackd248/db-sync-tool/build-status/master)
 
