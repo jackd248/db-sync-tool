@@ -30,14 +30,16 @@ def check_configuration(client):
         _db_config = parse_database_credentials(json.loads(stdout)['DB'])
     elif '.env' in _path:
         # Try to parse settings from .env file
+        if 'db' not in system.config[client]:
+            system.config[client]['db'] = {}
+
         _db_config = {
-            'name': get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__dbname', system.config[client]['path']),
-            'host': get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__host', system.config[client]['path']),
-            'password': get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__password', system.config[client]['path']),
-            'port': get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__port', system.config[client]['path'])
-            if get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__port',
-                                    system.config[client]['path']) != '' else 3306,
-            'user': get_database_setting_from_env(client, 'TYPO3_CONF_VARS__DB__Connections__Default__user', system.config[client]['path']),
+            'name': get_database_setting_from_env(client, system.config[client]['db'].get('name', 'TYPO3_CONF_VARS__DB__Connections__Default__dbname'), system.config[client]['path']),
+            'host': get_database_setting_from_env(client, system.config[client]['db'].get('host', 'TYPO3_CONF_VARS__DB__Connections__Default__host'), system.config[client]['path']),
+            'password': get_database_setting_from_env(client, system.config[client]['db'].get('password', 'TYPO3_CONF_VARS__DB__Connections__Default__password'), system.config[client]['path']),
+            'port': get_database_setting_from_env(client, system.config[client]['db'].get('port', 'TYPO3_CONF_VARS__DB__Connections__Default__port'), system.config[client]['path'])
+            if get_database_setting_from_env(client, system.config[client]['db'].get('port', 'TYPO3_CONF_VARS__DB__Connections__Default__port'), system.config[client]['path']) != '' else 3306,
+            'user': get_database_setting_from_env(client, system.config[client]['db'].get('user', 'TYPO3_CONF_VARS__DB__Connections__Default__user'), system.config[client]['path']),
         }
     elif 'AdditionalConfiguration.php' in _path:
         # Try to parse settings from AdditionalConfiguration.php file

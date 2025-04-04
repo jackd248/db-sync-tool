@@ -67,5 +67,7 @@ Select one of the following scenarios:
 - truncate
 - typo3_additional
 - typo3v7
+- typo3_env
+- typo3-2_env
 - wordpress
 - yaml
