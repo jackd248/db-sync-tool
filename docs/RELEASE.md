@@ -21,7 +21,7 @@ To release a new version of the script, the following steps are necessary:
    
     - _Optionally_: install `twine` for the upload:
     ```bash
-    $ python3 -m pip install --user --upgrade twine 
+    $ python3 -m pip install --user --upgrade twine pkginfo
    ```
    - Upload the archive:
     ```bash

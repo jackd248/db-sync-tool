@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.9] - 2025-04-07
+
+- docs: add download count for python package
+- feat: add more flexible TYPO3 environment sync configuration and testing script
+- docs: add typo3 documentation for .env file configuration for database credentials
+
 ## [2.11.8] - 2025-01-22
 
 - fix: remove unsupported MYSQL_PWD env variable
