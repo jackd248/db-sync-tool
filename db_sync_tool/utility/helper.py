@@ -351,3 +351,28 @@ def remove_surrounding_quotes(s):
         elif s.startswith("'") and s.endswith("'"):
             return s[1:-1]
     return s
+
+
+def run_sed_command(client, command):
+    """
+    Executes a sed command on the specified client, trying -E first and falling back to -r if -E fails.
+
+    :param client: The client on which the sed command should be executed.
+    :param command: The sed command to execute (excluding the sed options).
+    :return: The result of the sed command as a cleaned string (with newlines removed).
+    """
+    # Check if the client supports -E or -r option for sed
+    option = mode.run_command(
+         f"echo | {get_command(client, 'sed')} -E '' >/dev/null 2>&1 && echo -E || (echo | {get_command(client, 'sed')} -r '' >/dev/null 2>&1 && echo -r)",
+         client,
+         True
+    )
+    # If neither option is supported, default to -E
+    if option == '':
+        option = '-E'
+
+    return mode.run_command(
+        f"{get_command(client, 'sed')} -n {option} {command}",
+        client,
+        True
+    ).strip().replace('\n', '')

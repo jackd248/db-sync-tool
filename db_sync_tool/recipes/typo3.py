@@ -96,12 +96,7 @@ def get_database_setting_from_additional_configuration(client, name, file):
     :param file: String
     :return:
     """
-    return mode.run_command(
-        helper.get_command(client, 'sed') +
-        f' -nE "s/\'{name}\'.*=>.*\'(.*)\'.*$/\\1/p" {file}',
-        client,
-        True
-    ).replace('\n', '').strip()
+    return helper.run_sed_command(client, f'"s/\'{name}\'.*=>.*\'(.*)\'.*$/\\1/p" {file}')
 
 def get_database_setting_from_env(client, name, file):
     """
@@ -112,9 +107,4 @@ def get_database_setting_from_env(client, name, file):
     :param file: String
     :return:
     """
-    return mode.run_command(
-        helper.get_command(client, 'sed') +
-        f' -nE "s/{name}=(.*).*$/\\1/p" {file}',
-        client,
-        True
-    ).replace('\n', '').strip()
+    return helper.run_sed_command(client, f'"s/{name}=(.*).*$/\\1/p" {file}')
