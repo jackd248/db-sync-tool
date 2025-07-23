@@ -145,7 +145,7 @@ class SyncMode:
 
         :return: boolean
         """
-        return SyncMode.is_same_configuration('host') and SyncMode.is_same_configuration('port')
+        return SyncMode.is_same_configuration('host') and SyncMode.is_same_configuration('port') and SyncMode.is_same_configuration('user')
 
     @staticmethod
     def is_available_configuration(key):
