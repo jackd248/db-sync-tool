@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.11] - 2025-07-23
+
+- fix: include user configuration check in same host validation
+
 ## [2.11.10] - 2025-04-09
 
 - feat: distinguish between sed support for -E and -r option
