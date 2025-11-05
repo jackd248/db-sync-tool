@@ -178,7 +178,7 @@ def get_arguments(args):
     parser.add_argument('-tad', '--target-after-dump',
                         help='Additional dump file to insert after the regular database import',
                         required=False,
-                        type=int)
+                        type=str)
     parser.add_argument('-op', '--origin-path',
                         help='File path to origin database credential file depending on the framework type',
                         required=False,
