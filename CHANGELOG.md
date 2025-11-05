@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.11.12] - 2025-11-05
+
+- fix: set type for param --target-after-dump to str
+
 ## [2.11.11] - 2025-07-23
 
 - fix: include user configuration check in same host validation
